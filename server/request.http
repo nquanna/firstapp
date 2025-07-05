@@ -1,0 +1,31 @@
+GET http://localhost:3000
+
+###
+
+GET http://localhost:3000/auth/login
+
+###
+
+GET http://localhost:3000/auth/register
+
+### 
+
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY1MTM0OTAxZjlkNGNlOTJlN2ZkMDYiLCJpYXQiOjE3NTE0NTQ1Mzd9.5uE_eWDLYEFeQhEkQ6ed-yvoUQ-QVXVAQXDpzdL7Fjo
+
+{
+  "username": "register nquanna",
+  "password": "dzai"
+}
+
+### 
+
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "register nquanna",
+  "password": "dzai",
+  "confirmPassword": "dzai"
+}
