@@ -3,8 +3,12 @@ import { Link } from "react-router-dom";
 function LoginForm() {
   return (
     <>
-      <input placeholder="username"></input>
-      <input placeholder="password"></input>
+      <form>
+        <input placeholder="username" />
+        <input placeholder="password" />
+
+        <input type="submit" value="submit" />
+      </form>
 
       <Link to="/register">Create new account</Link>
     </>
