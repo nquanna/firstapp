@@ -4,6 +4,26 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 class AuthController {
+  // [POST] /auth
+  async loadUser(req, res, next) {
+    try {
+      if (!req.body.userId)
+        return res.status(400).json({ success: false, message: "cannot find user id" });
+
+      const user = await User.findById(req.body.userId).exec();
+      if (!user) return res.status(400).json({ success: false, message: "user not found" });
+
+      return res.json({
+        success: true,
+        message: "found user",
+        user,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  }
+
   // [POST] /auth/login
   async login(req, res, next) {
     try {
@@ -47,9 +67,11 @@ class AuthController {
       await newUser.save();
       const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY);
 
-      req.body.userId = newUser._id;
-      req.body.token = token;
-      res.json(req.body);
+      res.json({
+        success: true,
+        message: "registered successfully",
+        token,
+      });
     } catch {
       console.log("ERROR!");
       res.status(500).json({ success: false, message: "server error" });

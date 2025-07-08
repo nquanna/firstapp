@@ -1,16 +1,19 @@
 const express = require("express");
-const app = express();
+const cors = require("cors");
 
 require("dotenv").config();
-
-const connect = require("./config/db/connect");
+require("./config/db/connect")();
 
 const route = require("./routes/index");
 
-connect();
+const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
+
 app.use(route);
 
-app.listen(process.env.PORT, () => console.log(`server listening at http://localhost:${process.env.PORT}`));
+app.listen(process.env.PORT, () =>
+  console.log(`server listening at http://localhost:${process.env.PORT}`)
+);
