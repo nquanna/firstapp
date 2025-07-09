@@ -10,7 +10,7 @@ class AuthController {
       if (!req.body.userId)
         return res.status(400).json({ success: false, message: "cannot find user id" });
 
-      const user = await User.findById(req.body.userId).exec();
+      const user = await User.findById(req.body.userId).select("-password").exec();
       if (!user) return res.status(400).json({ success: false, message: "user not found" });
 
       return res.json({
@@ -58,7 +58,7 @@ class AuthController {
 
       if (user) {
         console.log("user already exists!");
-        return res.status(400).json({ success: false, message: "user already exists!" });
+        return res.status(409).json({ success: false, message: "user already exists!" });
       }
 
       req.body.password = await argon2.hash(req.body.password);
@@ -67,7 +67,7 @@ class AuthController {
       await newUser.save();
       const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY);
 
-      res.json({
+      res.status(201).json({
         success: true,
         message: "registered successfully",
         token,

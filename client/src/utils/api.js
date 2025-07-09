@@ -1,23 +1,32 @@
 import axios from "axios";
 
-export const httpRequest = axios.create({
+const httpRequest = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
 });
 
 const request = async ({ path, method, data = {} }) => {
-  try {
-    switch (method) {
-      case "get" || "GET":
+  switch (method) {
+    case "GET":
+    case "get":
+      try {
         return await httpRequest.get(path);
-      case "post" || "POST":
-        return await httpRequest.post(path, data);
-      default:
-        console.log("invalid method");
+      } catch (error) {
         return null;
-    }
-  } catch (error) {
-    console.warn(error);
-    return null;
+      }
+
+    case "POST":
+    case "post":
+      try {
+        const response = await httpRequest.post(path, data);
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        return error.response.data;
+      }
+
+    default:
+      console.log("invalid method");
+      return null;
   }
 };
 

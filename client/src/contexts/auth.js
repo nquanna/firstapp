@@ -1,37 +1,34 @@
 import { createContext, useEffect, useReducer } from "react";
 
 import { userReducer } from "~/reducers";
-import api, { httpRequest } from "~/utils/api";
+import api from "~/utils/api";
 
 const AuthContext = createContext();
 const AuthContextProvider = ({ children }) => {
-  const [auth, dispatch] = useReducer(userReducer, {
+  const [user, dispatch] = useReducer(userReducer, {
     isAuthenticated: false,
     authLoading: true,
     user: null,
   });
 
-  const loadUser = async (userData) => {
-    if (userData && userData.token) {
-      api.token(userData.token);
-    }
+  const loadUser = async () => {
+    if (!process.env.REACT_APP_TOKEN_KEY || !localStorage[process.env.REACT_APP_TOKEN_KEY]) return;
+    const token = JSON.parse(localStorage[process.env.REACT_APP_TOKEN_KEY]);
 
-    if (localStorage[process.env.REACT_APP_TOKEN_KEY]) {
-      const token = JSON.parse(localStorage[process.env.REACT_APP_TOKEN_KEY]);
-      console.log("token:", token);
+    api.setHeaders(token);
 
-      api.setHeaders(token);
+    const response = await api.request({
+      path: "/auth",
+      method: "post",
+    });
 
-      const response = await api.request({
-        path: "/auth",
-        method: "post",
+    console.log("response:", response);
+    if (response.success) {
+      dispatch({
+        type: "set_user",
+        isAuthenticated: true,
+        user: response.user,
       });
-
-      console.log("response:", response);
-
-      /* dispatch({
-        type: "SET_AUTH",
-      }); */
     }
   };
 
@@ -44,16 +41,21 @@ const AuthContextProvider = ({ children }) => {
       data: userData,
     });
 
-    loadUser(user?.data);
+    if (user.token) {
+      api.token(user.token);
+      await loadUser();
+    }
 
-    return user?.data;
+    return user;
   };
+
+  const logoutUser = async (userData) => {};
 
   useEffect(() => {
     loadUser();
   }, []);
 
-  const authContextData = { loadUser, loginUser, registerUser };
+  const authContextData = { loadUser, loginUser, registerUser, logoutUser, user };
   return <AuthContext.Provider value={authContextData}>{children}</AuthContext.Provider>;
 };
 

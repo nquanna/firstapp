@@ -1,20 +1,27 @@
 import config from "~/config";
 
-import LoginForm from "~/components/AuthForm/LoginForm";
-import RegisterForm from "~/components/AuthForm/RegisterForm";
+import Home from "~/pages/Home";
+import Auth from "~/pages/Auth";
 
 const publicRoutes = [
   {
     path: config.routes.home,
-    component: null,
+    component: Home,
+    props: {},
   },
   {
     path: config.routes.login,
-    component: LoginForm,
+    component: Auth,
+    props: {
+      routerPath: "/login",
+    },
   },
   {
     path: config.routes.register,
-    component: RegisterForm,
+    component: Auth,
+    props: {
+      routerPath: "/register",
+    },
   },
 ];
 
