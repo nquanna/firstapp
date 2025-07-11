@@ -7,7 +7,7 @@ import { authReducer } from "~/reducers";
 function RegisterForm() {
   const { registerUser } = useContext(AuthContext);
 
-  const [userData, dispatch] = useReducer(authReducer, {
+  const [authData, dispatch] = useReducer(authReducer, {
     username: "nquanna",
     password: "Quanbicuopdt192.",
     confirmPassword: "Quanbicuopdt192.",
@@ -23,8 +23,7 @@ function RegisterForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const newUser = await registerUser(userData);
-    console.log("new user: ", newUser);
+    await registerUser(authData);
   };
 
   return (
@@ -32,24 +31,24 @@ function RegisterForm() {
       <form onSubmit={handleSubmit}>
         <input
           name="username"
+          value={authData.username}
           onChange={handleDispatch}
           placeholder="username"
-          value={userData.username}
         />
         <input
           name="password"
+          value={authData.password}
           onChange={handleDispatch}
           placeholder="password"
-          value={userData.password}
         />
         <input
           name="confirmPassword"
+          value={authData.confirmPassword}
           onChange={handleDispatch}
           placeholder="confirm password"
-          value={userData.confirmPassword}
         />
 
-        <input type="submit" value="submit" />
+        <input type="submit" value="Register" />
       </form>
 
       <Link to="/login">Have a account</Link>

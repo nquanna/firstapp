@@ -1,12 +1,17 @@
-const authReducer = (state, action) => {
-  switch (action.type) {
+const authReducer = (state, { type, target, value }) => {
+  switch (type) {
+    case "REGISTER":
     case "register":
       return {
         ...state,
-        [action.target]: action.value,
+        [target]: value,
       };
+    case "LOGIN":
     case "login":
-      return state;
+      return {
+        ...state,
+        [target]: value,
+      };
     default:
       console.log("invalid actione type");
       return state;

@@ -1,7 +1,7 @@
 import config from "~/config";
 
-import Home from "~/pages/Home";
-import Auth from "~/pages/Auth";
+import Home from "~/pages/HomePage";
+import Auth from "~/pages/AuthPage";
 
 const publicRoutes = [
   {

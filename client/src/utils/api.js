@@ -9,9 +9,11 @@ const request = async ({ path, method, data = {} }) => {
     case "GET":
     case "get":
       try {
-        return await httpRequest.get(path);
+        const response = await httpRequest.get(path);
+        return response.data;
       } catch (error) {
-        return null;
+        console.log(error);
+        return error.response.data;
       }
 
     case "POST":
@@ -30,8 +32,8 @@ const request = async ({ path, method, data = {} }) => {
   }
 };
 
-const setHeaders = (token) => {
-  console.log("set headers with: token:", token);
+const headers = (token) => {
+  // console.log("set headers with: token:", token);
   if (token) return (httpRequest.defaults.headers.common["Authorization"] = `Bearer ${token}`);
   return delete httpRequest.defaults.headers.common["Authorization"];
 };
@@ -41,6 +43,6 @@ const token = (token) => {
   else localStorage.removeItem(process.env.REACT_APP_TOKEN_KEY);
 };
 
-const api = { request, setHeaders, token };
+const api = { request, headers, token };
 
 export default api;

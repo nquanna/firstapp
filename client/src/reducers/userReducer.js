@@ -1,5 +1,5 @@
 const userReducer = (state, { type, isAuthenticated, user }) => {
-  switch (type) {
+  /* switch (type) {
     case "SET_USER":
     case "set_user":
       return {
@@ -10,7 +10,12 @@ const userReducer = (state, { type, isAuthenticated, user }) => {
     default:
       console.error("invalid type");
       return state;
-  }
+  } */
+  return {
+    ...state,
+    isAuthenticated,
+    user,
+  };
 };
 
 export default userReducer;
