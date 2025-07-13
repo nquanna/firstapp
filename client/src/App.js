@@ -1,5 +1,6 @@
-import GlobalStyle from "~/components/GlobalStyle";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import GlobalStyle from "~/components/GlobalStyle";
 
 import { publicRoutes } from "~/routes";
 

@@ -1,0 +1,73 @@
+:root {
+  --form-group-margin-top: 12px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 420px;
+  padding: 16px 32px;
+  border-radius: 20px;
+  background-color: white;
+
+  .title {
+    margin-top: 20px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-group.form-group-username {
+    margin-top: calc(var(--form-group-margin-top) * 3);
+  }
+
+  &-group.form-group-password,
+  &-group.form-group-confirm-password {
+    margin-top: calc(var(--form-group-margin-top) * 2);
+  }
+
+  input {
+    margin-top: 2px;
+    padding: 6px;
+    border: solid 1px #ccc;
+    border-radius: 4px;
+    outline: none;
+  }
+
+  a {
+    margin-top: var(--form-group-margin-top);
+    text-align: center;
+    text-decoration: none;
+  }
+
+  input[type="submit"] {
+    margin-top: calc(var(--form-group-margin-top) * 3);
+    background-color: rgb(255, 195, 200);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgb(245, 190, 190);
+      opacity: 0.8;
+    }
+  }
+}
+
+/* < TABLET */
+@media all and (max-width: 740px) {
+  .form {
+    width: 360px;
+  }
+}
+
+/* MINI PHONE */
+@media all and (max-width: 400px) {
+  .form {
+    width: 315px;
+  }
+}

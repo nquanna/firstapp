@@ -23,6 +23,10 @@ const publicRoutes = [
       routerPath: "/register",
     },
   },
+  {
+    path: config.routes.forgotPassword,
+    component: null,
+  },
 ];
 
 const privateRoutes = [];

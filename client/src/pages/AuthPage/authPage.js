@@ -1,7 +1,6 @@
 import classNames from "classnames/bind";
 
-import LoginForm from "~/components/AuthForm/LoginForm";
-import RegisterForm from "~/components/AuthForm/RegisterForm";
+import { LoginForm, RegisterForm } from "~/components/AuthForm";
 
 import style from "./authPage.module.scss";
 
