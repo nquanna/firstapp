@@ -31,11 +31,11 @@ const AuthContextProvider = ({ children }) => {
     }
   };
 
-  const loginUser = async (userData) => {
+  const loginUser = async (authData) => {
     const response = await api.request({
       path: "/auth/login",
       method: "post",
-      data: userData,
+      data: authData,
     });
 
     if (!response.success) return;
@@ -43,19 +43,21 @@ const AuthContextProvider = ({ children }) => {
     await loadUser(response.token);
   };
 
-  const registerUser = async (userData) => {
+  const registerUser = async (authData) => {
     const response = await api.request({
       path: "/auth/register",
       method: "post",
-      data: userData,
+      data: authData,
     });
 
     if (!response.success) return;
     api.token(response.token);
     await loadUser(response.token);
+
+    return response;
   };
 
-  const logoutUser = async (userData) => {
+  const logoutUser = async () => {
     api.token();
     dispatch({
       isAuthenticated: false,
@@ -65,12 +67,45 @@ const AuthContextProvider = ({ children }) => {
     api.headers();
   };
 
+  const sendOtp = async (authData) => {
+    console.log(authData.email);
+    try {
+      await api.request({
+        path: "/auth/send-otp",
+        method: "post",
+        data: authData,
+      });
+    } catch (error) {
+      console.log("cannot send otp, why???");
+    }
+  };
+
+  const forgotPassword = async (authData) => {
+    try {
+      await api.request({
+        path: "/auth/forgot-password",
+        method: "post",
+        data: authData,
+      });
+    } catch (error) {
+      console.log("what the hell");
+    }
+  };
+
   useEffect(() => {
     loadUser();
     // eslint-disable-next-line
   }, []);
 
-  const authContextData = { loadUser, loginUser, registerUser, logoutUser, user };
+  const authContextData = {
+    loadUser,
+    loginUser,
+    registerUser,
+    logoutUser,
+    sendOtp,
+    forgotPassword,
+    user,
+  };
   return <AuthContext.Provider value={authContextData}>{children}</AuthContext.Provider>;
 };
 

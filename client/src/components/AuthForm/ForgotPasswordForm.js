@@ -1,18 +1,16 @@
-import { useReducer, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useContext, useReducer } from "react";
+import { Link } from "react-router-dom";
 
-import style from "./AuthForm.module.scss";
+import classNames from "classnames/bind";
 
 import { AuthContext } from "~/contexts";
 import { authReducer } from "~/reducers";
 
-import classNames from "classnames/bind";
+import style from "./AuthForm.module.scss";
 
 const cx = classNames.bind(style);
 
-function RegisterForm() {
-  const { registerUser, sendOtp } = useContext(AuthContext);
-
+function ForgotPasswordForm() {
   const [authData, dispatch] = useReducer(authReducer, {
     email: "quanhm153@gmail.com",
     otp: "000000",
@@ -20,41 +18,32 @@ function RegisterForm() {
     confirmPassword: "Quanbicuopdt192.",
   });
 
-  const navigate = useNavigate();
-
-  const handleSendOtp = async (event) => {
-    event.preventDefault();
-    await sendOtp({ email: authData.email });
-  };
+  const { forgotPassword } = useContext(AuthContext);
 
   const handleDispatch = (event) => {
     dispatch({
-      type: "register",
+      type: "forgotPassword",
       target: event.target.name,
       value: event.target.value,
     });
   };
 
   const handleSubmit = async (event) => {
-    try {
-      event.preventDefault();
-      const newUser = await registerUser(authData);
-      if (newUser?.success) navigate("/auth/login");
-    } catch {
-      console.log("cannot register new user");
-    }
+    event.preventDefault();
+    console.log(authData);
+
+    await forgotPassword(authData);
   };
 
   return (
     <>
       <form className={cx("form")} onSubmit={handleSubmit}>
-        <div className={cx("title")}>Register</div>
+        <div className={cx("title", "title-forgot-password")}>Forgot Your Password</div>
 
         <div className={cx("form-group", "form-group-email")}>
           <label htmlFor="email">Email:</label>
           <input
             type="email"
-            id="email"
             name="email"
             value={authData.email}
             onChange={handleDispatch}
@@ -63,7 +52,7 @@ function RegisterForm() {
         </div>
 
         <div className={cx("form-group", "form-group-otp")}>
-          <input type="submit" id={cx("sendBtn")} value="Send otp code" onClick={handleSendOtp} />
+          <input type="submit" id={cx("sendBtn")} value="Send otp code" />
           <input
             type="number"
             name="otp"
@@ -75,13 +64,13 @@ function RegisterForm() {
         </div>
 
         <div className={cx("form-group", "form-group-password")}>
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="password">New password:</label>
           <input
             id="password"
             name="password"
             value={authData.password}
             onChange={handleDispatch}
-            placeholder="password"
+            placeholder="new password"
           />
         </div>
 
@@ -96,14 +85,13 @@ function RegisterForm() {
           />
         </div>
 
-        <Link to="/auth/forgot-password">Forgot your password?</Link>
+        <input type="submit" id={cx("reset-password")} value="Reset password" />
 
-        <input type="submit" id={cx("registerBtn")} value="Register" /* onClick={handleSubmit} */ />
-
-        <Link to="/auth/login">Have an account?</Link>
+        <Link to="/auth/login">Hava an account?</Link>
+        <Link to="/auth/register">Create new account?</Link>
       </form>
     </>
   );
 }
 
-export default RegisterForm;
+export default ForgotPasswordForm;

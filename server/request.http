@@ -1,16 +1,16 @@
-GET http://localhost:3000
+GET http://localhost:3001
 
 ###
 
-GET http://localhost:3000/auth/login
+GET http://localhost:3001/auth/login
 
 ###
 
-GET http://localhost:3000/auth/register
+GET http://localhost:3001/auth/register
 
 ### 
 
-POST http://localhost:3000/auth/login
+POST http://localhost:3001/auth/login
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY1MTM0OTAxZjlkNGNlOTJlN2ZkMDYiLCJpYXQiOjE3NTE0NTQ1Mzd9.5uE_eWDLYEFeQhEkQ6ed-yvoUQ-QVXVAQXDpzdL7Fjo
 
@@ -21,7 +21,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY1M
 
 ### 
 
-POST http://localhost:3000/auth/register
+POST http://localhost:3001/auth/register
 Content-Type: application/json
 
 {
@@ -39,4 +39,23 @@ Content-Type: application/json
   "username": "register nquanna testing",
   "password": "dzai",
   "confirmPassword": "dzai"
+}
+
+### 
+
+POST http://localhost:3001/auth/send-otp
+Content-Type: application/json
+
+{
+  "email": "quanhm153@gmail.com"
+} 
+
+### 
+
+POST http://localhost:3001/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "quanhm153@gmail.com",
+  "otp": "791170"
 }

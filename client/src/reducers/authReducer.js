@@ -12,6 +12,11 @@ const authReducer = (state, { type, target, value }) => {
         ...state,
         [target]: value,
       };
+    case "forgotPassword":
+      return {
+        ...state,
+        [target]: value,
+      };
     default:
       console.log("invalid actione type");
       return state;

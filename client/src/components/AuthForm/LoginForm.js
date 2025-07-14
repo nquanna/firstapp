@@ -12,7 +12,7 @@ const cx = classNames.bind(style);
 
 function LoginForm() {
   const [authData, dispatch] = useReducer(authReducer, {
-    username: "nquanna",
+    email: "quanhm153@gmail.com",
     password: "Quanbicuopdt192.",
   });
 
@@ -36,13 +36,14 @@ function LoginForm() {
       <form className={cx("form")} onSubmit={handleSubmit}>
         <div className={cx("title")}>Login</div>
 
-        <div className={cx("form-group", "form-group-username")}>
-          <label htmlFor="username">Username:</label>
+        <div className={cx("form-group", "form-group-email")}>
+          <label htmlFor="email">Email:</label>
           <input
-            name="username"
-            value={authData.username}
+            type="email"
+            name="email"
+            value={authData.email}
             onChange={handleDispatch}
-            placeholder="username"
+            placeholder="email"
           />
         </div>
         <div className={cx("form-group", "form-group-password")}>
@@ -55,11 +56,11 @@ function LoginForm() {
           />
         </div>
 
-        <Link to="/forgot-password">Forgot your password?</Link>
+        <Link to="/auth/forgot-password">Forgot your password?</Link>
 
-        <input type="submit" value="Login" />
+        <input type="submit" id={cx("loginBtn")} value="Login" />
 
-        <Link to="/register">Create new account? Register.</Link>
+        <Link to="/auth/register">Create new account?</Link>
       </form>
     </>
   );

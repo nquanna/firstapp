@@ -13,19 +13,22 @@ const publicRoutes = [
     path: config.routes.login,
     component: Auth,
     props: {
-      routerPath: "/login",
+      routerPath: "/auth/login",
     },
   },
   {
     path: config.routes.register,
     component: Auth,
     props: {
-      routerPath: "/register",
+      routerPath: "/auth/register",
     },
   },
   {
     path: config.routes.forgotPassword,
-    component: null,
+    component: Auth,
+    props: {
+      routerPath: "/auth/forgot-password",
+    },
   },
 ];
 
