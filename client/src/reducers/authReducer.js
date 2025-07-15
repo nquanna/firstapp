@@ -1,12 +1,10 @@
 const authReducer = (state, { type, target, value }) => {
   switch (type) {
-    case "REGISTER":
     case "register":
       return {
         ...state,
         [target]: value,
       };
-    case "LOGIN":
     case "login":
       return {
         ...state,

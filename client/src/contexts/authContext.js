@@ -1,7 +1,7 @@
 import { createContext, useEffect, useReducer, useRef } from "react";
 
 import { userReducer } from "~/reducers";
-import api from "~/utils/api";
+import { api, constanst } from "~/utils";
 
 const AuthContext = createContext();
 const AuthContextProvider = ({ children }) => {
@@ -10,7 +10,7 @@ const AuthContextProvider = ({ children }) => {
     user: null,
   });
 
-  const TOKEN_KEY = useRef(process.env.REACT_APP_TOKEN_KEY).current;
+  const TOKEN_KEY = useRef(constanst.tokenKey).current;
 
   const loadUser = async (userToken) => {
     const token = userToken || (localStorage[TOKEN_KEY] && JSON.parse(localStorage[TOKEN_KEY]));
@@ -22,7 +22,6 @@ const AuthContextProvider = ({ children }) => {
       method: "post",
     });
 
-    // console.log("response:", response);
     if (response.success) {
       dispatch({
         isAuthenticated: true,
@@ -49,10 +48,6 @@ const AuthContextProvider = ({ children }) => {
       method: "post",
       data: authData,
     });
-
-    if (!response.success) return;
-    api.token(response.token);
-    await loadUser(response.token);
 
     return response;
   };

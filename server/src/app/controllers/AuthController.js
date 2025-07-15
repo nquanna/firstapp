@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
+const constanst = require("../../utils/constanst");
+
 const UserSchema = require("../models/user");
 const OtpSchema = require("../models/otps");
 
@@ -41,7 +43,7 @@ class AuthController {
 
       const newUser = new UserSchema(req.body);
       await newUser.save();
-      const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY);
+      const token = jwt.sign({ userId: newUser._id }, constanst.jwtSecret);
 
       res.status(201).json({
         success: true,
@@ -65,7 +67,7 @@ class AuthController {
       if (!isValidPassword)
         return res.status(401).json({ success: false, message: "Incorrect email or password" });
 
-      const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY);
+      const token = jwt.sign({ userId: user.id }, constanst.jwtSecret);
 
       res.json({
         success: true,
@@ -89,20 +91,19 @@ class AuthController {
     const { email } = req.body;
 
     try {
-      const hashedOtp = await argon2.hash(otp);
-      const saveOtp = new OtpSchema({ email, otp: hashedOtp });
+      const saveOtp = new OtpSchema({ email, otp: await argon2.hash(otp) });
       await saveOtp.save();
 
       const transporter = nodemailer.createTransport({
         service: "Gmail",
         auth: {
           user: "hmquan917@gmail.com",
-          pass: process.env.GMAIL_PASSWORD,
+          pass: constanst.gmailPassword,
         },
       });
 
       await transporter.sendMail({
-        from: '"Hoang Quan" <hmquan917@gmail.com>',
+        from: constanst.gmailSystem,
         to: email,
         subject: "Your otp code to register or reset your password",
         html,
@@ -110,7 +111,7 @@ class AuthController {
 
       console.log(otp);
 
-      res.json({ success: true, message: "Sent OTP code" });
+      res.json({ success: true, message: `Sent OTP code to ${email}` });
     } catch (error) {
       res.status(500).json({ success: false, message: "cannot send otp code" });
     }

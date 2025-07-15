@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import style from "./AuthForm.module.scss";
 
-import { AuthContext } from "~/contexts";
+import { AuthHandlerContext } from "~/contexts";
 import { authReducer } from "~/reducers";
 
 import classNames from "classnames/bind";
@@ -11,9 +11,10 @@ import classNames from "classnames/bind";
 const cx = classNames.bind(style);
 
 function RegisterForm() {
-  const { registerUser, sendOtp } = useContext(AuthContext);
+  const { handleSendOtp, handleDispatch, handleSubmit } = useContext(AuthHandlerContext);
 
   const [authData, dispatch] = useReducer(authReducer, {
+    type: "register",
     email: "quanhm153@gmail.com",
     otp: "000000",
     password: "Quanbicuopdt192.",
@@ -22,32 +23,17 @@ function RegisterForm() {
 
   const navigate = useNavigate();
 
-  const handleSendOtp = async (event) => {
-    event.preventDefault();
-    await sendOtp({ email: authData.email });
-  };
-
-  const handleDispatch = (event) => {
-    dispatch({
-      type: "register",
-      target: event.target.name,
-      value: event.target.value,
-    });
-  };
-
-  const handleSubmit = async (event) => {
-    try {
-      event.preventDefault();
-      const newUser = await registerUser(authData);
-      if (newUser?.success) navigate("/auth/login");
-    } catch {
-      console.log("cannot register new user");
-    }
-  };
-
   return (
     <>
-      <form className={cx("form")} onSubmit={handleSubmit}>
+      <form
+        className={cx("form")}
+        onSubmit={async (event) =>
+          await handleSubmit({
+            event,
+            authData,
+            navigate,
+          })
+        }>
         <div className={cx("title")}>Register</div>
 
         <div className={cx("form-group", "form-group-email")}>
@@ -57,19 +43,24 @@ function RegisterForm() {
             id="email"
             name="email"
             value={authData.email}
-            onChange={handleDispatch}
+            onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="email"
           />
         </div>
 
         <div className={cx("form-group", "form-group-otp")}>
-          <input type="submit" id={cx("sendBtn")} value="Send otp code" onClick={handleSendOtp} />
+          <input
+            type="submit"
+            id={cx("sendBtn")}
+            value="Send otp code"
+            onClick={async (event) => await handleSendOtp({ event, authData })}
+          />
           <input
             type="number"
             name="otp"
             id={cx("otp-code")}
             value={authData.otp}
-            onChange={handleDispatch}
+            onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="000000"
           />
         </div>
@@ -80,7 +71,7 @@ function RegisterForm() {
             id="password"
             name="password"
             value={authData.password}
-            onChange={handleDispatch}
+            onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="password"
           />
         </div>
@@ -91,14 +82,14 @@ function RegisterForm() {
             id="confirmPassword"
             name="confirmPassword"
             value={authData.confirmPassword}
-            onChange={handleDispatch}
+            onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="confirm password"
           />
         </div>
 
         <Link to="/auth/forgot-password">Forgot your password?</Link>
 
-        <input type="submit" id={cx("registerBtn")} value="Register" /* onClick={handleSubmit} */ />
+        <input type="submit" id={cx("registerBtn")} value="Register" />
 
         <Link to="/auth/login">Have an account?</Link>
       </form>

@@ -24,5 +24,4 @@ const otps = new Schema(
   }
 );
 
-module.exports = mongoose.model("opts", otps, "opts");
-// module.exports = new mongoose.model("otps", otps);
+module.exports = mongoose.model("otps", otps, "otps");

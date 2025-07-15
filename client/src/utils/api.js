@@ -1,12 +1,13 @@
 import axios from "axios";
 
+import constanst from "./constanst";
+
 const httpRequest = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: constanst.baseUrl,
 });
 
 const request = async ({ path, method, data = {} }) => {
   switch (method) {
-    case "GET":
     case "get":
       try {
         const response = await httpRequest.get(path);
@@ -16,7 +17,6 @@ const request = async ({ path, method, data = {} }) => {
         return error.response.data;
       }
 
-    case "POST":
     case "post":
       try {
         const response = await httpRequest.post(path, data);
@@ -39,8 +39,8 @@ const headers = (token) => {
 };
 
 const token = (token) => {
-  if (token) localStorage.setItem(process.env.REACT_APP_TOKEN_KEY, JSON.stringify(token));
-  else localStorage.removeItem(process.env.REACT_APP_TOKEN_KEY);
+  if (token) localStorage.setItem(constanst.tokenKey, JSON.stringify(token));
+  else localStorage.removeItem(constanst.tokenKey);
 };
 
 const api = { request, headers, token };

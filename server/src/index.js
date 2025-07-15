@@ -5,6 +5,8 @@ const morgan = require("morgan");
 require("dotenv").config();
 require("./config/db/connect")();
 
+const constanst = require("./utils/constanst");
+
 const route = require("./routes/index");
 
 const app = express();
@@ -16,6 +18,4 @@ app.use(morgan("dev"));
 
 app.use(route);
 
-app.listen(process.env.PORT, () =>
-  console.log(`server listening at http://localhost:${process.env.PORT}`)
-);
+app.listen(constanst.port, () => console.log(`server listening at http://localhost:${constanst.port}`));

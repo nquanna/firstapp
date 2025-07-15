@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
+const constanst = require("../../utils/constanst");
+
 const connect = () =>
   mongoose
-    .connect(process.env.MONGO_URI)
+    .connect(constanst.mongoUri)
     .then(() => console.log("Connected!"))
     .catch(() => console.log("ERROR!!!"));
 

@@ -1,39 +1,27 @@
 import { useReducer, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import style from "./AuthForm.module.scss";
 
 import { authReducer } from "~/reducers";
-import { AuthContext } from "~/contexts";
+import { AuthHandlerContext } from "~/contexts";
 
 import classNames from "classnames/bind";
 
 const cx = classNames.bind(style);
 
 function LoginForm() {
+  const location = useLocation();
+  const { handleDispatch, handleSubmit } = useContext(AuthHandlerContext);
   const [authData, dispatch] = useReducer(authReducer, {
-    email: "quanhm153@gmail.com",
+    type: "login",
+    email: location?.state?.email || "quanhm153@gmail.com2",
     password: "Quanbicuopdt192.",
   });
 
-  const { loginUser } = useContext(AuthContext);
-
-  const handleDispatch = (event) => {
-    dispatch({
-      type: "login",
-      target: event.target.name,
-      value: event.target.value,
-    });
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    await loginUser(authData);
-  };
-
   return (
     <>
-      <form className={cx("form")} onSubmit={handleSubmit}>
+      <form className={cx("form")} onSubmit={(event) => handleSubmit({ event, authData })}>
         <div className={cx("title")}>Login</div>
 
         <div className={cx("form-group", "form-group-email")}>
@@ -42,7 +30,7 @@ function LoginForm() {
             type="email"
             name="email"
             value={authData.email}
-            onChange={handleDispatch}
+            onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="email"
           />
         </div>
@@ -51,7 +39,7 @@ function LoginForm() {
           <input
             name="password"
             value={authData.password}
-            onChange={handleDispatch}
+            onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="password"
           />
         </div>
