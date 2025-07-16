@@ -32,8 +32,10 @@ class AuthController {
   // [POST] /auth/register
   async register(req, res, next) {
     try {
-      const user = await UserSchema.findOne({ email: req.body.email }).exec();
+      if (!req.body.isValidOtp)
+        return res.status(401).json({ success: false, messgae: "Invalid OTP code." });
 
+      const user = await UserSchema.findOne({ email: req.body.email }).exec();
       if (user) {
         console.log("user already exists!");
         return res.status(409).json({ success: false, message: "user already exists!" });
@@ -83,16 +85,15 @@ class AuthController {
   // [POST] /auth/send-otp
   async sendOtp(req, res, next) {
     const otp = crypto.randomInt(100000, 999999).toString();
-    const html = `<p style="font-size: 56px;"><b>Please do not share this OTP code with anyone.</b><br />
+    const html = `<p style="font-size: 16px;"><b>Please do not share this OTP code with anyone.</b><br />
       If you think someone else might have access to it, please reset your password to protect your account.<br />
       Your OTP code is: <i>${otp}</i>.<br/>
-      Code will expire in 2 minute</p>`;
+      Code will expire in ${constanst.expiresOtpTime / 60} minutes</p>`;
 
     const { email } = req.body;
 
     try {
-      const saveOtp = new OtpSchema({ email, otp: await argon2.hash(otp) });
-      await saveOtp.save();
+      await OtpSchema.updateOne({ email }, { email, otp: await argon2.hash(otp) }, { upsert: true });
 
       const transporter = nodemailer.createTransport({
         service: "Gmail",
@@ -109,7 +110,7 @@ class AuthController {
         html,
       });
 
-      console.log(otp);
+      console.log("otp: ", otp);
 
       res.json({ success: true, message: `Sent OTP code to ${email}` });
     } catch (error) {
@@ -117,16 +118,20 @@ class AuthController {
     }
   }
 
-  // [POST] /auth/forgot-password
+  // [PATCH] /auth/forgot-password
   async forgotPassword(req, res, next) {
     try {
-      if (req.body.invalidOtp)
+      if (!req.body.isValidOtp)
         return res.status(401).json({ success: false, message: "Invalid OTP code." });
 
-      console.log("valid otp");
-      return res.json({ success: true, message: "Valid OTP!!!" });
+      const hashedPassword = await argon2.hash(req.body.password);
+
+      await UserSchema.updateOne({ email: req.body.email }, { password: hashedPassword });
+
+      return res.json({ success: true, message: "Updated password" });
     } catch (error) {
-      return res.status(401).json({ success: false, message: "Invalid OTP code in error" });
+      console.log(error);
+      return res.status(500).json({ success: false, message: "Internal Server Error!!!" });
     }
   }
 }

@@ -8,9 +8,9 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, constanst.jwtSecret);
     req.body.userId = decoded.userId;
-    next();
   } catch (error) {
     console.log(error);
+  } finally {
     next();
   }
 };

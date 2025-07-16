@@ -26,6 +26,18 @@ const request = async ({ path, method, data = {} }) => {
         return error.response.data;
       }
 
+    case "put":
+      break;
+
+    case "patch":
+      try {
+        const response = await httpRequest.patch(path, data);
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        return error.response.data;
+      }
+
     default:
       console.log("invalid method");
       return null;

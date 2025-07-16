@@ -8,7 +8,6 @@ function AuthHandlerContextProvider({ children }) {
   const { loginUser, registerUser, logoutUser, sendOtp, forgotPassword } = useContext(AuthContext);
 
   const handleSendOtp = async ({ event, authData }) => {
-    console.log(event, authData);
     try {
       event.preventDefault();
       await sendOtp({ email: authData.email });
@@ -18,7 +17,6 @@ function AuthHandlerContextProvider({ children }) {
   };
 
   const handleDispatch = ({ event, type, dispatch }) => {
-    console.log(event);
     dispatch({
       type,
       target: event.target.name,
@@ -29,7 +27,7 @@ function AuthHandlerContextProvider({ children }) {
   const handleSubmit = async ({ event, authData, navigate }) => {
     try {
       event.preventDefault();
-      console.log(authData);
+      // console.log(authData);
 
       if (!authData?.email) throw new Error("Missing email bro.");
 
@@ -42,6 +40,8 @@ function AuthHandlerContextProvider({ children }) {
                 email: authData.email,
               },
             });
+          } else {
+            console.log(response);
           }
           break;
         case "login":

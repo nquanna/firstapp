@@ -14,9 +14,9 @@ function ForgotPasswordForm() {
   const { handleSendOtp, handleDispatch, handleSubmit } = useContext(AuthHandlerContext);
 
   const [authData, dispatch] = useReducer(authReducer, {
-    type: "forgotPassowrd",
+    type: "forgotPassword",
     email: "quanhm153@gmail.com",
-    otp: "000000",
+    otp: "",
     password: "Quanbicuopdt192.",
     confirmPassword: "Quanbicuopdt192.",
   });

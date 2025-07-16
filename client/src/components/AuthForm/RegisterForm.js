@@ -16,7 +16,7 @@ function RegisterForm() {
   const [authData, dispatch] = useReducer(authReducer, {
     type: "register",
     email: "quanhm153@gmail.com",
-    otp: "000000",
+    otp: "",
     password: "Quanbicuopdt192.",
     confirmPassword: "Quanbicuopdt192.",
   });

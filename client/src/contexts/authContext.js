@@ -63,7 +63,6 @@ const AuthContextProvider = ({ children }) => {
   };
 
   const sendOtp = async (authData) => {
-    console.log(authData.email);
     try {
       await api.request({
         path: "/auth/send-otp",
@@ -79,7 +78,7 @@ const AuthContextProvider = ({ children }) => {
     try {
       await api.request({
         path: "/auth/forgot-password",
-        method: "post",
+        method: "patch",
         data: authData,
       });
     } catch (error) {

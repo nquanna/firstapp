@@ -2,14 +2,15 @@ const argon2 = require("argon2");
 
 const OtpSchema = require("../../app/models/otps");
 
+// [POST] /auth/register
 // [POST] /auth/forgot-password
 const verifyOtp = async (req, res, next) => {
   try {
-    const data = await OtpSchema.findOne({ email: req.body.email }).exec();
-    req.body.invalidOtp = !(await argon2.verify(data.otp, req.body.otp));
+    const otpDoc = await OtpSchema.findOne({ email: req.body.email }).exec();
+    req.body.isValidOtp = await argon2.verify(otpDoc.otp, req.body.otp || "");
   } catch {
-    console.log("error!!");
-    req.body.invalidOtp = true;
+    console.log("error in otp verify");
+    req.body.isValidOtp = false;
   } finally {
     next();
   }

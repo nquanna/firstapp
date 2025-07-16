@@ -8,9 +8,10 @@ const verifyToken = require("../middlewares/auth/verifyToken");
 const verifyOtp = require("../middlewares/auth/verifyOtp");
 
 router.post("/login", validate, AuthController.login);
-router.post("/register", validate, AuthController.register);
+router.post("/register", validate, verifyOtp, AuthController.register);
 router.post("/send-otp", AuthController.sendOtp);
-router.post("/forgot-password", verifyOtp, AuthController.forgotPassword);
 router.post("/", verifyToken, AuthController.loadUser);
+
+router.patch("/forgot-password", verifyOtp, validate, AuthController.forgotPassword);
 
 module.exports = router;

@@ -4,6 +4,7 @@ const constanst = {
   jwtSecret: process.env.JWT_SECRET,
   gmailSystem: '"Hoang Quan" <hmquan917@gmail.com>',
   gmailPassword: process.env.GMAIL_PASSWORD,
+  expiresOtpTime: 120,
 };
 
 module.exports = constanst;

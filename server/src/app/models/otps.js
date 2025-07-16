@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const constanst = require("../../utils/constanst");
+
 const otps = new Schema(
   {
     email: {
@@ -13,11 +15,11 @@ const otps = new Schema(
       required: true,
       unique: true,
     },
-    /* expireAt: {
+    expireAt: {
       type: Date,
       default: () => Date.now(),
-      expires: 120,
-    }, */
+      expires: constanst.expiresOtpTime,
+    },
   },
   {
     timestamps: true,
