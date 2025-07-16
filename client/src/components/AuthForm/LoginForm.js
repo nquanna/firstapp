@@ -25,19 +25,22 @@ function LoginForm() {
         <div className={cx("title")}>Login</div>
 
         <div className={cx("form-group", "form-group-email")}>
-          <label htmlFor="email">Email:</label>
+          <label htmlFor={cx("email")}>Email:</label>
           <input
             type="email"
             name="email"
+            id={cx("email")}
             value={authData.email}
             onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="email"
           />
         </div>
         <div className={cx("form-group", "form-group-password")}>
-          <label htmlFor="password">Password:</label>
+          <label htmlFor={cx("password")}>Password:</label>
           <input
+            type="text"
             name="password"
+            id={cx("password")}
             value={authData.password}
             onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="password"

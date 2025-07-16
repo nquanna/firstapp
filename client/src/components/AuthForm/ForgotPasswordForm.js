@@ -10,7 +10,7 @@ import style from "./AuthForm.module.scss";
 
 const cx = classNames.bind(style);
 
-function ForgotPasswordForm() {
+function ForgotPasswordForm({ enableTimer, setEnableTimer, timer }) {
   const { handleSendOtp, handleDispatch, handleSubmit } = useContext(AuthHandlerContext);
 
   const [authData, dispatch] = useReducer(authReducer, {
@@ -27,10 +27,11 @@ function ForgotPasswordForm() {
         <div className={cx("title", "title-forgot-password")}>Forgot Your Password</div>
 
         <div className={cx("form-group", "form-group-email")}>
-          <label htmlFor="email">Email:</label>
+          <label htmlFor={cx("email")}>Email:</label>
           <input
             type="email"
             name="email"
+            id={cx("email")}
             value={authData.email}
             onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="email"
@@ -40,9 +41,13 @@ function ForgotPasswordForm() {
         <div className={cx("form-group", "form-group-otp")}>
           <input
             type="submit"
-            id={cx("sendBtn")}
+            id={cx("sendOtpBtn")}
             value="Send otp code"
-            onClick={(event) => handleSendOtp({ event, authData })}
+            disabled={enableTimer}
+            onClick={async (event) => {
+              setEnableTimer.call({}, true);
+              await handleSendOtp({ event, authData });
+            }}
           />
           <input
             type="number"
@@ -52,14 +57,17 @@ function ForgotPasswordForm() {
             onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="000000"
           />
-          <span className={cx("otp-notification")}></span>
+          <span className={cx("otp-notification", { "otp-notification-hide": !enableTimer })}>
+            {`You can resend OTP code after ${timer} seconds.`}
+          </span>
         </div>
 
         <div className={cx("form-group", "form-group-password")}>
-          <label htmlFor="password">New password:</label>
+          <label htmlFor={cx("password")}>New password:</label>
           <input
-            id="password"
+            type="text"
             name="password"
+            id={cx("password")}
             value={authData.password}
             onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="new password"
@@ -67,10 +75,11 @@ function ForgotPasswordForm() {
         </div>
 
         <div className={cx("form-group", "form-group-confirm-password")}>
-          <label htmlFor="confirmPassword">Confirm password:</label>
+          <label htmlFor={cx("confirmPassword")}>Confirm password:</label>
           <input
-            id="confirmPassword"
+            type="text"
             name="confirmPassword"
+            id={cx("confirmPassword")}
             value={authData.confirmPassword}
             onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="confirm password"

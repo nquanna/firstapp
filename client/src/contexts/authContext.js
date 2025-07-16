@@ -63,12 +63,14 @@ const AuthContextProvider = ({ children }) => {
   };
 
   const sendOtp = async (authData) => {
+    console.log(authData);
     try {
-      await api.request({
+      const response = await api.request({
         path: "/auth/send-otp",
         method: "post",
         data: authData,
       });
+      return response;
     } catch (error) {
       console.log("cannot send otp, why???");
     }

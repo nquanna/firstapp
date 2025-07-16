@@ -89,11 +89,15 @@ class AuthController {
       If you think someone else might have access to it, please reset your password to protect your account.<br />
       Your OTP code is: <i>${otp}</i>.<br/>
       Code will expire in ${constanst.expiresOtpTime / 60} minutes</p>`;
-
-    const { email } = req.body;
+    console.log(req.body);
+    const { type, email } = req.body;
 
     try {
-      await OtpSchema.updateOne({ email }, { email, otp: await argon2.hash(otp) }, { upsert: true });
+      await OtpSchema.updateOne(
+        { email },
+        { email, type, otp: await argon2.hash(otp) },
+        { upsert: true }
+      );
 
       const transporter = nodemailer.createTransport({
         service: "Gmail",
@@ -110,7 +114,7 @@ class AuthController {
         html,
       });
 
-      console.log("otp: ", otp);
+      console.log("otp:", otp);
 
       res.json({ success: true, message: `Sent OTP code to ${email}` });
     } catch (error) {

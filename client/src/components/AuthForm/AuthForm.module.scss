@@ -25,6 +25,15 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+
+    .otp-notification {
+      margin-top: calc(var(--form-group-margin-top) / 4);
+      font-size: 0.85rem;
+
+      &-hide {
+        opacity: 0;
+      }
+    }
   }
 
   &-group.form-group-email {
@@ -58,14 +67,19 @@
     cursor: pointer;
     transition: all 0.2s ease;
 
-    &:hover {
+    &:not(:disabled):hover {
       background-color: rgb(245, 185, 180);
       opacity: 0.8;
       box-shadow: 0 0 4px 1px rgb(245, 185, 180);
     }
+
+    &:disabled {
+      opacity: 0.75;
+      cursor: default;
+    }
   }
 
-  input#sendBtn {
+  input#sendOtpBtn {
     margin-top: calc(var(--form-group-margin-top));
     width: 150px;
     text-align: center;

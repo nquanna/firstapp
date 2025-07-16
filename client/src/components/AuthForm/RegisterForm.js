@@ -10,7 +10,7 @@ import classNames from "classnames/bind";
 
 const cx = classNames.bind(style);
 
-function RegisterForm() {
+function RegisterForm({ enableTimer, setEnableTimer, timer }) {
   const { handleSendOtp, handleDispatch, handleSubmit } = useContext(AuthHandlerContext);
 
   const [authData, dispatch] = useReducer(authReducer, {
@@ -37,11 +37,11 @@ function RegisterForm() {
         <div className={cx("title")}>Register</div>
 
         <div className={cx("form-group", "form-group-email")}>
-          <label htmlFor="email">Email:</label>
+          <label htmlFor={cx("email")}>Email:</label>
           <input
             type="email"
-            id="email"
             name="email"
+            id={cx("email")}
             value={authData.email}
             onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="email"
@@ -51,9 +51,13 @@ function RegisterForm() {
         <div className={cx("form-group", "form-group-otp")}>
           <input
             type="submit"
-            id={cx("sendBtn")}
+            id={cx("sendOtpBtn")}
             value="Send otp code"
-            onClick={async (event) => await handleSendOtp({ event, authData })}
+            disabled={enableTimer}
+            onClick={async (event) => {
+              setEnableTimer.call({}, true);
+              await handleSendOtp({ event, authData });
+            }}
           />
           <input
             type="number"
@@ -63,13 +67,17 @@ function RegisterForm() {
             onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="000000"
           />
+          <span className={cx("otp-notification", { "otp-notification-hide": !enableTimer })}>
+            {`You can resend OTP code after ${timer} seconds.`}
+          </span>
         </div>
 
         <div className={cx("form-group", "form-group-password")}>
-          <label htmlFor="password">Password:</label>
+          <label htmlFor={cx("password")}>Password:</label>
           <input
-            id="password"
+            type="text"
             name="password"
+            id={cx("password")}
             value={authData.password}
             onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="password"
@@ -77,10 +85,11 @@ function RegisterForm() {
         </div>
 
         <div className={cx("form-group", "form-group-confirm-password")}>
-          <label htmlFor="confirmPassword">Confirm password:</label>
+          <label htmlFor={cx("confirmPassword")}>Confirm password:</label>
           <input
-            id="confirmPassword"
+            type="text"
             name="confirmPassword"
+            id={cx("confirmPassword")}
             value={authData.confirmPassword}
             onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="confirm password"

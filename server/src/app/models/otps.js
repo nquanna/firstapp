@@ -10,16 +10,21 @@ const otps = new Schema(
       required: true,
       unique: true,
     },
+    type: {
+      type: String,
+      required: true,
+    },
     otp: {
       type: String,
       required: true,
       unique: true,
     },
+    /* 
     expireAt: {
       type: Date,
       default: () => Date.now(),
       expires: constanst.expiresOtpTime,
-    },
+    } */
   },
   {
     timestamps: true,

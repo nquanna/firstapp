@@ -10,7 +10,7 @@ function AuthHandlerContextProvider({ children }) {
   const handleSendOtp = async ({ event, authData }) => {
     try {
       event.preventDefault();
-      await sendOtp({ email: authData.email });
+      await sendOtp(authData);
     } catch (error) {
       console.log(error);
     }
