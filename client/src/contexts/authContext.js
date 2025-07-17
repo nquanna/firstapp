@@ -63,7 +63,7 @@ const AuthContextProvider = ({ children }) => {
   };
 
   const sendOtp = async (authData) => {
-    console.log(authData);
+    // console.log(authData);
     try {
       const response = await api.request({
         path: "/auth/send-otp",

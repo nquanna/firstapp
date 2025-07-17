@@ -6,36 +6,34 @@ import { publicRoutes } from "~/routes";
 
 import DefaultLayout from "~/layouts/DefaultLayout";
 
-import { AuthContextProvider, AuthHandlerContextProvider } from "./contexts";
+import { AuthContextProvider } from "./contexts";
 
 function App() {
   return (
     <GlobalStyle>
       <AuthContextProvider>
-        <AuthHandlerContextProvider>
-          <div className="App">
-            <Router>
-              <Routes>
-                {publicRoutes.map((route, index) => {
-                  const Layout = DefaultLayout;
-                  const Component = route.component;
+        <div className="App">
+          <Router>
+            <Routes>
+              {publicRoutes.map((route, index) => {
+                const Layout = DefaultLayout;
+                const Component = route.component;
 
-                  return (
-                    <Route
-                      key={index}
-                      path={route.path}
-                      element={
-                        <Layout>
-                          <Component {...route.props} />
-                        </Layout>
-                      }
-                    />
-                  );
-                })}
-              </Routes>
-            </Router>
-          </div>
-        </AuthHandlerContextProvider>
+                return (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={
+                      <Layout>
+                        <Component {...route.props} />
+                      </Layout>
+                    }
+                  />
+                );
+              })}
+            </Routes>
+          </Router>
+        </div>
       </AuthContextProvider>
     </GlobalStyle>
   );

@@ -30,6 +30,13 @@ const publicRoutes = [
       routerPath: "/auth/forgot-password",
     },
   },
+  {
+    path: config.routes.logout,
+    component: Auth,
+    props: {
+      routerPath: "/auth/logout",
+    },
+  },
 ];
 
 const privateRoutes = [];

@@ -2,7 +2,8 @@ const constanst = {
   port: process.env.PORT || 3001,
   mongoUri: process.env.MONGO_URI,
   jwtSecret: process.env.JWT_SECRET,
-  gmailSystem: '"Hoang Quan" <hmquan917@gmail.com>',
+  gmailName: `'nquanna' ${process.env.GMAIL_SYSTEM}`,
+  gmailSystem: process.env.GMAIL_SYSTEM,
   gmailPassword: process.env.GMAIL_PASSWORD,
   expiresOtpTime: 120,
 };

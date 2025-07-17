@@ -1,18 +1,16 @@
-import { useReducer, useContext } from "react";
+import { useReducer } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import style from "./AuthForm.module.scss";
 
 import { authReducer } from "~/reducers";
-import { AuthHandlerContext } from "~/contexts";
 
 import classNames from "classnames/bind";
 
 const cx = classNames.bind(style);
 
-function LoginForm() {
+function LoginForm({ handlers: { handleDispatch, handleSubmit } }) {
   const location = useLocation();
-  const { handleDispatch, handleSubmit } = useContext(AuthHandlerContext);
   const [authData, dispatch] = useReducer(authReducer, {
     type: "login",
     email: location?.state?.email || "quanhm153@gmail.com2",

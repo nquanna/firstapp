@@ -84,13 +84,14 @@ class AuthController {
 
   // [POST] /auth/send-otp
   async sendOtp(req, res, next) {
+    const { type, email } = req.body;
     const otp = crypto.randomInt(100000, 999999).toString();
     const html = `<p style="font-size: 16px;"><b>Please do not share this OTP code with anyone.</b><br />
       If you think someone else might have access to it, please reset your password to protect your account.<br />
       Your OTP code is: <i>${otp}</i>.<br/>
-      Code will expire in ${constanst.expiresOtpTime / 60} minutes</p>`;
-    console.log(req.body);
-    const { type, email } = req.body;
+      Code will expire in ${constanst.expiresOtpTime / 60} minutes.<br />
+      This OTP code is used for <b>${type === "register" ? "registration" : "reset password"}</b>,
+      please do not use this code for other purposes.</p>`;
 
     try {
       await OtpSchema.updateOne(
@@ -102,13 +103,13 @@ class AuthController {
       const transporter = nodemailer.createTransport({
         service: "Gmail",
         auth: {
-          user: "hmquan917@gmail.com",
+          user: constanst.gmailSystem,
           pass: constanst.gmailPassword,
         },
       });
 
       await transporter.sendMail({
-        from: constanst.gmailSystem,
+        from: constanst.gmailName,
         to: email,
         subject: "Your otp code to register or reset your password",
         html,
@@ -122,6 +123,12 @@ class AuthController {
     }
   }
 
+  // [POST] /auth/logout
+  async logout(req, res, next) {
+    console.log(req.headers.authorization);
+    res.json({ success: true });
+  }
+
   // [PATCH] /auth/forgot-password
   async forgotPassword(req, res, next) {
     try {
@@ -132,6 +139,7 @@ class AuthController {
 
       await UserSchema.updateOne({ email: req.body.email }, { password: hashedPassword });
 
+      console.log("reseted password!");
       return res.json({ success: true, message: "Updated password" });
     } catch (error) {
       console.log(error);

@@ -1,17 +1,16 @@
-import { useReducer, useContext } from "react";
+import { useReducer } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import style from "./AuthForm.module.scss";
 
-import { AuthHandlerContext } from "~/contexts";
 import { authReducer } from "~/reducers";
 
 import classNames from "classnames/bind";
 
 const cx = classNames.bind(style);
 
-function RegisterForm({ enableTimer, setEnableTimer, timer }) {
-  const { handleSendOtp, handleDispatch, handleSubmit } = useContext(AuthHandlerContext);
+function RegisterForm({ enableTimer, setEnableTimer, timer, handlers }) {
+  const { handleDispatch, handleSendOtp, handleSubmit } = handlers;
 
   const [authData, dispatch] = useReducer(authReducer, {
     type: "register",

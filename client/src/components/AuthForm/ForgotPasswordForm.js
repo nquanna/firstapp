@@ -1,17 +1,16 @@
-import { useContext, useReducer } from "react";
+import { useReducer } from "react";
 import { Link } from "react-router-dom";
 
 import classNames from "classnames/bind";
 
-import { AuthHandlerContext } from "~/contexts";
 import { authReducer } from "~/reducers";
 
 import style from "./AuthForm.module.scss";
 
 const cx = classNames.bind(style);
 
-function ForgotPasswordForm({ enableTimer, setEnableTimer, timer }) {
-  const { handleSendOtp, handleDispatch, handleSubmit } = useContext(AuthHandlerContext);
+function ForgotPasswordForm({ enableTimer, setEnableTimer, timer, handlers }) {
+  const { handleDispatch, handleSendOtp, handleSubmit } = handlers;
 
   const [authData, dispatch] = useReducer(authReducer, {
     type: "forgotPassword",

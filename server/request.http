@@ -59,3 +59,14 @@ Content-Type: application/json
   "email": "quanhm153@gmail.com",
   "otp": "841392"
 }
+
+### 
+
+POST http://localhost:3001/auth/logout
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY1MTM0OTAxZjlkNGNlOTJlN2ZkMDYiLCJpYXQiOjE3NTE0NTQ1Mzd9.5uE_eWDLYEFeQhEkQ6ed-yvoUQ-QVXVAQXDpzdL7Fjo
+
+{
+  "email": "quanhm153@gmail.com",
+  "otp": "841392"
+}
