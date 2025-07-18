@@ -12,11 +12,10 @@ class AuthController {
   // [POST] /auth
   async loadUser(req, res, next) {
     try {
-      if (!req.body.userId)
-        return res.status(400).json({ success: false, message: "cannot find user id" });
+      if (!req.body.sub) return res.status(401).json({ success: false, message: "cannot find user id" });
 
-      const user = await UserSchema.findById(req.body.userId).select("-password").exec();
-      if (!user) return res.status(400).json({ success: false, message: "user not found" });
+      const user = await UserSchema.findById(req.body.sub).select("-password").exec();
+      if (!user) return res.status(401).json({ success: false, message: "user not found" });
 
       return res.json({
         success: true,
@@ -45,12 +44,10 @@ class AuthController {
 
       const newUser = new UserSchema(req.body);
       await newUser.save();
-      const token = jwt.sign({ userId: newUser._id }, constanst.jwtSecret);
 
       res.status(201).json({
         success: true,
         message: "registered successfully",
-        token,
       });
     } catch {
       console.log("ERROR!");
@@ -69,15 +66,22 @@ class AuthController {
       if (!isValidPassword)
         return res.status(401).json({ success: false, message: "Incorrect email or password" });
 
-      const token = jwt.sign({ userId: user.id }, constanst.jwtSecret);
+      const token = jwt.sign({ sub: user.id }, constanst.jwtSecret);
+      console.log("login successfully!");
 
-      res.json({
-        success: true,
-        message: "Login successfully",
-        token,
-      });
+      await UserSchema.updateOne({ email: user.email }, { amount: ++user.amount });
+
+      res
+        .setHeader(
+          "Set-Cookie",
+          `token=${token}; Max-Age=${3600}; HttpOnly; Secure; SameSite=None; Partitioned`
+        )
+        .json({
+          success: true,
+          message: "Login successfully",
+        });
     } catch (error) {
-      console.log("Incorrect email or password");
+      console.log(error);
       res.status(500).json({ success: false, message: "Internal Server Error" });
     }
   }
@@ -125,8 +129,20 @@ class AuthController {
 
   // [POST] /auth/logout
   async logout(req, res, next) {
-    console.log(req.headers.authorization);
-    res.json({ success: true });
+    try {
+      if (!req.body.sub) return res.status(401).json({ success: false, message: "cannot find user id" });
+
+      await UserSchema.updateOne({ _id: req.body.sub }, { $inc: { amount: -1 } });
+
+      console.log("logout successfully!");
+      res.clearCookie("token").json({
+        success: true,
+        message: "Logout successfully!!!",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
   }
 
   // [PATCH] /auth/forgot-password

@@ -62,11 +62,6 @@ Content-Type: application/json
 
 ### 
 
-POST http://localhost:3001/auth/logout
+POST https://localhost:3001/auth/logout
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY1MTM0OTAxZjlkNGNlOTJlN2ZkMDYiLCJpYXQiOjE3NTE0NTQ1Mzd9.5uE_eWDLYEFeQhEkQ6ed-yvoUQ-QVXVAQXDpzdL7Fjo
-
-{
-  "email": "quanhm153@gmail.com",
-  "otp": "841392"
-}
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODdhODE3ZTI5ZGFkMzY0YTFkZDQzOTkiLCJpYXQiOjE3NTI4NTkzODl9.AuDppqp7XcBd44FyoE4Q-rVOLFEYKWSbHemb8SQ5jbo

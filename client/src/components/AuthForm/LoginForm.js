@@ -13,7 +13,7 @@ function LoginForm({ handlers: { handleDispatch, handleSubmit } }) {
   const location = useLocation();
   const [authData, dispatch] = useReducer(authReducer, {
     type: "login",
-    email: location?.state?.email || "quanhm153@gmail.com2",
+    email: location?.state?.email || "quanhm153@gmail.com",
     password: "Quanbicuopdt192.",
   });
 

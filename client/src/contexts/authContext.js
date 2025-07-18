@@ -1,7 +1,7 @@
-import { createContext, useEffect, useReducer, useRef } from "react";
+import { createContext, useEffect, useReducer } from "react";
 
 import { userReducer } from "~/reducers";
-import { api, constanst } from "~/utils";
+import { api } from "~/utils";
 
 const AuthContext = createContext();
 const AuthContextProvider = ({ children }) => {
@@ -10,13 +10,7 @@ const AuthContextProvider = ({ children }) => {
     user: null,
   });
 
-  const TOKEN_KEY = useRef(constanst.tokenKey).current;
-
-  const loadUser = async (userToken) => {
-    const token = userToken || (localStorage[TOKEN_KEY] && JSON.parse(localStorage[TOKEN_KEY]));
-    if (token) api.headers(token);
-    else return;
-
+  const loadUser = async () => {
     const response = await api.request({
       path: "/auth",
       method: "post",
@@ -37,9 +31,11 @@ const AuthContextProvider = ({ children }) => {
       data: authData,
     });
 
-    if (!response.success) return;
-    api.token(response.token);
-    await loadUser(response.token);
+    if (response.success) {
+      await loadUser();
+    }
+
+    return response;
   };
 
   const registerUser = async (authData) => {
@@ -53,17 +49,18 @@ const AuthContextProvider = ({ children }) => {
   };
 
   const logoutUser = async () => {
-    api.token();
+    const response = await api.request({
+      path: "/auth/logout",
+      method: "post",
+    });
+
     dispatch({
       isAuthenticated: false,
       user: null,
     });
-
-    api.headers();
   };
 
   const sendOtp = async (authData) => {
-    // console.log(authData);
     try {
       const response = await api.request({
         path: "/auth/send-otp",
@@ -89,7 +86,7 @@ const AuthContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    loadUser();
+    // loadUser();
     // eslint-disable-next-line
   }, []);
 
