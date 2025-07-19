@@ -1,0 +1,68 @@
+.wrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: var(--default-layout-header-height);
+  background-color: rgb(255, 0, 0);
+  z-index: 1;
+
+  .home-link {
+    height: 100%;
+
+    img {
+      height: 100%;
+      border-radius: 50%;
+    }
+  }
+
+  .auth-wrapper {
+    height: 100%;
+
+    .user-link {
+      height: 100%;
+      img {
+        height: 100%;
+        border-radius: 50%;
+      }
+
+      &:hover + .auth-link-wrapper {
+        max-height: 100%;
+        opacity: 1;
+      }
+    }
+
+    .auth-link-wrapper {
+      display: flex;
+      flex-direction: column;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: all 0.5s ease;
+
+      &:hover {
+        max-height: 100%;
+        opacity: 1;
+      }
+
+      .auth-link {
+        padding: 8px 0;
+        border-radius: 4px;
+        text-decoration: none;
+        text-align: center;
+        color: #ffffff;
+        background-color: rgba(100, 100, 100, 0.75);
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        & + .auth-link {
+          margin-top: 4px;
+        }
+      }
+    }
+  }
+}

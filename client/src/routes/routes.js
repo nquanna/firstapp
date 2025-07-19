@@ -1,41 +1,47 @@
 import config from "~/config";
 
-import Home from "~/pages/HomePage";
-import Auth from "~/pages/AuthPage";
+import HomePage from "~/pages/HomePage";
+import AuthPage from "~/pages/AuthPage";
+import MePage from "~/pages/MePage";
 
 const publicRoutes = [
   {
     path: config.routes.home,
-    component: Home,
+    component: HomePage,
     props: {},
   },
   {
     path: config.routes.login,
-    component: Auth,
+    component: AuthPage,
     props: {
       routerPath: "/auth/login",
     },
   },
   {
     path: config.routes.register,
-    component: Auth,
+    component: AuthPage,
     props: {
       routerPath: "/auth/register",
     },
   },
   {
     path: config.routes.forgotPassword,
-    component: Auth,
+    component: AuthPage,
     props: {
       routerPath: "/auth/forgot-password",
     },
   },
   {
     path: config.routes.logout,
-    component: Auth,
+    component: AuthPage,
     props: {
       routerPath: "/auth/logout",
     },
+  },
+  {
+    path: config.routes.me,
+    component: MePage,
+    props: {},
   },
 ];
 

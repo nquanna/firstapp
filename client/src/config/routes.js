@@ -5,6 +5,8 @@ const routes = {
   register: "/auth/register",
   forgotPassword: "/auth/forgot-password",
   logout: "/auth/logout",
+
+  me: "/me",
 };
 
 export default routes;

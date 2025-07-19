@@ -12,7 +12,16 @@ class AuthController {
   // [POST] /auth
   async loadUser(req, res, next) {
     try {
-      if (!req.body.sub) return res.status(401).json({ success: false, message: "cannot find user id" });
+      if (!req.body.sub) {
+        if (req.body.isFirstly)
+          return res.json({
+            success: false,
+            isFirstly: true,
+            message: "cannot find user id because invalid cookies",
+          });
+
+        return res.status(401).json({ success: false, message: "cannot find user id" });
+      }
 
       const user = await UserSchema.findById(req.body.sub).select("-password").exec();
       if (!user) return res.status(401).json({ success: false, message: "user not found" });
@@ -135,10 +144,16 @@ class AuthController {
       await UserSchema.updateOne({ _id: req.body.sub }, { $inc: { amount: -1 } });
 
       console.log("logout successfully!");
-      res.clearCookie("token").json({
-        success: true,
-        message: "Logout successfully!!!",
-      });
+
+      res
+        .setHeader(
+          "Set-Cookie",
+          `token=${null}; Max-Age=${0}; HttpOnly; Secure; SameSite=None; Partitioned`
+        )
+        .json({
+          success: true,
+          message: "Logout successfully!!!",
+        });
     } catch (error) {
       console.log(error);
       res.status(500).json({ success: false, message: "Internal Server Error" });

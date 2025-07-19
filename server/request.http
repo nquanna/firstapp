@@ -64,4 +64,4 @@ Content-Type: application/json
 
 POST https://localhost:3001/auth/logout
 Content-Type: application/json
-Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODdhODE3ZTI5ZGFkMzY0YTFkZDQzOTkiLCJpYXQiOjE3NTI4NTkzODl9.AuDppqp7XcBd44FyoE4Q-rVOLFEYKWSbHemb8SQ5jbo
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODdhODcwYTNmN2I2MzVhZDk1NWY5YWYiLCJpYXQiOjE3NTI4NjA0Mjh9.477DGHT68rC0GsJ9SaZAd5nNKC3kXCxQBguawzuZ7Jo

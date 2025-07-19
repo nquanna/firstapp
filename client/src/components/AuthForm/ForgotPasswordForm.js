@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 import classNames from "classnames/bind";
 
-import { authReducer } from "~/reducers";
-
 import style from "./AuthForm.module.scss";
+
+import { authReducer } from "~/reducers";
 
 const cx = classNames.bind(style);
 

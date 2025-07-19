@@ -10,10 +10,11 @@ const AuthContextProvider = ({ children }) => {
     user: null,
   });
 
-  const loadUser = async () => {
+  const loadUser = async (isFirstly = false) => {
     const response = await api.request({
       path: "/auth",
       method: "post",
+      data: isFirstly ? { isFirstly } : {},
     });
 
     if (response.success) {
@@ -31,9 +32,7 @@ const AuthContextProvider = ({ children }) => {
       data: authData,
     });
 
-    if (response.success) {
-      await loadUser();
-    }
+    if (response.success) await loadUser();
 
     return response;
   };
@@ -58,6 +57,8 @@ const AuthContextProvider = ({ children }) => {
       isAuthenticated: false,
       user: null,
     });
+
+    return response;
   };
 
   const sendOtp = async (authData) => {
@@ -86,7 +87,10 @@ const AuthContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // loadUser();
+    (async function () {
+      await loadUser(true);
+    })();
+
     // eslint-disable-next-line
   }, []);
 

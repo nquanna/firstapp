@@ -1,22 +1,26 @@
 import { useState, useEffect, useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 
 import { constanst } from "~/utils";
 
-import { RegisterForm, LoginForm, ForgotPasswordForm } from "~/components/AuthForm";
+import { RegisterForm, LoginForm, LogoutForm, ForgotPasswordForm } from "~/components/AuthForm";
 
 import { AuthContext } from "~/contexts";
 
-import style from "./authPage.module.scss";
+import config from "~/config";
+
+import style from "./AuthPage.module.scss";
 
 const cx = classNames.bind(style);
 
-function Auth({ routerPath }) {
-  // eslint-disable-next-line
+function AuthPage({ routerPath }) {
   const { loginUser, registerUser, logoutUser, sendOtp, forgotPassword } = useContext(AuthContext);
 
   const [enableTimer, setEnableTimer] = useState(false);
   const [timer, setTimer] = useState(constanst.otpDelay);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!enableTimer) return;
@@ -45,29 +49,31 @@ function Auth({ routerPath }) {
     });
   };
 
-  const handleSubmit = async ({ event, authData, navigate }) => {
+  const handleSubmit = async ({ event, authData }) => {
     try {
       event.preventDefault();
       // console.log(authData);
 
-      if (!authData?.email) throw new Error("Missing email bro.");
+      if (!authData?.email && !authData.isLogout) throw new Error("Missing email bro.");
 
       switch (authData.type) {
         case "register":
           const response = await registerUser(authData);
-          if (response.success && navigate instanceof Function) {
-            await navigate("/auth/login", {
+          if (response.success) {
+            await navigate(config.routes.login, {
               state: {
                 email: authData.email,
               },
             });
-          } else {
-            console.log(response);
           }
           break;
         case "login":
           await loginUser(authData);
           break;
+        case "logout":
+          console.log(authData);
+          if (authData.isConfirm) await logoutUser();
+          return navigate(config.routes.home);
         case "forgotPassword":
           await forgotPassword(authData);
           break;
@@ -96,9 +102,13 @@ function Auth({ routerPath }) {
     case "/auth/login":
       form.current = <LoginForm {...props} />;
       break;
+    case "/auth/logout":
+      form.current = <LogoutForm {...props} />;
+      break;
     case "/auth/forgot-password":
       form.current = <ForgotPasswordForm {...props} />;
       break;
+
     default:
       throw new Error("Router path is invalid!!!");
   }
@@ -110,4 +120,4 @@ function Auth({ routerPath }) {
   );
 }
 
-export default Auth;
+export default AuthPage;

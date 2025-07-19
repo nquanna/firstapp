@@ -1,11 +1,11 @@
 import { useReducer } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+import classNames from "classnames/bind";
 
 import style from "./AuthForm.module.scss";
 
 import { authReducer } from "~/reducers";
-
-import classNames from "classnames/bind";
 
 const cx = classNames.bind(style);
 
@@ -20,8 +20,6 @@ function RegisterForm({ enableTimer, setEnableTimer, timer, handlers }) {
     confirmPassword: "Quanbicuopdt192.",
   });
 
-  const navigate = useNavigate();
-
   return (
     <>
       <form
@@ -30,7 +28,6 @@ function RegisterForm({ enableTimer, setEnableTimer, timer, handlers }) {
           await handleSubmit({
             event,
             authData,
-            navigate,
           })
         }>
         <div className={cx("title")}>Register</div>

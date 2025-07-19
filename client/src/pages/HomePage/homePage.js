@@ -1,7 +1,12 @@
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 
-function Landing() {
-  return <Navigate to="/auth/login">this is landing</Navigate>;
+function HomePage() {
+  // return <Navigate to="/auth/login">this is landing</Navigate>;
+  return (
+    <>
+      <div>this is home</div>
+    </>
+  );
 }
 
-export default Landing;
+export default HomePage;

@@ -1,8 +1,6 @@
-:root {
-  --form-group-margin-top: 12px;
-}
-
 .form {
+  --form-group-margin-top: 12px;
+
   display: flex;
   flex-direction: column;
   width: 420px;
@@ -19,6 +17,12 @@
 
   .title.title-forgot-password {
     font-size: 2rem;
+  }
+
+  .confirm-text {
+    margin-top: calc(var(--form-group-margin-top) * 3);
+    text-align: center;
+    font-size: 1.6rem;
   }
 
   &-group {
@@ -42,6 +46,21 @@
 
   &-group.form-group-otp {
     margin-top: calc(var(--form-group-margin-top));
+  }
+
+  &-group.form-group-logout {
+    flex-direction: row;
+    margin-top: calc(var(--form-group-margin-top) * 3);
+
+    input {
+      flex-grow: 1;
+      margin: 0 5px;
+
+      &#no {
+        border: 1px solid rgb(255, 195, 200);
+        background: transparent;
+      }
+    }
   }
 
   &-group.form-group-password,
