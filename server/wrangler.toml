@@ -14,9 +14,10 @@ workers_dev = true
 # zone_id = "YOUR_ZONE_ID"
 
 [build]
-# Lệnh build nếu project có bước build (e.g. bundler, transpile,...)
-# command = "npm install && npm run build"
+# wrangler v3 auto dùng esbuild khi có `upload.format = "modules"`
+command = "npm install && npm run build"
 
 [build.upload]
-# Định dạng upload: "service-worker" (CommonJS) hoặc "modules" (ESM)
+# format modules để wrangler bundle
+dir = "dist"
 format = "modules"
