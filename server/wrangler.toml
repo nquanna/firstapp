@@ -2,7 +2,7 @@ name = "firstapp"
 
 main = "./src/index.js"       
 
-compatibility_date = "2025-07-19"
+compatibility_date = "2025-07-20"
 
 account_id = "275dc838e99c4da3d38828103e185728"
 
