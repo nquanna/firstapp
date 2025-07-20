@@ -1,0 +1,22 @@
+name = "firstapp"
+
+main = "src/index.js"       
+
+compatibility_date = "2025-07-19"
+
+account_id = "275dc838e99c4da3d38828103e185728"
+
+workers_dev = true
+
+# Nếu deploy custom domain thì điền route + zone_id,
+# nếu k thì bỏ trống hoặc comment đi
+# route = "example.com/*"
+# zone_id = "YOUR_ZONE_ID"
+
+[build]
+# Lệnh build nếu project có bước build (e.g. bundler, transpile,...)
+# command = "npm install && npm run build"
+
+[build.upload]
+# Định dạng upload: "service-worker" (CommonJS) hoặc "modules" (ESM)
+format = "modules"
