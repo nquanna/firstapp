@@ -15,6 +15,7 @@ import style from "./AuthPage.module.scss";
 const cx = classNames.bind(style);
 
 function AuthPage({ routerPath }) {
+  console.log(constanst.baseUrl);
   const { loginUser, registerUser, logoutUser, sendOtp, forgotPassword } = useContext(AuthContext);
 
   const [enableTimer, setEnableTimer] = useState(false);
