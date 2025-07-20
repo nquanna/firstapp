@@ -1,0 +1,27 @@
+name: Deploy CF Worker
+
+on:
+  push:
+    branches: [main] # hay branch m muốn
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install Wrangler
+        run: npm install -g @cloudflare/wrangler
+
+      - name: Publish Worker
+        run: wrangler publish --env production
+        working-directory: ./server # trỏ vào folder BE
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }} # các biến env m add vào Secrets
+          GMAIL_SYSTEM: ${{ secrets.GMAIL_SYSTEM }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          PORT: ${{ secrets.PORT }}

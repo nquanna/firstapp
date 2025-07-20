@@ -15,9 +15,9 @@ workers_dev = true
 
 [build]
 # wrangler v3 auto dùng esbuild khi có `upload.format = "modules"`
-command = "npm install && npm run build"
+# command = "npm install && npm run build"
 
 [build.upload]
 # format modules để wrangler bundle
-dir = "dist"
-format = "modules"
+# dir = "dist"
+format = "service-worker"
