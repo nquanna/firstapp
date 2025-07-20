@@ -28,16 +28,14 @@ app.use(morgan("dev"));
 
 app.use(route);
 
-/* https
-  .createServer(
-    {
-      key: fs.readFileSync("serverdev.com+2-key.pem"),
-      cert: fs.readFileSync("serverdev.com+2.pem"),
-    },
-    app
-  )
-  .listen(constanst.port, () => console.log(`server listening at http://localhost:${constanst.port}`)); */
+//  https
+//   .createServer(
+//     {
+//       key: fs.readFileSync("serverdev.com+2-key.pem"),
+//       cert: fs.readFileSync("serverdev.com+2.pem"),
+//     },
+//     app
+//   )
+//   .listen(constanst.port, () => console.log(`server listening at http://localhost:${constanst.port}`));
 
 app.listen(constanst.port, () => console.log(`server listening at http://localhost:${constanst.port}`));
-
-export default app;
