@@ -39,3 +39,5 @@ app.use(route);
   .listen(constanst.port, () => console.log(`server listening at http://localhost:${constanst.port}`)); */
 
 app.listen(constanst.port, () => console.log(`server listening at http://localhost:${constanst.port}`));
+
+export default app;
