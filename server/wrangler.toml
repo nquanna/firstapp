@@ -20,4 +20,4 @@ workers_dev = true
 
 [build.upload]
 # dir = "dist"
-format = module"
+format = "module"
