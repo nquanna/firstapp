@@ -6,7 +6,7 @@
   width: 420px;
   padding: 16px 32px;
   border-radius: 20px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.8);
 
   .title {
     margin-top: var(--form-group-margin-top);
@@ -57,7 +57,7 @@
       margin: 0 5px;
 
       &#no {
-        border: 1px solid rgb(255, 195, 200);
+        border: 1px solid var(--default-color);
         background: transparent;
       }
     }
@@ -82,14 +82,14 @@
   }
 
   input[type="submit"] {
-    background-color: rgb(255, 195, 200);
+    background-color: var(--default-color);
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:not(:disabled):hover {
-      background-color: rgb(245, 185, 180);
+      background-color: var(--default-color-second);
       opacity: 0.8;
-      box-shadow: 0 0 4px 1px rgb(245, 185, 180);
+      box-shadow: 0 0 4px 1px var(--default-color-second);
     }
 
     &:disabled {

@@ -52,7 +52,6 @@ function AuthPage({ routerPath }) {
   const handleSubmit = async ({ event, authData }) => {
     try {
       event.preventDefault();
-      // console.log(authData);
 
       if (!authData?.email && !authData.isLogout) throw new Error("Missing email bro.");
 
@@ -69,9 +68,8 @@ function AuthPage({ routerPath }) {
           break;
         case "login":
           await loginUser(authData);
-          break;
+          return navigate(config.routes.home);
         case "logout":
-          console.log(authData);
           if (authData.isConfirm) await logoutUser();
           return navigate(config.routes.home);
         case "forgotPassword":
