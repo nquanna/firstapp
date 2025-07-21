@@ -2,14 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-if (!constanst.isProd) {
-  const morgan = require("morgan");
-  app.use(morgan("dev"));
-}
-
-// const fs = require("fs");
-// const https = require("https");
-
 require("dotenv").config();
 require("./config/db/connect")();
 
@@ -31,14 +23,23 @@ app.use(cookieParser());
 
 app.use(route);
 
-//  https
-//   .createServer(
-//     {
-//       key: fs.readFileSync("serverdev.com+2-key.pem"),
-//       cert: fs.readFileSync("serverdev.com+2.pem"),
-//     },
-//     app
-//   )
-//   .listen(constanst.port, () => console.log(`server listening at http://localhost:${constanst.port}`));
+if (!constanst.isProd) {
+  const morgan = require("morgan");
+  app.use(morgan("dev"));
 
-app.listen(constanst.port, () => console.log(`server listening at http://localhost:${constanst.port}`));
+  const fs = require("fs");
+  const https = require("https");
+
+  https
+    .createServer(
+      {
+        key: fs.readFileSync("serverdev.com+2-key.pem"),
+        cert: fs.readFileSync("serverdev.com+2.pem"),
+      },
+      app
+    )
+    .listen(constanst.port, () => console.log(`server listening at http://localhost:${constanst.port}`));
+} else
+  app.listen(constanst.port, () =>
+    console.log(`server listening at http://localhost:${constanst.port}`)
+  );
