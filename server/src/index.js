@@ -2,12 +2,12 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+require("dotenv").config();
+
 const constanst = require("./utils/constanst");
 const route = require("./routes/index");
 
 const app = express();
-
-require("dotenv").config();
 
 const startServer = async () => {
   await require("./config/db/connect")();
@@ -41,11 +41,11 @@ const startServer = async () => {
       .listen(constanst.port, () =>
         console.log(`server listening at https://localhost:${constanst.port}`)
       );
-  } /* else {
+  } else {
     app.listen(constanst.port, () =>
       console.log(`server listening at http://localhost:${constanst.port}`)
     );
-  } */
+  }
 };
 
 startServer();

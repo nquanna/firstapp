@@ -10,7 +10,7 @@ async function connectDB() {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    cached.promise = await mongoose
+    cached.promise = mongoose
       .connect(constanst.mongoUri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
