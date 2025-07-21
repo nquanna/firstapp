@@ -1,4 +1,5 @@
 const express = require("express");
+const serverless = require("serverless-http");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -45,4 +46,4 @@ if (!constanst.isProd) {
     console.log(`server listening at http://localhost:${constanst.port}`)
   ); */
 
-module.exports = app;
+module.exports = serverless(app);
