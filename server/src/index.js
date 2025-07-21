@@ -9,7 +9,6 @@ const connectDB = require("./config/db/connect");
 
 const app = express();
 
-// Kết nối DB ngay khi serverless function khởi tạo (cold start)
 (async () => {
   try {
     await connectDB();

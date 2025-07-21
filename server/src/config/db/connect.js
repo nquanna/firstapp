@@ -10,12 +10,12 @@ async function connectDB() {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    cached.promise = mongoose
+    cached.promise = await mongoose
       .connect(constanst.mongoUri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         // maxPoolSize: 10,
-        bufferCommands: false,
+        // bufferCommands: false,
         connectTimeoutMS: 10000,
       })
       .then((m) => m.connection);
