@@ -23,11 +23,7 @@ app.use(
 
 app.use(cookieParser());
 
-// 1. API routes
-app.use("/api", route);
-
-// 2. Serve react build
-app.use(express.static(path.join(__dirname, "../../client/build")));
+app.use(route);
 
 if (!constanst.isProd) {
   const morgan = require("morgan");
