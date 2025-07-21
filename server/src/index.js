@@ -1,7 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const morgan = require("morgan");
+
+if (!constanst.isProd) {
+  const morgan = require("morgan");
+  app.use(morgan("dev"));
+}
 
 // const fs = require("fs");
 // const https = require("https");
@@ -24,7 +28,6 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(morgan("dev"));
 
 app.use(route);
 
