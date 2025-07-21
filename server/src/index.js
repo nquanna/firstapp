@@ -41,7 +41,9 @@ if (!constanst.isProd) {
       app
     )
     .listen(constanst.port, () => console.log(`server listening at http://localhost:${constanst.port}`));
-} else
-  app.listen(constanst.port, () =>
+} else {
+  /* app.listen(constanst.port, () =>
     console.log(`server listening at http://localhost:${constanst.port}`)
-  );
+  ); */
+  module.exports = { app };
+}
