@@ -4,6 +4,7 @@ import constanst from "./constanst";
 
 const httpRequest = axios.create({
   baseURL: constanst.baseUrl,
+  headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
 
