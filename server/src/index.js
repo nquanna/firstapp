@@ -32,7 +32,7 @@ if (!constanst.isProd) {
   const fs = require("fs");
   const https = require("https");
 
-  https
+  return https
     .createServer(
       {
         key: fs.readFileSync("serverdev.com+2-key.pem"),
@@ -41,9 +41,9 @@ if (!constanst.isProd) {
       app
     )
     .listen(constanst.port, () => console.log(`server listening at http://localhost:${constanst.port}`));
-} else {
-  /* app.listen(constanst.port, () =>
+}
+/* app.listen(constanst.port, () =>
     console.log(`server listening at http://localhost:${constanst.port}`)
   ); */
-  module.exports = { app };
-}
+
+module.exports = { app };
