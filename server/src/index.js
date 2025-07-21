@@ -12,6 +12,9 @@ const route = require("./routes/index");
 
 const app = express();
 
+console.log(constanst.isProd);
+console.log(constanst.origin);
+console.log(constanst.isProd ? constanst.origin : "http://localhost:3000");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
