@@ -67,6 +67,7 @@ class AuthController {
   // [POST] /auth/login
   async login(req, res, next) {
     try {
+      // console.log(await UserSchema.find().exec());
       const user = await UserSchema.findOne({ email: req.body.email }).exec();
 
       if (!user) return res.status(401).json({ success: false, message: "Incorrect email or password" });

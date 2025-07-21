@@ -4,7 +4,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
-require("./config/db/connect")();
+(async () => await require("./config/db/connect")())();
 
 const constanst = require("./utils/constanst");
 
@@ -12,9 +12,9 @@ const route = require("./routes/index");
 
 const app = express();
 
-console.log(constanst.isProd);
-console.log(constanst.origin);
-console.log(constanst.isProd ? constanst.origin : "http://localhost:3000");
+// console.log(constanst.isProd);
+// console.log(constanst.origin);
+// console.log(constanst.isProd ? constanst.origin : "http://localhost:3000");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
