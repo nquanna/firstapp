@@ -6,6 +6,7 @@ const constanst = {
   gmailName: `'nquanna' ${process.env.GMAIL_SYSTEM}`,
   gmailSystem: process.env.GMAIL_SYSTEM,
   gmailPassword: process.env.GMAIL_PASSWORD,
+  origin: process.env.ORIGIN,
   expiresOtpTime: 120,
 };
 
