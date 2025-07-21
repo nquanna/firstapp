@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: constanst.isProd ? "https://nquannafirstapp.netlify.app" : "http://localhost:3000",
     credentials: true,
   })
 );
