@@ -2,5 +2,7 @@
 
 .env
 
+request.http
+
 serverdev.com+2-key.pem
 serverdev.com+2.pem
