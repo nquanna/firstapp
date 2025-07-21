@@ -21,7 +21,6 @@ app.use(
   })
 );
 
-console.log(constanst.isProd);
 app.use(cookieParser());
 
 // 1. API routes
@@ -29,11 +28,6 @@ app.use("/api", route);
 
 // 2. Serve react build
 app.use(express.static(path.join(__dirname, "../../client/build")));
-
-// 3. Fallback các route còn lại về index.html
-app.get(/(.*)/, (req, res) => {
-  res.sendFile(path.join(__dirname, "../../client/build", "index.html"));
-});
 
 if (!constanst.isProd) {
   const morgan = require("morgan");
