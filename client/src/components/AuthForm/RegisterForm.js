@@ -14,6 +14,7 @@ function RegisterForm({ enableTimer, setEnableTimer, timer, handlers }) {
 
   const [authData, dispatch] = useReducer(authReducer, {
     type: "register",
+    username: "nquanna",
     email: "quanhm153@gmail.com",
     otp: "",
     password: "Quanbicuopdt192.",
@@ -32,6 +33,17 @@ function RegisterForm({ enableTimer, setEnableTimer, timer, handlers }) {
         }>
         <div className={cx("title")}>Register</div>
 
+        <div className={cx("form-group", "form-group-username")}>
+          <label htmlFor={cx("username")}>Username:</label>
+          <input
+            name="username"
+            id={cx("username")}
+            value={authData.username}
+            onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
+            placeholder="username"
+          />
+        </div>
+
         <div className={cx("form-group", "form-group-email")}>
           <label htmlFor={cx("email")}>Email:</label>
           <input
@@ -48,7 +60,7 @@ function RegisterForm({ enableTimer, setEnableTimer, timer, handlers }) {
           <input
             type="submit"
             id={cx("sendOtpBtn")}
-            value="Send otp code"
+            value="Send OTP code"
             disabled={enableTimer}
             onClick={async (event) => {
               setEnableTimer.call({}, true);

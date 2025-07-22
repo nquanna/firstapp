@@ -2,24 +2,24 @@ import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 
+import config from "~/config";
 import { constanst } from "~/utils";
 
 import { RegisterForm, LoginForm, LogoutForm, ForgotPasswordForm } from "~/components/AuthForm";
+import Loading from "~/components/Loading";
 
 import { AuthContext } from "~/contexts";
-
-import config from "~/config";
 
 import style from "./AuthPage.module.scss";
 
 const cx = classNames.bind(style);
 
 function AuthPage({ routerPath }) {
-  console.log(constanst.baseUrl);
   const { loginUser, registerUser, logoutUser, sendOtp, forgotPassword } = useContext(AuthContext);
 
   const [enableTimer, setEnableTimer] = useState(false);
   const [timer, setTimer] = useState(constanst.otpDelay);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -56,10 +56,13 @@ function AuthPage({ routerPath }) {
 
       if (!authData?.email && !authData.isLogout) throw new Error("Missing email bro.");
 
+      setIsLoading(true);
+
       switch (authData.type) {
         case "register":
           const response = await registerUser(authData);
           if (response.success) {
+            setIsLoading(false);
             await navigate(config.routes.login, {
               state: {
                 email: authData.email,
@@ -69,12 +72,15 @@ function AuthPage({ routerPath }) {
           break;
         case "login":
           await loginUser(authData);
-          return navigate(config.routes.home);
+          setIsLoading(false);
+          return await navigate(config.routes.home);
         case "logout":
           if (authData.isConfirm) await logoutUser();
-          return navigate(config.routes.home);
+          setIsLoading(false);
+          return await navigate(config.routes.home);
         case "forgotPassword":
           await forgotPassword(authData);
+          setIsLoading(false);
           break;
         default:
           console.log("invalid type of handle submit");
@@ -114,7 +120,10 @@ function AuthPage({ routerPath }) {
 
   return (
     <>
-      <div className={cx("landing")}>{form.current}</div>
+      <div className={cx("landing")}>
+        <Loading isLoading={isLoading} />
+        {form.current}
+      </div>
     </>
   );
 }

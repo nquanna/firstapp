@@ -16,7 +16,7 @@ const request = async ({ path, method, data = {} }) => {
         return response.data;
       } catch (error) {
         console.log(error);
-        return error.response.data;
+        return error.response?.data;
       }
 
     case "post":
@@ -25,7 +25,7 @@ const request = async ({ path, method, data = {} }) => {
         return response.data;
       } catch (error) {
         console.log(error);
-        return error.response.data;
+        return error.response?.data;
       }
 
     case "put":
@@ -37,7 +37,7 @@ const request = async ({ path, method, data = {} }) => {
         return response.data;
       } catch (error) {
         console.log(error);
-        return error.response.data;
+        return error.response?.data;
       }
 
     default:

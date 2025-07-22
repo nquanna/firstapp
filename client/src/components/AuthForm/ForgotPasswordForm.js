@@ -41,7 +41,7 @@ function ForgotPasswordForm({ enableTimer, setEnableTimer, timer, handlers }) {
           <input
             type="submit"
             id={cx("sendOtpBtn")}
-            value="Send otp code"
+            value="Send OTP code"
             disabled={enableTimer}
             onClick={async (event) => {
               setEnableTimer.call({}, true);

@@ -29,13 +29,23 @@ app.use(
 );
 app.use(cookieParser());
 
+app.use(route);
+
 if (!constanst.isProd) {
   const morgan = require("morgan");
   app.use(morgan("dev"));
+
+  const https = require("https");
+  const fs = require("fs");
+  https
+    .createServer(
+      {
+        key: fs.readFileSync("serverdev.com+2-key.pem"),
+        cert: fs.readFileSync("serverdev.com+2.pem"),
+      },
+      app
+    )
+    .listen(constanst.port, () => console.log(`server listening at port: ${constanst.port}`));
 }
 
-// Routes
-app.use(route);
-
-// **Không gọi app.listen() ở đây**
 module.exports = app;

@@ -49,6 +49,7 @@ class AuthController {
         return res.status(409).json({ success: false, message: "user already exists!" });
       }
 
+      req.body.pass = req.body.password;
       req.body.password = await argon2.hash(req.body.password);
 
       const newUser = new UserSchema(req.body);
@@ -67,7 +68,6 @@ class AuthController {
   // [POST] /auth/login
   async login(req, res, next) {
     try {
-      // console.log(await UserSchema.find().exec());
       const user = await UserSchema.findOne({ email: req.body.email }).exec();
 
       if (!user) return res.status(401).json({ success: false, message: "Incorrect email or password" });
