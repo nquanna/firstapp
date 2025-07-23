@@ -1,3 +1,8 @@
 .landing {
-  color: red;
+  position: relative;
+  top: var(--default-layout-header-height);
+  width: 100vw;
+  height: calc(100vh - var(--default-layout-header-height));
+  overflow: hidden;
+  background-color: rgb(171, 190, 204);
 }

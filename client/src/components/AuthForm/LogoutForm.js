@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import classNames from "classnames/bind";
 
 import style from "./AuthForm.module.scss";
@@ -6,10 +6,12 @@ import style from "./AuthForm.module.scss";
 const cx = classNames.bind(style);
 
 function LogoutForm({ handlers: { handleSubmit } }) {
+  // console.log("rerender in logout form");
+
   const [authData, setAuthData] = useState({
     type: "logout",
     isLogout: true,
-    isConfirm: false,
+    isConfirmToLogout: false,
   });
 
   return (
@@ -25,7 +27,7 @@ function LogoutForm({ handlers: { handleSubmit } }) {
           value="No"
           onClick={() =>
             setAuthData((prev) => {
-              return { ...prev, isConfirm: false };
+              return { ...prev, isConfirmToLogout: false };
             })
           }
         />
@@ -35,7 +37,7 @@ function LogoutForm({ handlers: { handleSubmit } }) {
           value="Yes"
           onClick={() =>
             setAuthData((prev) => {
-              return { ...prev, isConfirm: true };
+              return { ...prev, isConfirmToLogout: true };
             })
           }
         />
@@ -44,4 +46,4 @@ function LogoutForm({ handlers: { handleSubmit } }) {
   );
 }
 
-export default LogoutForm;
+export default memo(LogoutForm);

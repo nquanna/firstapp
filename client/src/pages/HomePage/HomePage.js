@@ -1,14 +1,36 @@
+import { useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import classNames from "classnames/bind";
+
+import Message from "~/components/Message";
+
 import style from "./HomePage.module.scss";
-// import { Navigate } from "react-router-dom";
 
 const cx = classNames.bind(style);
 
 function HomePage() {
-  // return <Navigate to="/auth/login">this is landing</Navigate>;
+  const location = useLocation();
+  const type = useRef(location.state?.type);
+  const state = useRef(location.state?.state);
+  const navigate = useNavigate();
+
+  const showMessage = state.current !== undefined && location.state?.state === undefined;
+
+  useEffect(() => {
+    if (state.current) {
+      if (location.state?.state !== undefined) return navigate(".", { replace: true, state: undefined });
+
+      state.current = undefined;
+    }
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <>
-      <div className={cx("landing")}>this is home page.</div>
+      <div className={cx("landing")}>
+        {showMessage && <Message type={type.current} state={state.current} />}
+        this is home page.
+      </div>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, memo } from "react";
 import { Link } from "react-router-dom";
 
 import classNames from "classnames/bind";
@@ -9,7 +9,8 @@ import { authReducer } from "~/reducers";
 
 const cx = classNames.bind(style);
 
-function RegisterForm({ enableTimer, setEnableTimer, timer, handlers }) {
+function RegisterForm({ enableTimer, timer, handlers }) {
+  // console.log("rerender in register form");
   const { handleDispatch, handleSendOtp, handleSubmit } = handlers;
 
   const [authData, dispatch] = useReducer(authReducer, {
@@ -62,10 +63,7 @@ function RegisterForm({ enableTimer, setEnableTimer, timer, handlers }) {
             id={cx("sendOtpBtn")}
             value="Send OTP code"
             disabled={enableTimer}
-            onClick={async (event) => {
-              setEnableTimer.call({}, true);
-              await handleSendOtp({ event, authData });
-            }}
+            onClick={async (event) => await handleSendOtp({ event, authData })}
           />
           <input
             type="number"
@@ -114,4 +112,4 @@ function RegisterForm({ enableTimer, setEnableTimer, timer, handlers }) {
   );
 }
 
-export default RegisterForm;
+export default memo(RegisterForm);

@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, memo } from "react";
 import { Link } from "react-router-dom";
 
 import classNames from "classnames/bind";
@@ -9,7 +9,9 @@ import { authReducer } from "~/reducers";
 
 const cx = classNames.bind(style);
 
-function ForgotPasswordForm({ enableTimer, setEnableTimer, timer, handlers }) {
+function ForgotPasswordForm({ enableTimer, timer, handlers }) {
+  // console.log("rerender in forgot password form");
+
   const { handleDispatch, handleSendOtp, handleSubmit } = handlers;
 
   const [authData, dispatch] = useReducer(authReducer, {
@@ -43,10 +45,7 @@ function ForgotPasswordForm({ enableTimer, setEnableTimer, timer, handlers }) {
             id={cx("sendOtpBtn")}
             value="Send OTP code"
             disabled={enableTimer}
-            onClick={async (event) => {
-              setEnableTimer.call({}, true);
-              await handleSendOtp({ event, authData });
-            }}
+            onClick={async (event) => await handleSendOtp({ event, authData })}
           />
           <input
             type="number"
@@ -94,4 +93,4 @@ function ForgotPasswordForm({ enableTimer, setEnableTimer, timer, handlers }) {
   );
 }
 
-export default ForgotPasswordForm;
+export default memo(ForgotPasswordForm);

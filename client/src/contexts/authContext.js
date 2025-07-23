@@ -26,39 +26,52 @@ const AuthContextProvider = ({ children }) => {
   };
 
   const loginUser = async (authData) => {
-    const response = await api.request({
-      path: "/auth/login",
-      method: "post",
-      data: authData,
-    });
+    try {
+      const response = await api.request({
+        path: "/auth/login",
+        method: "post",
+        data: authData,
+      });
 
-    if (response.success) await loadUser();
+      if (response.success) await loadUser();
 
-    return response;
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const registerUser = async (authData) => {
-    const response = await api.request({
-      path: "/auth/register",
-      method: "post",
-      data: authData,
-    });
+    try {
+      const response = await api.request({
+        path: "/auth/register",
+        method: "post",
+        data: authData,
+      });
 
-    return response;
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const logoutUser = async () => {
-    const response = await api.request({
-      path: "/auth/logout",
-      method: "post",
-    });
+    try {
+      const response = await api.request({
+        path: "/auth/logout",
+        method: "post",
+      });
 
-    dispatch({
-      isAuthenticated: false,
-      user: null,
-    });
+      if (response.success)
+        dispatch({
+          isAuthenticated: false,
+          user: null,
+        });
 
-    return response;
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const sendOtp = async (authData) => {
@@ -70,19 +83,20 @@ const AuthContextProvider = ({ children }) => {
       });
       return response;
     } catch (error) {
-      console.log("cannot send otp, why???");
+      console.log(error);
     }
   };
 
   const forgotPassword = async (authData) => {
     try {
-      await api.request({
+      const response = await api.request({
         path: "/auth/forgot-password",
         method: "patch",
         data: authData,
       });
+      return response;
     } catch (error) {
-      console.log("what the hell");
+      console.log(error);
     }
   };
 

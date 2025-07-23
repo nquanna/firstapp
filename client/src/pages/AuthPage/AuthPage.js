@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 
@@ -33,24 +33,26 @@ function AuthPage({ routerPath }) {
     }
   }, [enableTimer, timer]);
 
-  const handleSendOtp = async ({ event, authData }) => {
+  const handleSendOtp = useCallback(async ({ event, authData }) => {
+    event.preventDefault();
+    setEnableTimer(true);
     try {
-      event.preventDefault();
       await sendOtp(authData);
     } catch (error) {
       console.log(error);
     }
-  };
+    // eslint-disable-next-line
+  }, []);
 
-  const handleDispatch = ({ event, type, dispatch }) => {
+  const handleDispatch = useCallback(({ event, type, dispatch }) => {
     dispatch({
       type,
       target: event.target.name,
       value: event.target.value,
     });
-  };
+  }, []);
 
-  const handleSubmit = async ({ event, authData }) => {
+  const handleSubmit = useCallback(async ({ event, authData }) => {
     try {
       event.preventDefault();
 
@@ -58,30 +60,54 @@ function AuthPage({ routerPath }) {
 
       setIsLoading(true);
 
+      let response;
       switch (authData.type) {
         case "register":
-          const response = await registerUser(authData);
+          response = await registerUser(authData);
+          setIsLoading(false);
           if (response.success) {
-            setIsLoading(false);
-            await navigate(config.routes.login, {
+            return await navigate(config.routes.login, {
               state: {
+                type: "register",
+                state: response.success,
                 email: authData.email,
               },
             });
           }
           break;
+
         case "login":
-          await loginUser(authData);
+          response = await loginUser(authData);
           setIsLoading(false);
-          return await navigate(config.routes.home);
+          return await navigate(config.routes.home, {
+            state: {
+              type: "login",
+              state: response.success,
+            },
+          });
+
         case "logout":
-          if (authData.isConfirm) await logoutUser();
+          if (authData.isConfirmToLogout) {
+            response = await logoutUser();
+          }
           setIsLoading(false);
-          return await navigate(config.routes.home);
+          return await navigate(config.routes.home, {
+            state: {
+              type: "logout",
+              state: response.success,
+            },
+          });
+
         case "forgotPassword":
-          await forgotPassword(authData);
+          response = await forgotPassword(authData);
           setIsLoading(false);
-          break;
+          return await navigate(config.routes.home, {
+            state: {
+              type: "forgotPassword",
+              state: response.success,
+            },
+          });
+
         default:
           console.log("invalid type of handle submit");
           throw new Error("invalid type of handle submit");
@@ -90,28 +116,39 @@ function AuthPage({ routerPath }) {
       console.log(error);
       throw new Error("Has an error in auth submit!!");
     }
-  };
+    // eslint-disable-next-line
+  }, []);
 
   const props = {
     enableTimer,
-    setEnableTimer,
     timer,
     handlers: { handleDispatch, handleSendOtp, handleSubmit },
   };
 
-  const form = useRef(null);
+  const form = useRef();
   switch (routerPath) {
-    case "/auth/register":
+    case config.routes.register:
+      if (form.type === "register" && isLoading) break;
       form.current = <RegisterForm {...props} />;
+      form.type = "register";
       break;
-    case "/auth/login":
+
+    case config.routes.login:
+      if (form.type === "login" && isLoading) break;
       form.current = <LoginForm {...props} />;
+      form.type = "login";
       break;
-    case "/auth/logout":
+
+    case config.routes.logout:
+      if (form.type === "logout" && isLoading) break;
       form.current = <LogoutForm {...props} />;
+      form.type = "logout";
       break;
-    case "/auth/forgot-password":
+
+    case config.routes.forgotPassword:
+      if (form.type === "forgotPassword" && isLoading) break;
       form.current = <ForgotPasswordForm {...props} />;
+      form.type = "forgotPassword";
       break;
 
     default:
@@ -121,7 +158,7 @@ function AuthPage({ routerPath }) {
   return (
     <>
       <div className={cx("landing")}>
-        <Loading isLoading={isLoading} />
+        {isLoading && <Loading />}
         {form.current}
       </div>
     </>

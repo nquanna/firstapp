@@ -1,0 +1,84 @@
+$animation-duration: 4s;
+$animation-in-out: 0.8s;
+
+$animation-in-percent: calc($animation-in-out / $animation-duration * 100%);
+$animation-out-percent: calc(100% - $animation-in-percent);
+
+.message-wrapper {
+  $color-state: var(--color-state);
+
+  position: absolute;
+  top: 20px;
+  right: 0;
+  transform: translateX(100%);
+  max-width: 320px;
+  padding: 18px 36px;
+  overflow: hidden;
+  border-radius: 16px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 2px 3px 4px 2px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  animation: show $animation-duration ease forwards;
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 24px;
+    background: linear-gradient(to right, rgb($color-state), rgba($color-state, 0.25));
+  }
+
+  .body {
+    max-width: 260px;
+
+    .title {
+      font-size: 1.3rem;
+      color: rgb($color-state);
+    }
+
+    .message {
+      margin-top: 12px;
+      font-size: 1.15rem;
+      color: rgb(90, 90, 90);
+    }
+  }
+
+  .icon {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    cursor: pointer;
+
+    &:after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      filter: blur(4px);
+      transition: background-color 0.25s ease;
+    }
+
+    &:hover:after {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    svg {
+      aspect-ratio: 1/1;
+      font-size: 1.5rem;
+    }
+  }
+}
+
+@keyframes show {
+  #{$animation-in-percent},
+  #{$animation-out-percent} {
+    transform: translateX(-20px);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
