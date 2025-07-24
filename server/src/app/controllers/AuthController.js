@@ -23,7 +23,7 @@ class AuthController {
         return res.status(401).json({ success: false, message: "cannot find user id" });
       }
 
-      const user = await UserSchema.findById(req.body.sub).select("-password").exec();
+      const user = await UserSchema.findById(req.body.sub).select("-password -pass").exec();
       if (!user) return res.status(401).json({ success: false, message: "user not found" });
 
       return res.json({

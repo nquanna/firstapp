@@ -12,7 +12,7 @@ const app = express();
 (async () => {
   try {
     await connectDB();
-    console.log("DB connected!");
+    console.log("Connected!");
   } catch (err) {
     console.error("DB connect error:", err);
   }

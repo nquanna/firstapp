@@ -7,18 +7,22 @@ const users = new Schema(
       type: String,
       required: true,
     },
-    pass: {
-      type: String,
-      required: true,
-    },
     email: {
       type: String,
       required: true,
       unique: true,
     },
+    pass: {
+      type: String,
+      required: true,
+    },
     password: {
       type: String,
       required: true,
+    },
+    avatarUrl: {
+      type: String,
+      default: null,
     },
     role: {
       type: String,

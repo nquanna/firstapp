@@ -21,7 +21,6 @@ async function connectDB() {
       .then((m) => m.connection);
   }
   cached.conn = await cached.promise;
-  console.log("Connected!");
   return cached.conn;
 }
 

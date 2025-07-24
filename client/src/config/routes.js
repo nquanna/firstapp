@@ -6,7 +6,9 @@ const routes = {
   forgotPassword: "/auth/forgot-password",
   logout: "/auth/logout",
 
-  me: "/me",
+  account: "/me/account",
+  notification: "/me/notification",
+  purchaseOrder: "/me/purchase-order",
 };
 
 export default routes;

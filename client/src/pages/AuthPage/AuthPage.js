@@ -5,7 +5,7 @@ import classNames from "classnames/bind";
 import config from "~/config";
 import { constanst } from "~/utils";
 
-import { RegisterForm, LoginForm, LogoutForm, ForgotPasswordForm } from "~/components/AuthForm";
+import { RegisterForm, LoginForm, LogoutForm, ForgotPasswordForm } from "./AuthForm";
 import Loading from "~/components/Loading";
 
 import { AuthContext } from "~/contexts";
@@ -159,6 +159,7 @@ function AuthPage({ routerPath }) {
     <>
       <div className={cx("landing")}>
         {isLoading && <Loading />}
+        {/* <Loading /> */}
         {form.current}
       </div>
     </>

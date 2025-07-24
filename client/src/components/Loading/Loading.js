@@ -36,11 +36,13 @@ function Loading() {
     }, 500);
 
     intervalId.charRotating = setInterval(() => {
-      const currentIndex = +getComputedStyle(chars[i].current).getPropertyValue("--index").trim();
-      chars[i].current.style.setProperty("--index", currentIndex + 1);
+      if (chars[i].current instanceof Element) {
+        const currentIndex = +getComputedStyle(chars[i].current).getPropertyValue("--index").trim();
+        chars[i].current.style.setProperty("--index", currentIndex + 1);
 
-      if (i === 6) return (i = 0);
-      i++;
+        if (i === 6) return (i = 0);
+        i++;
+      }
     }, 250);
 
     return () => {

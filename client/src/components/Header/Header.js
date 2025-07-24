@@ -5,19 +5,37 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 import classNames from "classnames/bind";
 
-import style from "./Header.module.scss";
-
 import config from "~/config";
 import images from "~/assets/images";
 
 import { AuthContext } from "~/contexts";
+
+import style from "./Header.module.scss";
 
 const cx = classNames.bind(style);
 
 function Header() {
   const { user } = useContext(AuthContext);
 
-  // console.log(user);
+  const body = !user.user ? (
+    <>
+      <Link to={config.routes.register} className={cx("auth-link")}>
+        Register
+      </Link>
+      <Link to={config.routes.login} className={cx("auth-link")}>
+        Login
+      </Link>
+    </>
+  ) : (
+    <>
+      <Link to={config.routes.account} className={cx("auth-link")}>
+        My Account
+      </Link>
+      <Link to={config.routes.purchaseOrder} className={cx("auth-link")}>
+        Purchase Order
+      </Link>
+    </>
+  );
 
   return (
     <header className={cx("wrapper")}>
@@ -29,7 +47,7 @@ function Header() {
       <div className={cx("cart")}></div>
 
       <div className={cx("auth-wrapper")}>
-        <Link to={config.routes.me} className={cx("user-link")}>
+        <Link to={config.routes.account} className={cx("user-link")}>
           {user.user?.avatar ? (
             <img src={images.logo} alt="user-logo" />
           ) : (
@@ -38,13 +56,7 @@ function Header() {
         </Link>
 
         <div className={cx("auth-link-wrapper")}>
-          <Link to={config.routes.register} className={cx("auth-link")}>
-            Register
-          </Link>
-
-          <Link to={config.routes.login} className={cx("auth-link")}>
-            Login
-          </Link>
+          {body}
 
           <Link
             to={config.routes.logout}
