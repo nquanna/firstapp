@@ -1,10 +1,13 @@
 import config from "~/config";
 
+import { SidebarLayout } from "~/layouts";
+
 import HomePage from "~/pages/HomePage";
 import AuthPage from "~/pages/AuthPage";
 import MePage from "~/pages/MePage";
 
-const publicRoutes = [
+const routes = [
+  /* PUBLIC ROUTES */
   {
     path: config.routes.home,
     component: HomePage,
@@ -40,15 +43,11 @@ const publicRoutes = [
     },
   },
 
-  {
-    path: config.routes.me,
-    component: MePage,
-    props: {
-      routerPath: config.routes.me,
-    },
-  },
+  /* PRIVATE ROUTES */
   {
     path: config.routes.account,
+    private: true,
+    layout: SidebarLayout,
     component: MePage,
     props: {
       routerPath: config.routes.account,
@@ -56,6 +55,8 @@ const publicRoutes = [
   },
   {
     path: config.routes.notification,
+    private: true,
+    layout: SidebarLayout,
     component: MePage,
     props: {
       routerPath: config.routes.notification,
@@ -63,6 +64,8 @@ const publicRoutes = [
   },
   {
     path: config.routes.purchaseOrder,
+    private: true,
+    layout: SidebarLayout,
     component: MePage,
     props: {
       routerPath: config.routes.purchaseOrder,
@@ -70,6 +73,4 @@ const publicRoutes = [
   },
 ];
 
-const privateRoutes = [];
-
-export { publicRoutes, privateRoutes };
+export default routes;

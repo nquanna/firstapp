@@ -1,7 +1,5 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 import classNames from "classnames/bind";
 
@@ -17,7 +15,7 @@ const cx = classNames.bind(style);
 function Header() {
   const { user } = useContext(AuthContext);
 
-  const body = !user.user ? (
+  const body = !user.isAuthenticated ? (
     <>
       <Link to={config.routes.register} className={cx("auth-link")}>
         Register
@@ -48,11 +46,12 @@ function Header() {
 
       <div className={cx("auth-wrapper")}>
         <Link to={config.routes.account} className={cx("user-link")}>
-          {user.user?.avatar ? (
-            <img src={images.logo} alt="user-logo" />
-          ) : (
-            <FontAwesomeIcon icon={faUser} />
-          )}
+          <img
+            src={user.user?.avatarUrl ? user.user.avatarUrl : images.defaultAvatar}
+            alt="user-avatar"
+          />
+
+          <span>{user.isAuthenticated ? user.user.username : ""}</span>
         </Link>
 
         <div className={cx("auth-link-wrapper")}>
@@ -60,8 +59,8 @@ function Header() {
 
           <Link
             to={config.routes.logout}
-            className={cx("auth-link", { disable: !user.user })}
-            onClick={(event) => !user.user && event.preventDefault()}>
+            className={cx("auth-link", { disable: !user.isAuthenticated })}
+            onClick={(event) => !user.isAuthenticated && event.preventDefault()}>
             Logout
           </Link>
         </div>

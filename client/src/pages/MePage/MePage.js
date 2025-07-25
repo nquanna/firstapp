@@ -1,5 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { /* useContext, */ useRef } from "react";
 
 import classNames from "classnames/bind";
 import style from "./MePage.module.scss";
@@ -8,24 +7,14 @@ import config from "~/config";
 
 import { Account, Notification, PurchaseOrder } from "./Content";
 
-import { AuthContext } from "~/contexts";
-
-import Sidebar from "./Sidebar";
+// import { AuthContext } from "~/contexts";
 
 const cx = classNames.bind(style);
 
 function MePage({ routerPath }) {
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
+  // const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    if (!user.user) {
-      // navigate(config.routes.home);
-    }
-    // eslint-disable-next-line
-  }, []);
-
-  const classNameWrapper = `grid wide ${cx("me-wrapper")}`;
+  const classNameWrapper = `col l-10 m-8 c-12 ${cx("me-wrapper")}`;
 
   const content = useRef();
   const props = {
@@ -46,11 +35,7 @@ function MePage({ routerPath }) {
 
   return (
     <div className={classNameWrapper}>
-      <div className="row ">
-        <Sidebar occupy="col l-2 m-4 c-0" />
-        {content.current}
-        {/* <div className="col l-10 m-8 c-12"></div> */}
-      </div>
+      <div className="">{content.current}</div>
     </div>
   );
 }

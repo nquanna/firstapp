@@ -1,12 +1,14 @@
+import { Fragment } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import GlobalStyle from "~/components/GlobalStyle";
+import routes from "~/routes";
+import PrivateRoute from "~/components/PrivateRoute";
 
-import { publicRoutes } from "~/routes";
-
-import DefaultLayout from "~/layouts/DefaultLayout";
+import { DefaultLayout } from "~/layouts";
 
 import { AuthContextProvider } from "./contexts";
+
+import GlobalStyle from "~/components/GlobalStyle";
 
 function App() {
   return (
@@ -15,8 +17,9 @@ function App() {
         <div className="App">
           <Router>
             <Routes>
-              {publicRoutes.map((route, index) => {
-                const Layout = DefaultLayout;
+              {routes.map((route, index) => {
+                const Private = route.private ? PrivateRoute : Fragment;
+                const Layout = route.layout ? route.layout : DefaultLayout;
                 const Component = route.component;
 
                 return (
@@ -24,9 +27,11 @@ function App() {
                     key={index}
                     path={route.path}
                     element={
-                      <Layout>
-                        <Component {...route.props} />
-                      </Layout>
+                      <Private>
+                        <Layout>
+                          <Component {...route.props} />
+                        </Layout>
+                      </Private>
                     }
                   />
                 );

@@ -23,6 +23,8 @@ const AuthContextProvider = ({ children }) => {
         user: response.user,
       });
     }
+
+    return response;
   };
 
   const loginUser = async (authData) => {

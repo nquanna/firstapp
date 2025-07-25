@@ -87,14 +87,13 @@ function AuthPage({ routerPath }) {
           });
 
         case "logout":
-          if (authData.isConfirmToLogout) {
-            response = await logoutUser();
-          }
+          if (authData.isConfirmToLogout) response = await logoutUser();
+
           setIsLoading(false);
           return await navigate(config.routes.home, {
             state: {
               type: "logout",
-              state: response.success,
+              state: response?.success,
             },
           });
 

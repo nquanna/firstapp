@@ -40,6 +40,7 @@ function RegisterForm({ enableTimer, timer, handlers }) {
             name="username"
             id={cx("username")}
             value={authData.username}
+            maxLength={12}
             onChange={(event) => handleDispatch({ event, type: authData.type, dispatch })}
             placeholder="username"
           />

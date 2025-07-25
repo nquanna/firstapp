@@ -1,5 +1,6 @@
 :root {
-  --default-layout-header-height: 120px;
+  --header-height: 120px;
+  --container-top: calc(var(--header-height) + 20px);
 
   --primary-color: rgb(255, 195, 200);
   --primary-color-second: rgb(245, 185, 180);
