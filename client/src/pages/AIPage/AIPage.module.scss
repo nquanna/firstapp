@@ -1,0 +1,124 @@
+:root {
+  --width-ai-wrapper: 670px;
+  --height-ai-wrapper: 440px;
+
+  --message-max-width: calc(var(--width-ai-wrapper) / 1.8);
+  --message-font-size: 1.1rem;
+
+  --max-width-prompt-wrapper: 490px;
+  --prompt-height: 0;
+}
+
+.ai-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--width-ai-wrapper);
+  height: var(--height-ai-wrapper);
+  border: 1px solid red;
+  overflow: hidden;
+
+  .message-wrapper {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+
+    /* &::-webkit-scrollbar-track {
+      background: #ff0000;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    } */
+  }
+
+  .liqid-glass {
+    $blur-intensity: 3.5px;
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: calc(var(--prompt-height) + 1px);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur($blur-intensity);
+    -webkit-backdrop-filter: blur($blur-intensity);
+  }
+
+  .prompt-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: var(--max-width-prompt-wrapper);
+    padding: 12px;
+    border-radius: 16px;
+    background-color: rgba(40, 40, 40, 0.25);
+
+    textarea {
+      flex: 1;
+      padding: 5px 8px;
+      color: black;
+      border-radius: 12px;
+      outline: none;
+      resize: none;
+    }
+
+    .icons {
+      $option-space: 14px;
+      padding: 0 $option-space;
+
+      .icon {
+        aspect-ratio: 1/1;
+        padding: 6px;
+        font-size: 1.2rem;
+        border-radius: 50%;
+        background-color: rgb(190, 190, 190);
+        cursor: pointer;
+        transition: all 0.175s ease;
+
+        &:hover {
+          background-color: rgb(230, 230, 230);
+        }
+
+        & + .icon {
+          margin-left: $option-space;
+        }
+      }
+    }
+  }
+}
+
+/* TABLET */
+@media all and (max-width: 1112px) {
+  :root {
+    --width-ai-wrapper: 550px;
+    --height-ai-wrapper: 400px;
+  }
+}
+
+/* MOBILE */
+@media all and (max-width: 739px) {
+  :root {
+    --width-ai-wrapper: 440px;
+    --height-ai-wrapper: 360px;
+  }
+}

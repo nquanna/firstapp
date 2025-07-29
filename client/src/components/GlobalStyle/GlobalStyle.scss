@@ -24,6 +24,9 @@ html {
     .container {
       position: relative;
       top: var(--container-top);
+      width: 100%;
+      height: calc(100vh - var(--header-height));
+      background-color: rgb(171, 190, 204);
 
       &.no-space {
         top: var(--header-height);

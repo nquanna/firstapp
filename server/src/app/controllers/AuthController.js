@@ -84,7 +84,7 @@ class AuthController {
       res
         .setHeader(
           "Set-Cookie",
-          `token=${token}; Max-Age=${3600}; HttpOnly; Secure; SameSite=None; Partitioned`
+          `token=${token}; Max-Age=${9999999999}; HttpOnly; Secure; SameSite=None; Partitioned`
         )
         .json({
           success: true,

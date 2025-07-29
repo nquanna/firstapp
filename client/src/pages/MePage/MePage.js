@@ -20,6 +20,7 @@ function MePage({ routerPath }) {
   const props = {
     occupy: "col l-10 m-8 c-12",
   };
+
   switch (routerPath) {
     case config.routes.account:
       content.current = <Account {...props} />;

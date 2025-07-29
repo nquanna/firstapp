@@ -5,6 +5,7 @@ import { SidebarLayout } from "~/layouts";
 import HomePage from "~/pages/HomePage";
 import AuthPage from "~/pages/AuthPage";
 import MePage from "~/pages/MePage";
+import AIPage from "~/pages/AIPage";
 
 const routes = [
   /* PUBLIC ROUTES */
@@ -69,6 +70,15 @@ const routes = [
     component: MePage,
     props: {
       routerPath: config.routes.purchaseOrder,
+    },
+  },
+
+  {
+    path: config.routes.ai,
+    private: true,
+    component: AIPage,
+    props: {
+      routerPath: config.routes.ai,
     },
   },
 ];

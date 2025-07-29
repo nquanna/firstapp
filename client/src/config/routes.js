@@ -9,6 +9,8 @@ const routes = {
   account: "/me/account",
   notification: "/me/notification",
   purchaseOrder: "/me/purchase-order",
+
+  ai: "/ai",
 };
 
 export default routes;

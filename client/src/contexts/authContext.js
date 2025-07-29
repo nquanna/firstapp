@@ -35,7 +35,7 @@ const AuthContextProvider = ({ children }) => {
         data: authData,
       });
 
-      if (response.success) await loadUser();
+      if (response?.success) await loadUser();
 
       return response;
     } catch (error) {

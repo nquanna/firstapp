@@ -1,4 +1,4 @@
-.wrapper {
+.header-wrapper {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -9,12 +9,23 @@
   background-color: rgb(255, 0, 0);
   z-index: 1;
 
-  .home-link {
+  .home-link-wrapper {
     height: 100%;
+    .home-link {
+      img {
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
+  }
 
-    img {
-      height: 100%;
-      border-radius: 50%;
+  .ai-link-wrapper {
+    height: 100%;
+    .ai-link {
+      img {
+        height: 100%;
+        border-radius: 50%;
+      }
     }
   }
 

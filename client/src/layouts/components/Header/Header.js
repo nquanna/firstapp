@@ -36,10 +36,18 @@ function Header() {
   );
 
   return (
-    <header className={cx("wrapper")}>
-      <Link to={config.routes.home} className={cx("home-link")}>
-        <img src={images.logo} alt="logo" />
-      </Link>
+    <header className={cx("header-wrapper")}>
+      <div className={cx("home-link-wrapper")}>
+        <Link to={config.routes.home} className={cx("home-link")}>
+          <img src={images.logo} alt="logo" />
+        </Link>
+      </div>
+
+      <div className={cx("ai-link-wrapper")}>
+        <Link to={config.routes.ai} className={cx("ai-link")}>
+          <img src={images.logo} alt="logo" />
+        </Link>
+      </div>
 
       <div className={cx("search-bar")}></div>
       <div className={cx("cart")}></div>

@@ -1,0 +1,28 @@
+.message {
+  $message-margin: 6px;
+
+  margin-top: $message-margin;
+  width: max-content;
+  max-width: var(--message-max-width);
+  padding: 12px 20px;
+  font-size: var(--message-font-size);
+  border-radius: 1rem;
+  text-wrap: wrap;
+
+  &.user {
+    align-self: flex-end;
+    margin-right: $message-margin;
+    background-color: red;
+  }
+  &.ai {
+    margin-left: $message-margin;
+    background-color: green;
+  }
+  &.system {
+    opacity: 0;
+  }
+
+  & + .message {
+    margin-top: 12px;
+  }
+}
