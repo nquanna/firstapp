@@ -7,7 +7,9 @@ const constanst = require("./utils/constanst");
 const route = require("./routes/index");
 const connectDB = require("./config/db/connect");
 
+const morgan = require("morgan");
 const app = express();
+app.use(morgan("dev"));
 
 (async () => {
   try {
@@ -32,9 +34,6 @@ app.use(cookieParser());
 app.use(route);
 
 if (!constanst.isProd) {
-  const morgan = require("morgan");
-  app.use(morgan("dev"));
-
   const https = require("https");
   const fs = require("fs");
   https

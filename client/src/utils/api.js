@@ -2,17 +2,18 @@ import axios from "axios";
 
 import constanst from "./constanst";
 
-const httpRequest = axios.create({
+const jsonType = "application/json";
+
+const http = axios.create({
   baseURL: constanst.baseUrl,
-  headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
 
-const request = async ({ path, method, data = {} }) => {
+const request = async ({ path, method, data = {}, inputType = "json", outputType = "json" }) => {
   switch (method) {
     case "get":
       try {
-        const response = await httpRequest.get(path);
+        const response = await http.get(path);
         return response.data;
       } catch (error) {
         console.log(error);
@@ -21,7 +22,15 @@ const request = async ({ path, method, data = {} }) => {
 
     case "post":
       try {
-        const response = await httpRequest.post(path, data);
+        /* if (data.entries instanceof Function)
+          for (let pair of data.entries()) console.warn(pair[0], pair[1]); */
+
+        const response = await http.post(path, data, {
+          headers: {
+            Accept: outputType === "audio" ? "audio/*" : jsonType,
+          },
+          responseType: outputType === "audio" ? "blob" : undefined,
+        });
         return response.data;
       } catch (error) {
         console.log(error);
@@ -33,7 +42,7 @@ const request = async ({ path, method, data = {} }) => {
 
     case "patch":
       try {
-        const response = await httpRequest.patch(path, data);
+        const response = await http.patch(path, data);
         return response.data;
       } catch (error) {
         console.log(error);

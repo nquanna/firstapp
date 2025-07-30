@@ -1,12 +1,16 @@
 :root {
-  --width-ai-wrapper: 670px;
-  --height-ai-wrapper: 440px;
+  --width-ai-wrapper: 720px;
+  --height-ai-wrapper: 500px;
+
+  --options-height: 0;
 
   --message-max-width: calc(var(--width-ai-wrapper) / 1.8);
   --message-font-size: 1.1rem;
 
   --max-width-prompt-wrapper: 490px;
   --prompt-height: 0;
+
+  --audio-option-width: calc((var(--width-ai-wrapper) - var(--max-width-prompt-wrapper)) / 2 - 5px);
 }
 
 .ai-wrapper {
@@ -19,6 +23,26 @@
   border: 1px solid red;
   overflow: hidden;
 
+  .options-wrapper {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+
+    select {
+      padding: 1.25px 4px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      user-select: none;
+    }
+
+    select + select {
+      margin-left: 12px;
+    }
+  }
+
   .message-wrapper {
     display: flex;
     flex-direction: column;
@@ -27,7 +51,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow: scroll;
 
     &::-webkit-scrollbar {
       width: 0;
@@ -44,18 +68,54 @@
     &::-webkit-scrollbar-thumb:hover {
       background: #555;
     } */
+
+    .message {
+      $message-margin: 6px;
+
+      margin-top: $message-margin;
+      width: max-content;
+      max-width: var(--message-max-width);
+      padding: 12px 20px;
+      font-size: var(--message-font-size);
+      border-radius: 1rem;
+      text-wrap: wrap;
+
+      &.user {
+        align-self: flex-end;
+        margin-right: $message-margin;
+        background-color: red;
+      }
+      &.ai {
+        margin-left: $message-margin;
+        background-color: green;
+      }
+      &.system {
+        height: 0;
+        opacity: 0;
+      }
+
+      & + .message {
+        margin-top: 12px;
+      }
+    }
   }
 
   .liqid-glass {
     $blur-intensity: 3.5px;
     position: absolute;
-    bottom: -1px;
-    left: 0;
     width: 100%;
-    height: calc(var(--prompt-height) + 1px);
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur($blur-intensity);
     -webkit-backdrop-filter: blur($blur-intensity);
+
+    &.at-options {
+      top: -1px;
+      height: calc(var(--options-height) + 1px);
+    }
+    &.at-prompt {
+      bottom: -1px;
+      height: calc(var(--prompt-height) + 1px);
+    }
   }
 
   .prompt-wrapper {
@@ -91,18 +151,32 @@
         padding: 6px;
         font-size: 1.2rem;
         border-radius: 50%;
-        background-color: rgb(190, 190, 190);
+        background-color: rgb(220, 220, 220);
+        box-shadow: 0 0 2px 1px rgb(220, 220, 220);
         cursor: pointer;
         transition: all 0.175s ease;
 
-        &:hover {
-          background-color: rgb(230, 230, 230);
+        &:not(.disable):hover {
+          background-color: rgb(255, 255, 255);
+          box-shadow: 0 0 4px 1.5px rgb(255, 255, 255);
+        }
+
+        &.disable {
+          opacity: 0.5;
+          cursor: default;
+          pointer-events: none;
         }
 
         & + .icon {
           margin-left: $option-space;
         }
       }
+    }
+
+    input[type="checkbox"] {
+      $scale: 1.5;
+      transform: scale($scale);
+      -webkit-transform: scale($scale);
     }
   }
 }
