@@ -7,7 +7,7 @@ import classNames from "classnames/bind";
 
 import { api, recognition, assignSetText, audio } from "~/utils";
 
-// import SpeechConfig from "~/pages/AIPage/SpeechConfig";
+import SpeechConfig from "./SpeechConfig";
 
 import style from "./AIPage.module.scss";
 
@@ -22,6 +22,7 @@ function AIPage() {
   const [microIcon, setMicroIcon] = useState(true);
   const [isSpeak, setIsSpeak] = useState(true);
   const [speech, setSpeech] = useState("");
+  const [config, setConfig] = useState();
 
   const audioStore = useRef();
   const [options, promptWrapper, textarea] = [useRef(), useRef(), useRef()];
@@ -29,17 +30,9 @@ function AIPage() {
 
   const { start, stop } = useSpeech({
     text: speech,
-    rate: 0.8,
     volume: 1,
-    lang: "en-GB",
-    voiceURI: "Microsoft Zira - English (United States)",
+    ...config,
   });
-
-  useEffect(() => {
-    stop();
-    start();
-    // eslint-disable-next-line
-  }, [speech]);
 
   useEffect(() => {
     // initial
@@ -56,6 +49,12 @@ function AIPage() {
 
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    stop();
+    start();
+    // eslint-disable-next-line
+  }, [speech]);
 
   useEffect(() => {
     uploadRef.current.classList.toggle(cx("disable"), !audioStore.audio && !prompt.trim());
@@ -123,7 +122,7 @@ function AIPage() {
         })}
       </div>
 
-      <div className={cx("speech-config")}></div>
+      <SpeechConfig setConfig={setConfig} />
 
       <div className={cx("ai-interactive")}>
         <div ref={options} className={cx("options-wrapper")}>
