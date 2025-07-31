@@ -7,6 +7,8 @@ import classNames from "classnames/bind";
 
 import { api, recognition, assignSetText, audio } from "~/utils";
 
+// import SpeechConfig from "~/pages/AIPage/SpeechConfig";
+
 import style from "./AIPage.module.scss";
 
 const cx = classNames.bind(style);
@@ -31,8 +33,6 @@ function AIPage() {
     volume: 1,
     lang: "en-GB",
     voiceURI: "Microsoft Zira - English (United States)",
-    // highlightText: true,
-    // highlightMode: "word",
   });
 
   useEffect(() => {
@@ -123,12 +123,14 @@ function AIPage() {
         })}
       </div>
 
+      <div className={cx("speech-config")}></div>
+
       <div className={cx("ai-interactive")}>
         <div ref={options} className={cx("options-wrapper")}>
           <select defaultValue={inputType} onChange={(event) => setInputType(event.target.value)}>
             <option value="text">Speech to text</option>
             <option value="audio">Audio</option>
-          </select>{" "}
+          </select>
           <select defaultValue={outputType} onChange={(event) => setOutputType(event.target.value)}>
             <option value="text">Text</option>
             <option value="audio">Audio</option>
