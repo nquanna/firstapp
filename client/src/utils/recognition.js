@@ -10,7 +10,8 @@ let setFinalResult;
 recording.onend = () => {
   if (isListening) return recording.start();
 
-  setFinalResult({ finalText: finalResult.join(" ") });
+  console.log(finalResult.join(" "));
+  setFinalResult({ audioText: finalResult.join(" ") });
   finalResult.length = 0;
 };
 

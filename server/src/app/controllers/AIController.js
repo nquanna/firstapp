@@ -3,7 +3,6 @@ const callAPI = require("../../config/ai/callApi");
 class AuthController {
   // [POST] /ai/call-api
   async callApi(req, res) {
-    console.log(req.file);
     try {
       const { prompt, model, outputType } = req.body;
       // console.log(prompt, model, outputType);

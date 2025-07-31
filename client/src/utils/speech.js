@@ -1,4 +1,4 @@
-function speech(text) {
+/* function speech(text) {
   console.log("speech");
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = 0.8;
@@ -12,4 +12,4 @@ function speech(text) {
   speechSynthesis.speak(utterance);
 }
 
-export default speech;
+export default speech; */
