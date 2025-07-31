@@ -7,9 +7,9 @@ const constanst = require("./utils/constanst");
 const route = require("./routes/index");
 const connectDB = require("./config/db/connect");
 
-const morgan = require("morgan");
+// const morgan = require("morgan");
 const app = express();
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 
 (async () => {
   try {

@@ -1,5 +1,16 @@
+import audioBufferToWav from "audiobuffer-to-wav";
+
 let mediaRecorder;
 let chunks = [];
+
+async function audioConverter(webmBlob) {
+  const audioContext = new window.AudioContext();
+  const arrayBuffer = await webmBlob.arrayBuffer();
+  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+  const wavBuffer = audioBufferToWav(audioBuffer);
+  return new Blob([wavBuffer], { type: "audio/wav" });
+}
 
 const methods = {
   async start() {
@@ -18,9 +29,11 @@ const methods = {
   stop() {
     return new Promise((resolve) => {
       mediaRecorder.onstop = async () => {
-        const blob = new Blob(chunks, { type: "audio/webm" });
+        const webmBlob = new Blob(chunks, { type: "audio/webm" });
+        const wavBlob = await audioConverter(webmBlob);
         // const audioURL = URL.createObjectURL(blob);
-        resolve(blob);
+
+        resolve(wavBlob);
       };
 
       mediaRecorder.stop();
@@ -32,4 +45,5 @@ async function audio(method) {
   return await methods[method]();
 }
 
+export { audioConverter };
 export default audio;

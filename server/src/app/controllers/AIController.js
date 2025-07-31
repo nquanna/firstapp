@@ -1,17 +1,16 @@
 const callAPI = require("../../config/ai/callApi");
 
-const audioConverter = require("../../utils/audioConverter");
-
 class AuthController {
   // [POST] /ai/call-api
   async callApi(req, res) {
+    console.log(req.file);
     try {
       const { prompt, model, outputType } = req.body;
       // console.log(prompt, model, outputType);
 
       let responseMessage;
       if (req.file) {
-        const base64Audio = await audioConverter(req.file);
+        const base64Audio = req.file.buffer.toString("base64");
         responseMessage = await callAPI({
           prompt,
           model,
