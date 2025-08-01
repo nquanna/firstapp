@@ -1,4 +1,8 @@
 :root {
+  --mobile-breakpoint: 0px;
+  --tablet-breakpoint: 768px;
+  --pc-breakpoint: 1024px;
+
   --header-height: 120px;
   --container-top: calc(var(--header-height) + 20px);
 

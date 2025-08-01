@@ -1,4 +1,7 @@
 .speech-config-wrapper {
+  --speech-config-width: 350px;
+  --speech-config-height: 160px;
+
   position: absolute;
   top: 0;
   left: 0;
@@ -41,64 +44,103 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
-    height: 200px;
-    border: 1px solid yellow;
+    width: var(--speech-config-width);
+    height: var(--speech-config-height);
+    border: 1px solid var(--primary-color);
+    border-radius: 16px;
+    background: linear-gradient(to bottom right, var(--primary-color), transparent);
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.25);
     z-index: 1;
 
     &.hide {
       display: none;
     }
 
-    .config-group {
-      // margin-left: 8px;
+    .config-group-wrapper {
+      margin-top: -32.5px;
 
-      & + .config-group {
-        margin-top: 12px;
-      }
+      .config-group {
+        & + .config-group {
+          margin-top: 12px;
+        }
 
-      label {
-        font-size: 1.15rem;
-      }
+        label {
+          font-size: 1rem;
+        }
 
-      input,
-      select {
-        padding: 2.5px 5px;
-        outline: none;
-        border: none;
-        border-radius: 8px;
-      }
+        input,
+        select {
+          padding: 2.8px 6px;
+          font-size: 0.9rem;
+          outline: none;
+          border: none;
+          border-radius: 8px;
+        }
 
-      input[type="number"] {
-        margin-left: 8px;
+        input[type="number"] {
+          margin-left: 8px;
+        }
       }
     }
 
     .close {
       position: absolute;
-      bottom: 0;
+      bottom: 6px;
       left: 50%;
       transform: translateX(-50%);
-      aspect-ratio: 1/1;
+      padding: 0 16px;
+      font-size: 1.35rem;
+      font-weight: 700;
+      opacity: 0.6;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.1s ease;
 
-      &:after {
-        content: "";
-        position: absolute;
-        inset: -8px;
-        aspect-ratio: 1/1;
-        border-radius: 25%;
-        filter: blur(12px);
-        transition: all 0.25s ease;
+      &:hover {
+        opacity: 1;
       }
+    }
+  }
+}
 
-      &:hover:after {
-        background-color: rgba(0, 0, 0, 0.25);
+/* TABLET */
+@media all and (min-width: 768px) and (max-width: 1023px) {
+  .speech-config-wrapper {
+    --speech-config-width: 380px;
+    --speech-config-height: 175px;
+
+    .speech-config {
+      .config-group-wrapper {
+        .config-group {
+          label {
+            font-size: 1.05rem;
+          }
+          input,
+          select {
+            font-size: 1rem;
+          }
+        }
       }
+    }
+  }
+}
 
-      svg {
-        font-size: 1.5rem;
+/* PC */
+@media all and (min-width: 1024px) {
+  .speech-config-wrapper {
+    --speech-config-width: 420px;
+    --speech-config-height: 200px;
+
+    .speech-config {
+      .config-group-wrapper {
+        .config-group {
+          label {
+            font-size: 1.1rem;
+          }
+          input,
+          select {
+            font-size: 1.08rem;
+          }
+        }
       }
     }
   }

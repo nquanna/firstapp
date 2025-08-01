@@ -1,6 +1,6 @@
 .form {
-  --form-group-margin-top: 12px;
-  --form-width: 420px;
+  --form-group-margin-top: 8px;
+  --form-width: 340px;
 
   display: flex;
   flex-direction: column;
@@ -111,7 +111,7 @@
 }
 
 /* TABLET */
-@media all and (max-width: 1112px) {
+@media all and (min-width: 768px) and (max-width: 1023px) {
   .form {
     --form-group-margin-top: 10px;
     --form-width: 380px;
@@ -119,9 +119,9 @@
 }
 
 /* MOBILE */
-@media all and (max-width: 739px) {
+@media all and (min-width: 1024px) {
   .form {
-    --form-group-margin-top: 8px;
-    --form-width: 340px;
+    --form-group-margin-top: 12px;
+    --form-width: 420px;
   }
 }

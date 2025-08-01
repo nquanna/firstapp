@@ -1,9 +1,8 @@
 :root {
-  --width-ai-interactive: 720px;
-  --height-ai-interactive: 500px;
-
-  --audio-store-scale: 4;
-  --audio-store-margin: 0 25px;
+  --width-ai-interactive: 440px;
+  --height-ai-interactive: 360px;
+  --audio-store-scale: 1.2;
+  --audio-store-margin: 0 8px;
   --audio-store-width: calc((100vw - var(--width-ai-interactive)) / var(--audio-store-scale));
 
   --options-height: 0;
@@ -220,7 +219,7 @@
 }
 
 /* TABLET */
-@media all and (max-width: 1112px) {
+@media all and (min-width: 768px) and (max-width: 1023px) {
   :root {
     --width-ai-interactive: 550px;
     --height-ai-interactive: 400px;
@@ -230,13 +229,13 @@
   }
 }
 
-/* MOBILE */
-@media all and (max-width: 739px) {
+/* PC */
+@media all and (min-width: 1024px) {
   :root {
-    --width-ai-interactive: 440px;
-    --height-ai-interactive: 360px;
+    --width-ai-interactive: 720px;
+    --height-ai-interactive: 500px;
 
-    --audio-store-margin: 12px;
-    --audio-store-scale: 1.75;
+    --audio-store-margin: 0 25px;
+    --audio-store-scale: 4;
   }
 }

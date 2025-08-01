@@ -8,6 +8,7 @@ import classNames from "classnames/bind";
 import { api, recognition, assignSetText, audio } from "~/utils";
 
 import SpeechConfig from "./SpeechConfig";
+import SpeakAgain from "./SpeakAgin";
 
 import style from "./AIPage.module.scss";
 
@@ -16,13 +17,15 @@ const cx = classNames.bind(style);
 function AIPage() {
   const [messages, setMessages] = useState([]);
   const [prompt, setPrompt] = useState("");
-  const [model, setModel] = useState("gemini-2.0-flash");
   const [inputType, setInputType] = useState("audio");
+  const [model, setModel] = useState("gemini-2.0-flash");
   const [outputType, setOutputType] = useState("audio");
   const [microIcon, setMicroIcon] = useState(true);
   const [isSpeak, setIsSpeak] = useState(true);
-  const [speech, setSpeech] = useState("");
   const [config, setConfig] = useState();
+  const [speech, setSpeech] = useState("");
+  const [speechAgain, setSpeechAgain] = useState(false);
+  const [messageClicked, setMessageClicked] = useState("");
 
   const audioStore = useRef();
   const [options, promptWrapper, textarea] = [useRef(), useRef(), useRef()];
@@ -32,6 +35,7 @@ function AIPage() {
     text: speech,
     volume: 1,
     ...config,
+    rate: config?.rate / 10 || 0.8,
   });
 
   useEffect(() => {
@@ -84,8 +88,8 @@ function AIPage() {
     const newMessage = `${audioStore.audio ? "*this is audio file*" : ""} ${prompt.trim() && prompt}`;
     setMessages((prev) => [...prev, { role: "user", message: newMessage }]);
 
+    prompt.trim() && textarea.current.focus();
     setPrompt("");
-    textarea.current.focus();
 
     const formData = new FormData();
     formData.append("prompt", prompt);
@@ -124,6 +128,10 @@ function AIPage() {
 
       <SpeechConfig setConfig={setConfig} />
 
+      {speechAgain && (
+        <SpeakAgain setSpeech={setSpeech} message={messageClicked} destroy={setSpeechAgain} />
+      )}
+
       <div className={cx("ai-interactive")}>
         <div ref={options} className={cx("options-wrapper")}>
           <select defaultValue={inputType} onChange={(event) => setInputType(event.target.value)}>
@@ -147,7 +155,13 @@ function AIPage() {
           </div>
 
           {messages.map((messageObj, index) => (
-            <div className={cx("message", messageObj.role)} key={index}>
+            <div
+              className={cx("message", messageObj.role)}
+              onClick={(event) => {
+                setMessageClicked(event.target.textContent);
+                setSpeechAgain(true);
+              }}
+              key={index}>
               {messageObj.message.trim()}
             </div>
           ))}

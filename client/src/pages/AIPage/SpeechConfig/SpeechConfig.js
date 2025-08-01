@@ -1,7 +1,7 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, memo } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 import classNames from "classnames/bind";
 
@@ -43,47 +43,58 @@ function SpeechConfig({ setConfig }) {
       </div>
 
       <div className={cx("speech-config", { hide: !showing })}>
-        <div className={cx("config-group")}>
-          <label>Rate (1 - 100):</label>
-          <input
-            type="number"
-            min={1}
-            max={100}
-            value={rate}
-            onChange={(event) => setRate(event.target.value)}
-          />
-        </div>
+        <div className={cx("config-group-wrapper")}>
+          <div className={cx("config-group")}>
+            <label>Rate (1 - 100):</label>
+            <input
+              type="number"
+              min={1}
+              max={100}
+              value={rate}
+              onChange={(event) => setRate(event.target.value)}
+            />
+          </div>
 
-        <div className={cx("config-group")}>
-          <select value={lang} onChange={(event) => setLang(event.target.value)}>
-            <option value="en-GB">English</option>
-            <option value="vi-VN">Vietnamese</option>
-          </select>
-        </div>
+          <div className={cx("config-group")}>
+            <select
+              value={lang}
+              onChange={(event) => {
+                setLang(event.target.value);
+                setVoiceURI(
+                  event.target.value === langAndVoiceRef.vi.lang
+                    ? langAndVoiceRef.vi.an
+                    : langAndVoiceRef.en.zira
+                );
+              }}>
+              <option value="en-GB">English</option>
+              <option value="vi-VN">Vietnamese</option>
+            </select>
+          </div>
 
-        <div className={cx("config-group")}>
-          <select value={voiceURI} onChange={(event) => setVoiceURI(event.target.value)}>
-            {lang === langAndVoiceRef.en.lang ? (
-              <>
-                <option value={langAndVoiceRef.en.mark}>{langAndVoiceRef.en.mark}</option>
-                <option value={langAndVoiceRef.en.david}>{langAndVoiceRef.en.david}</option>
-                <option value={langAndVoiceRef.en.zira}>{langAndVoiceRef.en.zira}</option>
-                <option value={langAndVoiceRef.en.google}>{langAndVoiceRef.en.google}</option>
-              </>
-            ) : (
-              <>
-                <option value={langAndVoiceRef.vi.an}>{langAndVoiceRef.vi.an}</option>
-              </>
-            )}
-          </select>
+          <div className={cx("config-group")}>
+            <select value={voiceURI} onChange={(event) => setVoiceURI(event.target.value)}>
+              {lang === langAndVoiceRef.en.lang ? (
+                <>
+                  <option value={langAndVoiceRef.en.mark}>{langAndVoiceRef.en.mark}</option>
+                  <option value={langAndVoiceRef.en.david}>{langAndVoiceRef.en.david}</option>
+                  <option value={langAndVoiceRef.en.zira}>{langAndVoiceRef.en.zira}</option>
+                  <option value={langAndVoiceRef.en.google}>{langAndVoiceRef.en.google}</option>
+                </>
+              ) : (
+                <>
+                  <option value={langAndVoiceRef.vi.an}>{langAndVoiceRef.vi.an}</option>
+                </>
+              )}
+            </select>
+          </div>
         </div>
 
         <div className={cx("close")} onClick={() => setShowing(false)}>
-          <FontAwesomeIcon icon={faThumbsUp} />
+          OK
         </div>
       </div>
     </div>
   );
 }
 
-export default SpeechConfig;
+export default memo(SpeechConfig);

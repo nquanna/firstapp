@@ -1,5 +1,5 @@
 .landing {
-  --loading-size: 480px;
+  --loading-size: 360px;
 
   display: flex;
   justify-content: center;
@@ -52,15 +52,15 @@
 }
 
 /*  TABLET */
-@media all and (max-width: 1112px) {
+@media all and (min-width: 768px) and (max-width: 1023px) {
   .landing {
     --loading-size: 420px;
   }
 }
 
-/*  MOBILE */
-@media all and (max-width: 739px) {
+/*  PC */
+@media all and (min-width: 1024px) {
   .landing {
-    --loading-size: 360px;
+    --loading-size: 480px;
   }
 }

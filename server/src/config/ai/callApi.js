@@ -20,7 +20,7 @@ const callApi = async ({ prompt, model, base64Audio, inputType = "text", outputT
   const response = await AI.models.generateContent({
     model,
     generationConfig: {
-      temperature: 0.3,
+      temperature: 0.5,
       maxOutputTokens: 75,
     },
     contents,

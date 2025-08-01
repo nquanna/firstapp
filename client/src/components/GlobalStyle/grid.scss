@@ -47,8 +47,8 @@
 // Mobile (default)
 @include generate-cols(c);
 
-// Tablet >= 740px
-@media (min-width: 740px) {
+// Tablet
+@media all and (min-width: 768px) and (max-width: 1023px) {
   .row {
     margin-left: -8px;
     margin-right: -8px;
@@ -62,8 +62,8 @@
   @include generate-cols(m);
 }
 
-// PC >= 1113px
-@media (min-width: 1113px) {
+// PC
+@media all and (min-width: 1024px) {
   .row {
     margin-left: -12px;
     margin-right: -12px;
