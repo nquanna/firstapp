@@ -1,6 +1,6 @@
 :root {
-  --width-ai-interactive: 440px;
-  --height-ai-interactive: 360px;
+  --width-ai-interactive: 360px;
+  --height-ai-interactive: 380px;
   --audio-store-scale: 1.2;
   --audio-store-margin: 0 8px;
   --audio-store-width: calc((100vw - var(--width-ai-interactive)) / var(--audio-store-scale));
@@ -128,6 +128,8 @@
         &.system {
           height: 0;
           opacity: 0;
+          pointer-events: auto;
+          user-select: none;
         }
 
         & + .message {
@@ -233,7 +235,7 @@
 @media all and (min-width: 1024px) {
   :root {
     --width-ai-interactive: 720px;
-    --height-ai-interactive: 500px;
+    --height-ai-interactive: 580px;
 
     --audio-store-margin: 0 25px;
     --audio-store-scale: 4;

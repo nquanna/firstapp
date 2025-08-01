@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { useSpeech } from "react-text-to-speech";
+import Speech, { useSpeak, HighlightedText } from "react-text-to-speech";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone, faMicrophoneSlash, faArrowUp } from "@fortawesome/free-solid-svg-icons";
 
@@ -8,7 +8,6 @@ import classNames from "classnames/bind";
 import { api, recognition, assignSetText, audio } from "~/utils";
 
 import SpeechConfig from "./SpeechConfig";
-import SpeakAgain from "./SpeakAgin";
 
 import style from "./AIPage.module.scss";
 
@@ -23,20 +22,13 @@ function AIPage() {
   const [microIcon, setMicroIcon] = useState(true);
   const [isSpeak, setIsSpeak] = useState(true);
   const [config, setConfig] = useState();
-  const [speech, setSpeech] = useState("");
-  const [speechAgain, setSpeechAgain] = useState(false);
-  const [messageClicked, setMessageClicked] = useState("");
 
+  const uniquaIdToSpeak = useRef(-1);
   const audioStore = useRef();
   const [options, promptWrapper, textarea] = [useRef(), useRef(), useRef()];
   const uploadRef = useRef();
 
-  const { start, stop } = useSpeech({
-    text: speech,
-    volume: 1,
-    ...config,
-    rate: config?.rate / 10 || 0.8,
-  });
+  const { speak } = useSpeak();
 
   useEffect(() => {
     // initial
@@ -53,12 +45,6 @@ function AIPage() {
 
     // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    stop();
-    start();
-    // eslint-disable-next-line
-  }, [speech]);
 
   useEffect(() => {
     uploadRef.current.classList.toggle(cx("disable"), !audioStore.audio && !prompt.trim());
@@ -106,8 +92,7 @@ function AIPage() {
 
     if (!responseMessage.success) return;
     setMessages((prev) => [...prev, { role: "ai", message: responseMessage.message }]);
-    // isSpeak && speech(responseMessage.message);
-    isSpeak && setSpeech(responseMessage.message);
+    isSpeak && speak(responseMessage.message, { ...config });
   };
 
   const handleSendPromptByEnter = (event) => {
@@ -120,17 +105,13 @@ function AIPage() {
 
   return (
     <div className={cx("ai-page-wrapper")}>
+      <SpeechConfig setConfig={setConfig} />
+
       <div className={cx("audio-store")}>
         {audioStore.ai?.map((audioURL, index) => {
           return <audio src={audioURL} controls key={index} />;
         })}
       </div>
-
-      <SpeechConfig setConfig={setConfig} />
-
-      {speechAgain && (
-        <SpeakAgain setSpeech={setSpeech} message={messageClicked} destroy={setSpeechAgain} />
-      )}
 
       <div className={cx("ai-interactive")}>
         <div ref={options} className={cx("options-wrapper")}>
@@ -154,17 +135,17 @@ function AIPage() {
             &lt;message&gt;*
           </div>
 
-          {messages.map((messageObj, index) => (
-            <div
-              className={cx("message", messageObj.role)}
-              onClick={(event) => {
-                setMessageClicked(event.target.textContent);
-                setSpeechAgain(true);
-              }}
-              key={index}>
-              {messageObj.message.trim()}
-            </div>
-          ))}
+          {messages.map((messageObj, index) => {
+            const text = <span>{messageObj.message.trim()}</span>;
+            const uniqueId = `unique-id-${uniquaIdToSpeak.current}`;
+            uniquaIdToSpeak.current += 1;
+            return (
+              <div className={cx("message", messageObj.role)} key={index}>
+                <HighlightedText id={uniqueId}>{text}</HighlightedText>
+                <Speech {...config} id={uniqueId} text={text} highlightText={true} />
+              </div>
+            );
+          })}
 
           <div className={cx("message", "system")}>
             *This &lt;message&gt; increases the height of the &lt;message-wrapper&gt; to show the last

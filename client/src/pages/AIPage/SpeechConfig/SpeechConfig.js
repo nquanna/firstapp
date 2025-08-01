@@ -28,11 +28,8 @@ function SpeechConfig({ setConfig }) {
   const [voiceURI, setVoiceURI] = useState(langAndVoiceRef.en.zira);
   const [showing, setShowing] = useState(false);
 
-  const config = useRef({});
-
   useEffect(() => {
-    config.current = { rate, lang, voiceURI };
-    setConfig({ ...config.current });
+    setConfig({ rate: rate / 10, lang, voiceURI });
     // eslint-disable-next-line
   }, [rate, lang, voiceURI]);
 
