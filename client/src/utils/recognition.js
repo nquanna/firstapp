@@ -1,5 +1,4 @@
 const recording = new window.webkitSpeechRecognition() || new window.SpeechRecognition();
-recording.lang = "en-GB";
 recording.continuous = true;
 recording.interimResults = false;
 
@@ -8,19 +7,21 @@ let isListening = false;
 let setFinalResult;
 
 recording.onstart = () => {
-  alert("start listen to convert to text!");
+  alert(isListening);
 };
 
 recording.onend = () => {
+  alert("end and", isListening);
   if (isListening) return recording.start();
 
-  console.log(finalResult.join(" "));
+  // console.log(finalResult.join(" "));
   setFinalResult({ audioText: finalResult.join(" ") });
   finalResult.length = 0;
 };
 
 recording.onerror = (e) => {
   console.log("Error: ", e.error);
+  alert(e.error);
 };
 
 function assignSetText(setText) {
@@ -31,8 +32,10 @@ function assignSetText(setText) {
   setFinalResult = setText;
 }
 
-function recognition(method) {
+function recognition(method, lang = "en-GB") {
   isListening = method === "start";
+
+  recording.lang = lang;
   recording[method]();
 }
 
