@@ -5,9 +5,11 @@ import { faMicrophone, faMicrophoneSlash, faArrowUp } from "@fortawesome/free-so
 
 import classNames from "classnames/bind";
 
-import { api, recognition, assignSetText, audio } from "~/utils";
-
+import Options from "./Options";
 import SpeechConfig from "./SpeechConfig";
+
+import { api } from "~/utils";
+import getMicro from "./getMicro";
 
 import style from "./AIPage.module.scss";
 
@@ -16,16 +18,14 @@ const cx = classNames.bind(style);
 function AIPage() {
   const [messages, setMessages] = useState([]);
   const [prompt, setPrompt] = useState("");
-  const [inputType, setInputType] = useState("audio");
-  const [model, setModel] = useState("gemini-2.0-flash");
-  const [outputType, setOutputType] = useState("audio");
+  const [options, setOptions] = useState();
   const [microIcon, setMicroIcon] = useState(true);
   const [isSpeak, setIsSpeak] = useState(true);
   const [config, setConfig] = useState();
 
   const uniqueIdRef = useRef(-1);
-  const audioStore = useRef();
-  const [options, promptWrapper, textarea] = [useRef(), useRef(), useRef()];
+  const audioStoreRef = useRef();
+  const [optionsRef, promptWrapper, textarea] = [useRef(), useRef(), useRef()];
   const uploadRef = useRef();
 
   const { speak } = useSpeak();
@@ -35,24 +35,21 @@ function AIPage() {
     promptWrapper.height = getComputedStyle(promptWrapper.current).height;
     document.documentElement.style.setProperty("--prompt-height", promptWrapper.height);
 
-    options.height = getComputedStyle(options.current).height;
-    document.documentElement.style.setProperty("--options-height", options.height);
+    optionsRef.height = getComputedStyle(optionsRef.current).height;
+    document.documentElement.style.setProperty("--options-height", optionsRef.height);
 
-    audioStore.user = [];
-    audioStore.ai = [];
+    audioStoreRef.user = [];
+    audioStoreRef.ai = [];
 
-    assignSetText(handleSetPrompt);
+    getMicro({ inputType: "text", method: "init" });
+    getMicro({ inputType: "text", method: "assignSetText", setPrompt: handleSetPrompt });
 
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    inputType === "text" && recognition("stop");
-  }, [inputType]);
-
-  useEffect(() => {
-    uploadRef.current.classList.toggle(cx("disable"), !audioStore.audio && !prompt.trim());
-  }, [audioStore.audio, prompt]);
+    uploadRef.current.classList.toggle(cx("disable"), !audioStoreRef.audio && !prompt.trim());
+  }, [audioStoreRef.audio, prompt]);
 
   const handleSetPrompt = ({ event, audioText }) => {
     event && setPrompt(event.target.value);
@@ -60,32 +57,33 @@ function AIPage() {
   };
 
   const handleRecording = async () => {
-    if (inputType === "text") microIcon ? recognition("start") : recognition("stop");
-    else {
-      if (microIcon) await audio("start");
-      else {
-        audioStore.audio = await audio("stop");
-        audioStore.user.push(URL.createObjectURL(audioStore.audio));
-      }
-    }
+    const data = await getMicro({
+      inputType: options.inputType,
+      method: microIcon ? "start" : "stop",
+      audioStoreRef,
+    });
     setMicroIcon((prev) => !prev);
+
+    if (!data) return;
+    audioStoreRef.audio = data;
+    audioStoreRef.user.push(URL.createObjectURL(audioStoreRef.audio));
   };
 
   const handleSendPrompt = async () => {
     console.log("prompt:", prompt.trim());
-    if (!prompt.trim() && !audioStore.audio) return;
+    if (!prompt.trim() && !audioStoreRef.audio) return;
 
-    const newMessage = `${audioStore.audio ? "*this is audio file*" : ""} ${prompt.trim() && prompt}`;
+    const newMessage = `${audioStoreRef.audio ? "*this is audio file*" : ""} ${prompt.trim() && prompt}`;
     setMessages((prev) => [...prev, { role: "user", message: newMessage.trim() }]);
 
     setPrompt("");
 
     const formData = new FormData();
     formData.append("prompt", prompt);
-    formData.append("outputType", outputType);
-    formData.append("model", model);
-    audioStore.audio && formData.append("audio", audioStore.audio, "audio.wav");
-    audioStore.audio = null;
+    formData.append("outputType", options.outputType);
+    formData.append("model", options.model);
+    audioStoreRef.audio && formData.append("audio", audioStoreRef.audio, "audio.wav");
+    audioStoreRef.audio = null;
 
     const responseMessage = await api.request({
       method: "post",
@@ -111,26 +109,13 @@ function AIPage() {
       <SpeechConfig setConfig={setConfig} />
 
       <div className={cx("audio-store")}>
-        {audioStore.ai?.map((audioURL, index) => (
+        {audioStoreRef.ai?.map((audioURL, index) => (
           <audio src={audioURL} controls key={index} />
         ))}
       </div>
 
       <div className={cx("ai-interactive")}>
-        <div ref={options} className={cx("options-wrapper")}>
-          <select defaultValue={inputType} onChange={(event) => setInputType(event.target.value)}>
-            <option value="text">Speech to text</option>
-            <option value="audio">Audio</option>
-          </select>
-          <select defaultValue={outputType} onChange={(event) => setOutputType(event.target.value)}>
-            <option value="text">Text</option>
-            <option value="audio">Audio</option>
-          </select>
-          <select name="model" defaultValue={model} onChange={setModel}>
-            <option value="gemini-2.0-flash">Gemini-2.0-flash</option>
-            <option value="gemini-2.5-flash">Gemini-2.5-flash</option>
-          </select>
-        </div>
+        <Options setOptions={setOptions} optionsRef={optionsRef} />
 
         <div className={cx("message-wrapper")}>
           <div className={cx("message", "system")}>
@@ -193,7 +178,7 @@ function AIPage() {
       </div>
 
       <div className={cx("audio-store")}>
-        {audioStore.user?.map((audioURL, index) => (
+        {audioStoreRef.user?.map((audioURL, index) => (
           <audio src={audioURL} controls key={index} />
         ))}
       </div>

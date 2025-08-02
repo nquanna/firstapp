@@ -1,0 +1,19 @@
+.options-wrapper {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+
+  select {
+    padding: 1.5px 6px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    user-select: none;
+  }
+
+  select + select {
+    margin-left: 12px;
+  }
+}

@@ -4,8 +4,8 @@ class AuthController {
   // [POST] /ai/call-api
   async callApi(req, res) {
     try {
-      const { prompt, model, outputType } = req.body;
-      // console.log(prompt, model, outputType);
+      const { prompt, outputType, model } = req.body;
+      // console.log(prompt, outputType, model);
 
       let responseMessage;
       if (req.file) {

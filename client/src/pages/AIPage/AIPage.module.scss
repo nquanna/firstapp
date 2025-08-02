@@ -60,26 +60,6 @@
     border: 1px solid red;
     overflow: hidden;
 
-    .options-wrapper {
-      display: flex;
-      justify-content: center;
-      position: absolute;
-      width: 100%;
-      z-index: 1;
-
-      select {
-        padding: 1.25px 4px;
-        border-radius: 6px;
-        border: none;
-        outline: none;
-        user-select: none;
-      }
-
-      select + select {
-        margin-left: 12px;
-      }
-    }
-
     .message-wrapper {
       display: flex;
       flex-direction: column;
@@ -96,15 +76,15 @@
 
       /* &::-webkit-scrollbar-track {
       background: #ff0000;
-    }
+      }
 
-    &::-webkit-scrollbar-thumb {
-      background: #888;
-    }
+      &::-webkit-scrollbar-thumb {
+        background: #888;
+      }
 
-    &::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    } */
+      &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      } */
 
       .message {
         $message-margin: 6px;
