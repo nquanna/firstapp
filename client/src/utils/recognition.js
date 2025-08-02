@@ -1,4 +1,5 @@
-const recording = new window.webkitSpeechRecognition() || new window.SpeechRecognition();
+// eslint-disable-next-line
+let recording = new window.webkitSpeechRecognition() || new window.SpeechRecognition();
 recording.continuous = true;
 recording.interimResults = false;
 
@@ -31,11 +32,12 @@ function assignSetText(setText) {
   setFinalResult = setText;
 }
 
-function recognition(method, lang = "en-GB") {
-  isListening = method === "start";
+function recognition(action, lang = "en-GB") {
+  isListening = action === "start";
 
   recording.lang = lang;
-  recording[method]();
+  action === "start" && recording.abort();
+  recording[action]();
 }
 
 export { assignSetText };

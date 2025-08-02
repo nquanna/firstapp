@@ -78,7 +78,6 @@ function AIPage() {
     const newMessage = `${audioStore.audio ? "*this is audio file*" : ""} ${prompt.trim() && prompt}`;
     setMessages((prev) => [...prev, { role: "user", message: newMessage.trim() }]);
 
-    // prompt.trim() && textarea.current.focus();
     setPrompt("");
 
     const formData = new FormData();
