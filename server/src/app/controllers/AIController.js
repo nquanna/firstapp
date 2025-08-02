@@ -1,23 +1,20 @@
-const callAPI = require("../../config/ai/callApi");
+const callModel = require("../../config/ai/callModel");
 
-class AuthController {
-  // [POST] /ai/call-api
-  async callApi(req, res) {
+class AIController {
+  // [POST] /ai/call-model
+  async callModel(req, res) {
     try {
       const { prompt, outputType, model } = req.body;
       // console.log(prompt, outputType, model);
 
-      let responseMessage;
+      let params = { prompt, model, outputType };
+
       if (req.file) {
-        const base64Audio = req.file.buffer.toString("base64");
-        responseMessage = await callAPI({
-          prompt,
-          model,
-          base64Audio,
-          inputType: "audio",
-          outputType,
-        });
-      } else responseMessage = await callAPI({ prompt, model, outputType });
+        const base64Audio = await req.file.buffer.toString("base64");
+        params = { ...params, prompt, model, outputType, base64Audio, inputType: "audio" };
+      }
+
+      const responseMessage = await callModel(params);
 
       return res.json({ success: true, message: responseMessage });
     } catch (error) {
@@ -28,4 +25,4 @@ class AuthController {
   }
 }
 
-module.exports = new AuthController();
+module.exports = new AIController();

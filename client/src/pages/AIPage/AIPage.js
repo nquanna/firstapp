@@ -87,7 +87,7 @@ function AIPage() {
 
     const responseMessage = await api.request({
       method: "post",
-      path: "/ai/call-api",
+      path: "/ai/call-model",
       data: formData,
     });
 

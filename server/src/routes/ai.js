@@ -6,6 +6,6 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 const AIController = require("../app/controllers/AIController");
 
-router.post("/call-api", upload.single("audio"), AIController.callApi);
+router.post("/call-model", upload.single("audio"), AIController.callModel);
 
 module.exports = router;
