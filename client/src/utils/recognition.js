@@ -7,6 +7,10 @@ const finalResult = [];
 let isListening = false;
 let setFinalResult;
 
+recording.onstart = () => {
+  alert("start listen to convert to text!");
+};
+
 recording.onend = () => {
   if (isListening) return recording.start();
 

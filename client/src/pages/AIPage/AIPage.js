@@ -23,7 +23,7 @@ function AIPage() {
   const [isSpeak, setIsSpeak] = useState(true);
   const [config, setConfig] = useState();
 
-  const uniquaIdToSpeak = useRef(-1);
+  const uniqueIdRef = useRef(-1);
   const audioStore = useRef();
   const [options, promptWrapper, textarea] = [useRef(), useRef(), useRef()];
   const uploadRef = useRef();
@@ -52,7 +52,7 @@ function AIPage() {
 
   const handleSetPrompt = ({ event, audioText }) => {
     event && setPrompt(event.target.value);
-    audioText && setPrompt((prev) => (prev += ` ${audioText}`));
+    audioText && setPrompt((prev) => `${prev ? prev : ""} ${audioText}`.trim());
   };
 
   const handleRecording = async () => {
@@ -72,9 +72,9 @@ function AIPage() {
     if (!prompt.trim() && !audioStore.audio) return;
 
     const newMessage = `${audioStore.audio ? "*this is audio file*" : ""} ${prompt.trim() && prompt}`;
-    setMessages((prev) => [...prev, { role: "user", message: newMessage }]);
+    setMessages((prev) => [...prev, { role: "user", message: newMessage.trim() }]);
 
-    prompt.trim() && textarea.current.focus();
+    // prompt.trim() && textarea.current.focus();
     setPrompt("");
 
     const formData = new FormData();
@@ -108,9 +108,9 @@ function AIPage() {
       <SpeechConfig setConfig={setConfig} />
 
       <div className={cx("audio-store")}>
-        {audioStore.ai?.map((audioURL, index) => {
-          return <audio src={audioURL} controls key={index} />;
-        })}
+        {audioStore.ai?.map((audioURL, index) => (
+          <audio src={audioURL} controls key={index} />
+        ))}
       </div>
 
       <div className={cx("ai-interactive")}>
@@ -137,8 +137,8 @@ function AIPage() {
 
           {messages.map((messageObj, index) => {
             const text = <span>{messageObj.message.trim()}</span>;
-            const uniqueId = `unique-id-${uniquaIdToSpeak.current}`;
-            uniquaIdToSpeak.current += 1;
+            const uniqueId = `unique-id-${uniqueIdRef.current}`;
+            uniqueIdRef.current += 1;
             return (
               <div className={cx("message", messageObj.role)} key={index}>
                 <HighlightedText id={uniqueId}>{text}</HighlightedText>
@@ -190,9 +190,9 @@ function AIPage() {
       </div>
 
       <div className={cx("audio-store")}>
-        {audioStore.user?.map((audioURL, index) => {
-          return <audio src={audioURL} controls key={index} />;
-        })}
+        {audioStore.user?.map((audioURL, index) => (
+          <audio src={audioURL} controls key={index} />
+        ))}
       </div>
     </div>
   );

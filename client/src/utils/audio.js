@@ -27,7 +27,7 @@ const methods = {
   },
 
   stop() {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
       mediaRecorder.onstop = async () => {
         const webmBlob = new Blob(chunks, { type: "audio/webm" });
         const wavBlob = await audioConverter(webmBlob);
@@ -36,7 +36,7 @@ const methods = {
         resolve(wavBlob);
       };
 
-      mediaRecorder.stop();
+      await mediaRecorder.stop();
     });
   },
 };
