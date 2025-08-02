@@ -7,21 +7,20 @@ let isListening = false;
 let setFinalResult;
 
 recording.onstart = () => {
-  alert(isListening);
+  // alert(isListening);
 };
 
 recording.onend = () => {
-  alert("end and", isListening);
-  if (isListening) return recording.start();
+  // alert("end and", isListening);
+  isListening && recording.start();
 
-  // console.log(finalResult.join(" "));
   setFinalResult({ audioText: finalResult.join(" ") });
   finalResult.length = 0;
 };
 
-recording.onerror = (e) => {
-  console.log("Error: ", e.error);
-  alert(e.error);
+recording.onerror = (event) => {
+  console.log("Error: ", event.error);
+  alert(event.error);
 };
 
 function assignSetText(setText) {

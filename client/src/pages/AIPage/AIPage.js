@@ -47,6 +47,10 @@ function AIPage() {
   }, []);
 
   useEffect(() => {
+    inputType === "text" && recognition("stop");
+  }, [inputType]);
+
+  useEffect(() => {
     uploadRef.current.classList.toggle(cx("disable"), !audioStore.audio && !prompt.trim());
   }, [audioStore.audio, prompt]);
 
