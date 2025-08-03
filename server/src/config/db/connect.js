@@ -15,7 +15,7 @@ async function connectDB() {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         maxPoolSize: 8,
-        bufferCommands: false,
+        // bufferCommands: false,
         connectTimeoutMS: 10000,
       })
       .then((m) => m.connection);
