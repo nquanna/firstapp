@@ -1,16 +1,27 @@
 const { GoogleGenAI } = require("@google/genai");
-const fs = require("fs");
+const { readFileSync } = require("fs");
 const path = require("path");
 
 const constanst = require("../../utils/constanst");
 
 const AI = new GoogleGenAI({ apiKey: constanst.apiKey });
 
-const trainingPath = path.join(process.cwd(), "training.txt");
-const trainingContent = fs.readFileSync(trainingPath /*, { encoding: "utf8", flag: "r" } */);
+const trainingDirectory = path.resolve(process.cwd(), "");
+const trainingPath = path.join(trainingDirectory, "training.json");
+const trainingContent = readFileSync(trainingPath, { encoding: "utf8", flag: "r" });
+const systemTraining = { role: "user", parts: [{ text: trainingContent ?? "" }] };
+const contents = [systemTraining];
+
+/* const trainingDirectory = path.resolve(process.cwd(), "");
+const trainingPath = path.join(trainingDirectory, "training.json");
+const trainingContent = readFileSync(path.join(trainingDirectory, "training.json"), {
+  encoding: "utf8",
+  flag: "r",
+});
+console.log(JSON.parse(trainingContent)?.ai?.content);
 // const systemTraining = { role: "user", parts: [{ text: trainingContent }] };
 const systemTraining = { role: "user", parts: [{ text: "" }] };
-const contents = [systemTraining];
+const contents = [systemTraining]; */
 
 const modelTTS = {
   flash: "gemini-2.5-flash-preview-tts",
