@@ -1,14 +1,15 @@
 const { GoogleGenAI } = require("@google/genai");
-const fs = require("fs");
-const path = require("path");
+// const fs = require("fs");
+// const path = require("path");
 
 const constanst = require("../../utils/constanst");
 
 const AI = new GoogleGenAI({ apiKey: constanst.apiKey });
 
-const trainingPath = path.join(process.cwd(), "training.txt");
-const trainingContent = fs.readFileSync(trainingPath, { encoding: "utf8", flag: "r" });
-const systemTraining = { role: "user", parts: [{ text: trainingContent }] };
+// const trainingPath = path.join(process.cwd(), "training.txt");
+// const trainingContent = fs.readFileSync(trainingPath, { encoding: "utf8", flag: "r" });
+// const systemTraining = { role: "user", parts: [{ text: trainingContent }] };
+const systemTraining = { role: "user", parts: [{ text: "" }] };
 const contents = [systemTraining];
 
 const modelTTS = {
