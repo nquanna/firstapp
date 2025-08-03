@@ -1,15 +1,17 @@
 const { GoogleGenAI } = require("@google/genai");
-const { readFileSync } = require("fs");
-const path = require("path");
+// const { readFileSync } = require("fs");
+// const path = require("path");
 
 const constanst = require("../../utils/constanst");
+const trainingContent = require("../../training.json")?.ai?.content || "";
 
 const AI = new GoogleGenAI({ apiKey: constanst.apiKey });
 
-const trainingDirectory = path.resolve(process.cwd(), "");
+/* const trainingDirectory = path.resolve(process.cwd(), "");
 const trainingPath = path.join(trainingDirectory, "training.json");
-const trainingContent = readFileSync(trainingPath, { encoding: "utf8", flag: "r" });
-const systemTraining = { role: "user", parts: [{ text: trainingContent ?? "" }] };
+const trainingContent = readFileSync(trainingPath, "utf8"); 
+ const systemTraining = { role: "user", parts: [{ text: trainingContent ?? "" }] };*/
+const systemTraining = { role: "user", parts: [{ text: trainingContent }] };
 const contents = [systemTraining];
 
 /* const trainingDirectory = path.resolve(process.cwd(), "");
