@@ -7,7 +7,7 @@ const constanst = require("../../utils/constanst");
 const AI = new GoogleGenAI({ apiKey: constanst.apiKey });
 
 const trainingPath = path.join(process.cwd(), "training.txt");
-// const trainingContent = fs.readFileSync(trainingPath, { encoding: "utf8", flag: "r" });
+const trainingContent = fs.readFileSync(trainingPath, { encoding: "utf8", flag: "r" });
 // const systemTraining = { role: "user", parts: [{ text: trainingContent }] };
 const systemTraining = { role: "user", parts: [{ text: "" }] };
 const contents = [systemTraining];
