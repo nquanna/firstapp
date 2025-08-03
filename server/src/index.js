@@ -33,6 +33,10 @@ app.use(cookieParser());
 
 app.use(route);
 
+// const trainingPath = path.join(process.cwd(), "src/training.txt");
+// const trainingContent = fs.readFileSync(trainingPath, { encoding: "utf8", flag: "r" });
+// console.log("trainingContent:", trainingContent);
+
 if (!constanst.isProd) {
   const https = require("https");
   const fs = require("fs");

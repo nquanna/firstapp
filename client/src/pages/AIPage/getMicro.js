@@ -1,5 +1,27 @@
 import audioBufferToWav from "audiobuffer-to-wav";
 
+const utils = {
+  base64ToBlob(base64, contentType = "audio/wav", sliceSize = 512) {
+    const byteCharacters = atob(base64);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+
+    const blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+  },
+};
+
 const recognitionMethods = {
   recording: new window.webkitSpeechRecognition() || new window.SpeechRecognition(),
   finalResult: [],
@@ -94,4 +116,5 @@ async function getMicro({ inputType, method, setPrompt, lang }) {
   else alert("Invalid input type!");
 }
 
+export { utils };
 export default getMicro;

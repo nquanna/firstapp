@@ -7,9 +7,10 @@ import classNames from "classnames/bind";
 
 import Options from "./Options";
 import SpeechConfig from "./SpeechConfig";
+import RemoveCache from "./RemoveCache";
 
 import { api } from "~/utils";
-import getMicro from "./getMicro";
+import getMicro, { utils } from "./getMicro";
 
 import style from "./AIPage.module.scss";
 
@@ -26,7 +27,7 @@ function AIPage() {
   const uniqueIdRef = useRef(-1);
   const audioStoreRef = useRef();
   const [optionsRef, promptWrapper, textarea] = [useRef(), useRef(), useRef()];
-  const uploadRef = useRef();
+  const uploadIconRef = useRef();
 
   const { speak } = useSpeak();
 
@@ -48,7 +49,7 @@ function AIPage() {
   }, []);
 
   useEffect(() => {
-    uploadRef.current.classList.toggle(cx("disable"), !audioStoreRef.audio && !prompt.trim());
+    uploadIconRef.current.classList.toggle(cx("disable"), !audioStoreRef.audio && !prompt.trim());
   }, [audioStoreRef.audio, prompt]);
 
   const handleSetPrompt = ({ event, audioText }) => {
@@ -70,7 +71,7 @@ function AIPage() {
   };
 
   const handleSendPrompt = async () => {
-    console.log("prompt:", prompt.trim());
+    // console.log("prompt:", prompt.trim());
     if (!prompt.trim() && !audioStoreRef.audio) return;
 
     const newMessage = `${audioStoreRef.audio ? "*this is audio file*" : ""} ${prompt.trim() && prompt}`;
@@ -85,15 +86,20 @@ function AIPage() {
     audioStoreRef.audio && formData.append("audio", audioStoreRef.audio, "audio.wav");
     audioStoreRef.audio = null;
 
-    const responseMessage = await api.request({
+    const response = await api.request({
       method: "post",
       path: "/ai/call-model",
       data: formData,
     });
+    // console.log(response.resBase64Audio);
 
-    if (!responseMessage.success) return;
-    setMessages((prev) => [...prev, { role: "ai", message: responseMessage.message }]);
-    isSpeak && speak(responseMessage.message, { ...config });
+    if (!response.success) return;
+    setMessages((prev) => [...prev, { role: "ai", message: response.message }]);
+    if (options.outputType === "audio" && response.resBase64Audio.trim()) {
+      const blob = utils.base64ToBlob(response.resBase64Audio);
+      audioStoreRef.ai.push(URL.createObjectURL(blob));
+    }
+    isSpeak && speak(response.message, { ...config });
   };
 
   const handleSendPromptByEnter = (event) => {
@@ -107,6 +113,8 @@ function AIPage() {
   return (
     <div className={cx("ai-page-wrapper")}>
       <SpeechConfig setConfig={setConfig} />
+
+      <RemoveCache audioStoreRef={audioStoreRef} setMessages={setMessages} />
 
       <div className={cx("audio-store")}>
         {audioStoreRef.ai?.map((audioURL, index) => (
@@ -162,7 +170,7 @@ function AIPage() {
             />
             <FontAwesomeIcon
               icon={faArrowUp}
-              ref={uploadRef}
+              ref={uploadIconRef}
               className={cx("icon")}
               onClick={handleSendPrompt}
             />

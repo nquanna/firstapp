@@ -2,8 +2,6 @@ import axios from "axios";
 
 import constanst from "./constanst";
 
-const jsonType = "application/json";
-
 const http = axios.create({
   baseURL: constanst.baseUrl,
   withCredentials: true,
@@ -22,15 +20,7 @@ const request = async ({ path, method, data = {}, inputType = "json", outputType
 
     case "post":
       try {
-        /* if (data.entries instanceof Function)
-          for (let pair of data.entries()) console.warn(pair[0], pair[1]); */
-
-        const response = await http.post(path, data, {
-          headers: {
-            Accept: outputType === "audio" ? "audio/*" : jsonType,
-          },
-          responseType: outputType === "audio" ? "blob" : undefined,
-        });
+        const response = await http.post(path, data);
         return response.data;
       } catch (error) {
         console.log(error);

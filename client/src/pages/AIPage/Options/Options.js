@@ -11,7 +11,7 @@ function Options({ setOptions, optionsRef }) {
       return { ...prevOptions, [event.target.name]: event.target.value };
     },
     {
-      inputType: "text",
+      inputType: "audio",
       outputType: "text",
       model: "gemini-2.0-flash",
     }

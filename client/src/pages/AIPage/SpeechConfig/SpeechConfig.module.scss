@@ -15,6 +15,7 @@
     aspect-ratio: 1/1;
     cursor: pointer;
     transition: all 0.25s ease;
+    z-index: 1;
 
     &:after {
       content: "";
