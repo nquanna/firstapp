@@ -6,8 +6,7 @@ import { faMicrophone, faMicrophoneSlash, faArrowUp } from "@fortawesome/free-so
 import classNames from "classnames/bind";
 
 import Options from "./Options";
-import SpeechConfig from "./SpeechConfig";
-import RemoveCache from "./RemoveCache";
+import Config from "./Config/Config";
 
 import { api } from "~/utils";
 import getMicro, { utils } from "./getMicro";
@@ -22,7 +21,8 @@ function AIPage() {
   const [options, setOptions] = useState();
   const [microIcon, setMicroIcon] = useState(true);
   const [isSpeak, setIsSpeak] = useState(true);
-  const [config, setConfig] = useState();
+  const [useTraining, setUseTraining] = useState(true);
+  const [speechConfig, setSpeechConfig] = useState();
 
   const uniqueIdRef = useRef(-1);
   const audioStoreRef = useRef();
@@ -70,7 +70,7 @@ function AIPage() {
     audioStoreRef.user.push(URL.createObjectURL(audioStoreRef.audio));
   };
 
-  const handleSendPrompt = async () => {
+  const handleCallModel = async () => {
     // console.log("prompt:", prompt.trim());
     if (!prompt.trim() && !audioStoreRef.audio) return;
 
@@ -78,8 +78,8 @@ function AIPage() {
     setMessages((prev) => [...prev, { role: "user", message: newMessage.trim() }]);
 
     setPrompt("");
-
     const formData = new FormData();
+    formData.append("useTraining", useTraining);
     formData.append("prompt", prompt);
     formData.append("outputType", options.outputType);
     formData.append("model", options.model);
@@ -99,22 +99,26 @@ function AIPage() {
       const blob = utils.base64ToBlob(response.resBase64Audio);
       audioStoreRef.ai.push(URL.createObjectURL(blob));
     }
-    isSpeak && speak(response.message, { ...config });
+    isSpeak && speak(response.message, { ...speechConfig });
   };
 
-  const handleSendPromptByEnter = (event) => {
+  const handleCallModelByEnter = (event) => {
     if (event.code !== "Enter") return;
     if (event.shiftKey) return;
 
     event.preventDefault();
-    handleSendPrompt();
+    handleCallModel();
   };
 
   return (
     <div className={cx("ai-page-wrapper")}>
-      <SpeechConfig setConfig={setConfig} />
-
-      <RemoveCache audioStoreRef={audioStoreRef} setMessages={setMessages} />
+      <Config
+        setSpeechConfig={setSpeechConfig}
+        audioStoreRef={audioStoreRef}
+        setMessages={setMessages}
+        useTraining={useTraining}
+        setUseTraining={setUseTraining}
+      />
 
       <div className={cx("audio-store")}>
         {audioStoreRef.ai?.map((audioURL, index) => (
@@ -138,7 +142,7 @@ function AIPage() {
             return (
               <div className={cx("message", messageObj.role)} key={index}>
                 <HighlightedText id={uniqueId}>{text}</HighlightedText>
-                <Speech {...config} id={uniqueId} text={text} highlightText={true} />
+                <Speech {...speechConfig} id={uniqueId} text={text} highlightText={true} />
               </div>
             );
           })}
@@ -160,7 +164,7 @@ function AIPage() {
             rows={2}
             value={prompt}
             onChange={(event) => handleSetPrompt({ event })}
-            onKeyDownCapture={handleSendPromptByEnter}></textarea>
+            onKeyDownCapture={handleCallModelByEnter}></textarea>
 
           <div className={cx("icons")}>
             <FontAwesomeIcon
@@ -172,7 +176,7 @@ function AIPage() {
               icon={faArrowUp}
               ref={uploadIconRef}
               className={cx("icon")}
-              onClick={handleSendPrompt}
+              onClick={handleCallModel}
             />
           </div>
 

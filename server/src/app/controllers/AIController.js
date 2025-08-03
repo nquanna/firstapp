@@ -5,8 +5,10 @@ const trainingContents = require("../../training.json")?.ai?.contents || "";
 const trainingContent = trainingContents?.reduce((final, content) => (final += content)) || "";
 
 const AI = new GoogleGenAI({ apiKey: constanst.apiKey });
+
+const noneTraining = { role: "user", parts: [{ text: "" }] };
 const systemTraining = { role: "user", parts: [{ text: trainingContent }] };
-const contents = [systemTraining];
+const contents = [];
 
 const modelTTS = {
   flash: "gemini-2.5-flash-preview-tts",
@@ -17,8 +19,10 @@ class AIController {
   // [POST] /ai/call-model
   async callModel(req, res) {
     try {
-      const { prompt, outputType, model } = req.body;
+      const { useTraining, prompt, outputType, model } = req.body;
       // console.log(prompt, outputType, model);
+
+      contents[0] = +useTraining ? systemTraining : noneTraining;
 
       const newContent = { role: "user", parts: [{ text: prompt }] };
       if (req.file) {
@@ -52,6 +56,8 @@ class AIController {
         });
         resBase64Audio = responseAudio.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
       }
+
+      contents.push({ role: "model", parts: [{ text: message }] });
 
       return res.json({ success: true, message, resBase64Audio });
     } catch (error) {
