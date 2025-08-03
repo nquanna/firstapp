@@ -14,8 +14,8 @@ async function connectDB() {
       .connect(constanst.mongoUri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        // maxPoolSize: 10,
-        // bufferCommands: false,
+        maxPoolSize: 8,
+        bufferCommands: false,
         connectTimeoutMS: 10000,
       })
       .then((m) => m.connection);
