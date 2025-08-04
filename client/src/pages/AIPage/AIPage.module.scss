@@ -1,8 +1,8 @@
 :root {
-  --width-ai-interactive: 360px;
-  --height-ai-interactive: 380px;
-  --audio-store-scale: 1.2;
-  --audio-store-margin: 0 8px;
+  --width-ai-interactive: 340px;
+  --height-ai-interactive: 420px;
+  --audio-store-scale: 1.1;
+  --audio-store-margin: 0 4px;
   --audio-store-width: calc((100vw - var(--width-ai-interactive)) / var(--audio-store-scale));
 
   --options-height: 0;
@@ -31,7 +31,7 @@
     width: var(--audio-store-width);
     height: var(--height-ai-interactive);
     border: 1px solid red;
-    border-radius: 14px;
+    border-radius: 6px;
     overflow: auto;
 
     &::-webkit-scrollbar {

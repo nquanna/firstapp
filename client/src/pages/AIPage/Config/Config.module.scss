@@ -15,8 +15,8 @@
 
     .icon {
       position: absolute;
-      top: 30px;
-      left: 30px;
+      top: 20px;
+      left: 20px;
       svg {
         font-size: 1.5rem;
       }
@@ -41,8 +41,8 @@
   .speech-config-wrapper {
     .icon {
       position: absolute;
-      top: 30px;
-      right: 30px;
+      top: 20px;
+      right: 20px;
       aspect-ratio: 1/1;
       cursor: pointer;
       transition: all 0.25s ease;
@@ -137,8 +137,8 @@
   .remove-cache-wrapper {
     .remove-cache-btn {
       position: absolute;
-      top: 80px;
-      right: 25px;
+      top: 60px;
+      right: 15px;
       padding: 7px 16px;
       border-radius: 14px;
       background: linear-gradient(to bottom right, rgb(255, 255, 0), var(--primary-color));
@@ -204,8 +204,8 @@
 
   .use-training-wrapper {
     position: absolute;
-    top: 135px;
-    right: 30px;
+    top: 100px;
+    right: 20px;
     width: 20px;
     z-index: 1;
 
