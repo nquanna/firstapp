@@ -1,24 +1,43 @@
 import audioBufferToWav from "audiobuffer-to-wav";
 
 const utils = {
-  base64ToBlob(base64, contentType = "audio/wav", sliceSize = 512) {
-    const byteCharacters = atob(base64);
-    const byteArrays = [];
+  base64ToBlob(base64Audio, options = {}) {
+    const sampleRate = options.sampleRate || 24000;
+    const numChannels = options.numChannels || 1;
+    const bytesPerSample = 2;
 
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      const slice = byteCharacters.slice(offset, offset + sliceSize);
+    const rawData = atob(base64Audio);
+    const dataLength = rawData.length;
+    const buffer = new ArrayBuffer(44 + dataLength);
+    const view = new DataView(buffer);
 
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
+    // WAV header
+    const writeString = (offset, str) => {
+      for (let i = 0; i < str.length; i++) {
+        view.setUint8(offset + i, str.charCodeAt(i));
       }
+    };
 
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
+    writeString(0, "RIFF");
+    view.setUint32(4, 36 + dataLength, true); // Chunk size
+    writeString(8, "WAVE");
+    writeString(12, "fmt ");
+    view.setUint32(16, 16, true); // Subchunk1Size (PCM)
+    view.setUint16(20, 1, true); // AudioFormat = PCM
+    view.setUint16(22, numChannels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * numChannels * bytesPerSample, true); // ByteRate
+    view.setUint16(32, numChannels * bytesPerSample, true); // BlockAlign
+    view.setUint16(34, 8 * bytesPerSample, true); // BitsPerSample
+    writeString(36, "data");
+    view.setUint32(40, dataLength, true);
+
+    // PCM data
+    for (let i = 0; i < dataLength; i++) {
+      view.setUint8(44 + i, rawData.charCodeAt(i));
     }
 
-    const blob = new Blob(byteArrays, { type: contentType });
-    return blob;
+    return URL.createObjectURL(new Blob([view], { type: "audio/wav" }));
   },
 };
 

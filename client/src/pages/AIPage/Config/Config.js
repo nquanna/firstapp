@@ -1,16 +1,23 @@
 import { useRef, useEffect, useState, memo } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faGear } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames/bind";
 
-import { api } from "~/utils";
+import { api, defaultTrainingContent } from "~/utils";
 
 import style from "./Config.module.scss";
 
 const cx = classNames.bind(style);
 
-function Config({ setSpeechConfig, audioStoreRef, setMessages, useTraining, setUseTraining }) {
+function Config({
+  setSpeechConfig,
+  audioStoreRef,
+  setMessages,
+  useTraining,
+  setUseTraining,
+  setTrainingContent,
+}) {
   /* SPEECH CONFIG */
   const langAndVoiceRef = useRef();
   langAndVoiceRef.en = {
@@ -28,14 +35,16 @@ function Config({ setSpeechConfig, audioStoreRef, setMessages, useTraining, setU
   const [rate, setRate] = useState(8);
   const [lang, setLang] = useState(langAndVoiceRef.en.lang);
   const [voiceURI, setVoiceURI] = useState(langAndVoiceRef.en.zira);
-  const [showing, setShowing] = useState(false);
+  const [showingSpeechConfig, setShowingSpeechConfig] = useState(false);
+  const [showingRemoveCache, setShowingRemoveCache] = useState(false);
+  const [showingTrainingContent, setShowingTrainingContent] = useState(true);
 
-  const [isShowing, setIsShowing] = useState(false);
+  const textareaRef = useRef();
 
   /* REMOVE CACHE */
   const handleRemoveCache = async (event) => {
     event.preventDefault();
-    setIsShowing((prev) => !prev);
+    setShowingRemoveCache((prev) => !prev);
 
     if (!+event.target.name) return;
     const response = await api.request({ method: "get", path: "/ai/remove-cache" });
@@ -53,14 +62,36 @@ function Config({ setSpeechConfig, audioStoreRef, setMessages, useTraining, setU
   }, [rate, lang, voiceURI]);
 
   /* USE TRAINING */
+
+  /* TRAINING CONTENTS */
+  useEffect(() => {
+    setShowingTrainingContent(false);
+    setTrainingContent(textareaRef.current?.value);
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <div className={cx("config-wrapper")}>
+      <div className={cx("training-wrapper")}>
+        <div className={cx("icon")} onClick={() => setShowingTrainingContent((prev) => !prev)}>
+          <FontAwesomeIcon icon={faGear} />
+        </div>
+        {showingTrainingContent && (
+          <textarea
+            ref={textareaRef}
+            className={cx("training-content")}
+            defaultValue={defaultTrainingContent}
+            onChange={(event) => setTrainingContent(event.target.value)}
+          />
+        )}
+      </div>
+
       <div className={cx("speech-config-wrapper")}>
-        <div className={cx("icon")} onClick={() => setShowing((prev) => !prev)}>
+        <div className={cx("icon")} onClick={() => setShowingSpeechConfig((prev) => !prev)}>
           <FontAwesomeIcon icon={faBars} />
         </div>
 
-        <div className={cx("speech-config", { hide: !showing })}>
+        <div className={cx("speech-config", { hide: !showingSpeechConfig })}>
           <div className={cx("config-group-wrapper")}>
             <div className={cx("config-group")}>
               <label>Rate (1 - 100):</label>
@@ -107,7 +138,7 @@ function Config({ setSpeechConfig, audioStoreRef, setMessages, useTraining, setU
             </div>
           </div>
 
-          <div className={cx("close")} onClick={() => setShowing(false)}>
+          <div className={cx("close")} onClick={() => setShowingSpeechConfig(false)}>
             OK
           </div>
         </div>
@@ -118,7 +149,7 @@ function Config({ setSpeechConfig, audioStoreRef, setMessages, useTraining, setU
           <div className={cx("text")}>Remove Cache</div>
         </div>
 
-        {isShowing && (
+        {showingRemoveCache && (
           <div className={cx("remove-cache-confirm-wrapper")}>
             <div className={cx("title")}>
               REMOVE CACHE.

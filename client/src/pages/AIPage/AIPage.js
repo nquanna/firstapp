@@ -23,6 +23,7 @@ function AIPage() {
   const [isSpeak, setIsSpeak] = useState(true);
   const [useTraining, setUseTraining] = useState(true);
   const [speechConfig, setSpeechConfig] = useState();
+  const [trainingContent, setTrainingContent] = useState("");
 
   const uniqueIdRef = useRef(-1);
   const audioStoreRef = useRef();
@@ -80,6 +81,7 @@ function AIPage() {
     setPrompt("");
     const formData = new FormData();
     formData.append("useTraining", useTraining);
+    formData.append("trainingContent", trainingContent);
     formData.append("prompt", prompt);
     formData.append("outputType", options.outputType);
     formData.append("model", options.model);
@@ -94,10 +96,11 @@ function AIPage() {
     // console.log(response.resBase64Audio);
 
     if (!response.success) return;
-    setMessages((prev) => [...prev, { role: "ai", message: response.message }]);
+    setMessages((prev) => [...prev, { role: "ai", message: response.message?.replace("*", '"') }]);
     if (options.outputType === "audio" && response.resBase64Audio.trim()) {
-      const blob = utils.base64ToBlob(response.resBase64Audio);
-      audioStoreRef.ai.push(URL.createObjectURL(blob));
+      const wavAudio = utils.base64ToBlob(response.resBase64Audio);
+      console.log(wavAudio);
+      audioStoreRef.ai.push(wavAudio);
     }
     isSpeak && speak(response.message, { ...speechConfig });
   };
@@ -118,6 +121,7 @@ function AIPage() {
         setMessages={setMessages}
         useTraining={useTraining}
         setUseTraining={setUseTraining}
+        setTrainingContent={setTrainingContent}
       />
 
       <div className={cx("audio-store")}>

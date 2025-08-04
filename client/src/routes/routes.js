@@ -75,7 +75,7 @@ const routes = [
 
   {
     path: config.routes.ai,
-    private: true,
+    // private: true,
     component: AIPage,
     props: {
       routerPath: config.routes.ai,
