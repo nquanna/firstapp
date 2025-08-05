@@ -25,11 +25,25 @@ function HomePage() {
     // eslint-disable-next-line
   }, []);
 
+  const handleSendNotification = (event) => {
+    Notification.requestPermission().then((perm) => {
+      if (perm === "granted") {
+        // console.warn("noitficated");
+        const noitficated = new Notification(Math.random(), {
+          body: `Hello World!`,
+          // tag: "test",
+          tag: `${Date.now()}`,
+          renotify: true,
+        });
+      }
+    });
+  };
+
   return (
     <>
       <div className={cx("landing")}>
         {showMessage && <Message type={type.current} state={state.current} />}
-        this is home page.
+        <div onClick={handleSendNotification}>this is home page.</div>
       </div>
     </>
   );
