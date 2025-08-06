@@ -1,10 +1,8 @@
 // eslint-disable-next-line
-self.addEventListener("push", (e) => {
-  const data = e.data.json();
+self.addEventListener("push", (event) => {
+  const data = event.data.json();
 
-  // eslint-disable-next-line
-  self.registration.showNotification(data.title, {
-    body: "Notified by Traversy Media!",
-    icon: "http://image.ibb.co/frYOFd/tmlogo.png",
-  });
+  const options = { body: data.body || "Default body!", icon: "./logo512.png" };
+
+  event.waitUntil(self.registration.showNotification(data.title, options));
 });

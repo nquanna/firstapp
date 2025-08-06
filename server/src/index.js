@@ -8,7 +8,8 @@ const route = require("./routes/index");
 const connectMongo = require("./config/database/connectMongo");
 const neonQueries = require("./config/database/neonQueries");
 
-// console.log(neonQueries.createTable());
+// neonQueries.createDeviceTable();
+// console.log(neonQueries.createVocabTable());
 
 // const morgan = require("morgan");
 const app = express();
