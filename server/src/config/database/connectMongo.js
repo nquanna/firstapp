@@ -6,7 +6,7 @@ if (!cached) {
   cached = global._mongo = { conn: null, promise: null };
 }
 
-async function connectDB() {
+async function connectMongo() {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
@@ -24,10 +24,4 @@ async function connectDB() {
   return cached.conn;
 }
 
-module.exports = connectDB;
-
-/* const connect = () =>
-  mongoose
-    .connect(constanst.mongoUri)
-    .then(() => console.log("Connected!"))
-    .catch(() => console.log("ERROR!!!")); */
+module.exports = connectMongo;

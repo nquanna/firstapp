@@ -1,6 +1,8 @@
 import { Fragment } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import { registerServiceWorker } from "~/utils";
+
 import routes from "~/routes";
 import PrivateRoute from "~/components/PrivateRoute";
 
@@ -11,6 +13,8 @@ import { AuthContextProvider } from "./contexts";
 import GlobalStyle from "~/components/GlobalStyle";
 
 function App() {
+  registerServiceWorker();
+
   return (
     <GlobalStyle>
       <AuthContextProvider>

@@ -33,10 +33,7 @@ class AIController {
 
       const { text: message } = await AI.models.generateContent({
         model,
-        generationConfig: {
-          temperature: 0.5,
-          maxOutputTokens: 30,
-        },
+        generationConfig: { temperature: 0.5, maxOutputTokens: 30 },
         contents,
       });
 
@@ -49,11 +46,7 @@ class AIController {
           contents: [{ parts: [{ text: message }] }],
           config: {
             responseModalities: ["AUDIO"],
-            speechConfig: {
-              voiceConfig: {
-                prebuiltVoiceConfig: { voiceName: "Iapetus" },
-              },
-            },
+            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Iapetus" } } },
           },
         });
         resBase64Audio = responseAudio.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
