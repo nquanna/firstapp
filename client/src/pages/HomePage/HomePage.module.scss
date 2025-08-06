@@ -3,4 +3,9 @@
   width: 100vw;
   height: calc(100vh - var(--header-height));
   overflow: hidden;
+
+  .text {
+    padding: 12px 36px;
+    border: 1px solid red;
+  }
 }

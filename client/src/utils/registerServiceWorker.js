@@ -21,7 +21,7 @@ const registerServiceWorker = () => {
 const sendNotification = () => {
   if (!subscription) return console.error("not subscription");
   api.request({
-    path: "/subscribe",
+    path: "/learn/subscribe",
     method: "post",
     data: subscription,
   });

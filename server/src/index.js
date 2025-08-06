@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const webpush = require("web-push");
 require("dotenv").config();
 
 const constanst = require("./utils/constanst");
@@ -15,16 +14,14 @@ const neonQueries = require("./config/database/neonQueries");
 const app = express();
 // app.use(morgan("dev"));
 
-webpush.setVapidDetails("mailto:test@test.com", constanst.vapidPublicKey, constanst.vapidPrivateKey);
-
-(async () => {
+/* (async () => {
   try {
     await connectMongo();
     console.log("Connected!");
   } catch (err) {
     console.error("DB connect error:", err);
   }
-})();
+})(); */
 
 // Middlewares
 app.use(express.urlencoded({ extended: true }));
@@ -33,21 +30,6 @@ app.use(
   cors({ origin: constanst.isProd ? constanst.origin : "http://localhost:3000", credentials: true })
 );
 app.use(cookieParser());
-
-// Subscribe Route
-app.post("/subscribe", (req, res) => {
-  const subscription = req.body;
-  const payload = JSON.stringify({
-    title: "🔥 Hello from server!",
-    body: "Đây là push notification đầu tiên đó bro!",
-  });
-
-  console.log("received!");
-
-  webpush.sendNotification(subscription, payload).catch((err) => console.error(err));
-
-  res.status(201).json({ message: "Sent push notification!" });
-});
 
 app.use(route);
 
