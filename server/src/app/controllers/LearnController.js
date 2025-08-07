@@ -12,9 +12,12 @@ class LearnController {
     try {
       const subscription = req.body;
       const existsDevice = await neonQueries.getDeviceThroughEndpoint(subscription.endpoint);
-
-      if (existsDevice) await neonQueries.updateDevice({ ...subscription });
-      else await neonQueries.insertDevice({ ...subscription });
+      if (existsDevice) {
+        await neonQueries.updateDevice({ ...subscription });
+      } else {
+        console.log("insert");
+        await neonQueries.insertDevice({ ...subscription });
+      }
 
       const payload = JSON.stringify({
         title: "🔥 Hello from server!",
