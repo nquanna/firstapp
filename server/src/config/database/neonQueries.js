@@ -2,8 +2,12 @@ const { Pool } = require("pg");
 
 const constanst = require("../../utils/constanst");
 
-const vocabTableName = "vocabularies";
-const devicesTableName = "devices";
+const tableName = {
+  otps: "otps",
+  users: "users",
+  vocab: "vocabularies",
+  subscriptions: "subscriptions ",
+};
 
 const remindLater = [1, 3, 7, 15, 30];
 
@@ -14,10 +18,47 @@ const pool = new Pool({
 });
 
 const queries = {
-  createVocabTable() {
-    pool.query(
-      `CREATE TABLE ${vocabTableName}
+  create: {
+    otpsTable() {
+      pool.query(
+        `CREATE TABLE ${tableName.otps}
         (id SERIAL PRIMARY KEY,
+        email TEXT NOT NULL,
+        otp TEXT NOT NULL,
+        role TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT now(),
+        updated_at TIMESTAMP DEFAULT now(),
+        UNIQUE(email))`,
+        (err, res) => {
+          console.log("err:", err);
+          console.log(res);
+        }
+      );
+    },
+
+    userTable() {
+      pool.query(
+        `CREATE TABLE ${tableName.users}
+        (id SERIAL PRIMARY KEY,
+        username TEXT NOT NULL,
+        email TEXT NOT NULL,
+        pass TEXT NOT NULL,
+        password TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT now(),
+        updated_at TIMESTAMP DEFAULT now(),
+        UNIQUE(username, email))`,
+        (err, res) => {
+          console.log("err:", err);
+          console.log(res);
+        }
+      );
+    },
+
+    vocabTable() {
+      pool.query(
+        `CREATE TABLE ${tableName.vocab}
+        (id SERIAL PRIMARY KEY,
+        user_id TEXT NOT NULL,
         word TEXT,
         en_mean TEXT,
         vi_mean TEXT,
@@ -26,103 +67,192 @@ const queries = {
         remind_at TEXT,
         remind_count INTEGER,
         learning BOOLEAN)`,
-      (err, res) => {
-        console.log("err:", err);
-        console.log(res);
-      }
-    );
-  },
+        (err, res) => {
+          console.log("err:", err);
+          console.log(res);
+        }
+      );
+    },
 
-  createDeviceTable() {
-    pool.query(
-      `CREATE TABLE ${devicesTableName}
+    subTable() {
+      pool.query(
+        `CREATE TABLE ${tableName.subscriptions}
         (id SERIAL PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        device_id TEXT NOT NULL,
         endpoint TEXT NOT NULL,
-        expiration_time BIGINT,
+        auth TEXT NOT NULL,
         p256dh TEXT NOT NULL,
-        auth TEXT NOT NULL)`,
-      (err, res) => {
-        console.log("err:", err);
-        console.log(res);
-      }
-    );
+        created_at TIMESTAMP DEFAULT now(),
+        updated_at TIMESTAMP DEFAULT now(),
+        UNIQUE (user_id, device_id))`,
+        (err, res) => {
+          console.log("err:", err);
+          console.log(res);
+        }
+      );
+    },
   },
 
-  async insertWord({ word, enMean, viMean, pronounce }) {
-    const current = new Date();
-    const insertedAt = `${current.getDate()}-${current.getMonth() + 1}-${current.getFullYear()}`;
+  insert: {
+    async otp({ email, otp, role }) {
+      try {
+        const res = await pool.query(
+          `INSERT INTO ${tableName.otps}
+          (email, otp, role)
+          VALUES ($1, $2, $3)
+          ON CONFLICT (email)
+          DO UPDATE SET otp = $2, updated_at = now()`,
+          [email, otp, role]
+        );
 
-    current.setDate(current.getDate() + remindLater[0]);
-    const remindAt = `${current.getDate()}-${current.getMonth()}-${current.getFullYear()}`;
+        return res.rows.length !== 0 ? res.rows[0] : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
 
-    try {
-      const res = await pool.query(
-        `INSERT INTO ${vocabTableName}
+    async user({ username, email, pass, password }) {
+      try {
+        const res = await pool.query(
+          `INSERT INTO ${tableName.users} (username, email, pass, password) VALUES ($1, $2 ,$3, $4)`,
+          [username, email, pass, password]
+        );
+        return res.rows.length !== 0 ? res.rows : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+
+    async word({ word, enMean, viMean, pronounce }) {
+      const current = new Date();
+      const insertedAt = `${current.getDate()}-${current.getMonth() + 1}-${current.getFullYear()}`;
+
+      current.setDate(current.getDate() + remindLater[0]);
+      const remindAt = `${current.getDate()}-${current.getMonth()}-${current.getFullYear()}`;
+
+      try {
+        const res = await pool.query(
+          `INSERT INTO ${tableName.vocab}
         (word, en_mean, vi_mean, pronounce, inserted_at, remind_at, remind_count, learning)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-        [word.trim(), enMean, viMean, pronounce, insertedAt, remindAt, 0, true]
-      );
+          [word.trim(), enMean, viMean, pronounce, insertedAt, remindAt, 0, true]
+        );
 
-      return res;
-    } catch (error) {
-      console.log("error:", error);
-    }
-  },
+        return res.rows.length !== 0 ? res.rows : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
 
-  async getAllWords() {
-    try {
-      const res = await pool.query(`SELECT * FROM ${vocabTableName}`);
-      return res;
-    } catch (error) {
-      console.log("error:", error);
-    }
-  },
-
-  async getWordsToRemind(nowDate) {
-    try {
-      const res = await pool.query(`SELECT * FROM ${vocabTableName} WHERE remind_at = $1`, [nowDate]);
-      return res;
-    } catch (error) {
-      console.log("error:", error);
-    }
-  },
-
-  async insertDevice({ endpoint, expirationTime, keys }) {
-    try {
-      const res = await pool.query(
-        `INSERT INTO ${devicesTableName}
+    async device({ endpoint, expirationTime, keys }) {
+      try {
+        const res = await pool.query(
+          `INSERT INTO ${devicesTableName}
         (endpoint, expiration_time, p256dh, auth)
         VALUES ($1, $2, $3, $4)`,
-        [endpoint, expirationTime, keys.p256dh, keys.auth]
-      );
-      return res;
-    } catch (error) {
-      console.log("error:", error);
-    }
+          [endpoint, expirationTime, keys.p256dh, keys.auth]
+        );
+        return res.rows.length !== 0 ? res.rows : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
   },
 
-  async getDeviceThroughEndpoint(endpoint) {
-    try {
-      const res = await pool.query(`SELECT * FROM ${devicesTableName} WHERE endpoint=$1`, [endpoint]);
-      return res.rows.length !== 0 ? res.rows : null;
-    } catch (error) {
-      console.log(error);
-    }
+  get: {
+    async otp(email) {
+      try {
+        const res = await pool.query(`SELECT * FROM ${tableName.otps} WHERE email = $1`, [email]);
+        return res.rows.length !== 0 ? res.rows[0] : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+
+    async user(email) {
+      try {
+        const res = await pool.query(`SELECT * FROM ${tableName.users} WHERE email = $1`, [email]);
+        return res.rows.length !== 0 ? res.rows[0] : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+
+    async allWords() {
+      try {
+        const res = await pool.query(`SELECT * FROM ${tableName.vocab}`);
+        return res.rows.length !== 0 ? res.rows : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+
+    async wordsToRemind(nowDate) {
+      try {
+        const res = await pool.query(`SELECT * FROM ${tableName.vocab} WHERE remind_at = $1`, [nowDate]);
+        return res.rows.length !== 0 ? res.rows : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+
+    async devices() {
+      try {
+        const res = await pool.query(`SELECT * FROM ${devicesTableName}`);
+        return res.rows.length !== 0 ? res.rows : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+
+    async deviceThroughEndpoint(endpoint) {
+      try {
+        const res = await pool.query(`SELECT * FROM ${devicesTableName} WHERE endpoint=$1`, [endpoint]);
+        return res.rows.length !== 0
+          ? res.rows
+          : null.length !== 0
+          ? res.rows.length !== 0
+            ? res.rows
+            : null
+          : null;
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 
-  async updateDevice({ endpoint, expirationTime, keys }) {
-    try {
-      const res = await pool.query(
-        `UPDATE ${devicesTableName}
-        SET expiration_time = $1, p256dh = $2, auth = $3
-        WHERE endpoint = $4`,
-        [expirationTime, keys.p256dh, keys.auth, endpoint]
-      );
-      return res;
-    } catch (error) {
-      console.log("error:", error);
-    }
+  update: {
+    async user({ email, newPass, newPassword }) {
+      try {
+        const res = await pool.query(
+          `UPDATE ${tableName.users}
+          SET pass = $2, password = $3
+          WHERE email = $1`,
+          [email, newPass, newPassword]
+        );
+        return res.rows.length !== 0 ? res.rows[0] : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+
+    async device({ endpoint, expirationTime, keys }) {
+      try {
+        const res = await pool.query(
+          `UPDATE ${tableName.subscriptions}
+          SET expiration_time = $1, p256dh = $2, auth = $3
+          WHERE endpoint = $4`,
+          [expirationTime, keys.p256dh, keys.auth, endpoint]
+        );
+        return res.rows.length !== 0 ? res.rows : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
   },
+
+  delete: {},
 };
 
 module.exports = queries;

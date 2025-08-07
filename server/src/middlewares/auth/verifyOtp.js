@@ -1,15 +1,15 @@
 const argon2 = require("argon2");
 
-const OtpSchema = require("../../app/models/otps");
+const neonQueries = require("../../config/database/neonQueries");
 
 // [POST] /auth/register
 // [POST] /auth/forgot-password
 const verifyOtp = async (req, res, next) => {
   try {
-    const otpDoc = await OtpSchema.findOne({ email: req.body.email, type: req.body.type }).exec();
-    req.body.isValidOtp = await argon2.verify(otpDoc.otp, req.body.otp || "");
-  } catch {
-    console.log("error in otp verify");
+    const otpInDb = await neonQueries.get.otp(req.body.email);
+    req.body.isValidOtp = await argon2.verify(otpInDb.otp, req.body.otp || "");
+  } catch (error) {
+    console.log("error in otp verify:", error);
     req.body.isValidOtp = false;
   } finally {
     next();

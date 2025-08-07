@@ -11,12 +11,14 @@ class LearnController {
   async subscribe(req, res) {
     try {
       const subscription = req.body;
-      const existsDevice = await neonQueries.getDeviceThroughEndpoint(subscription.endpoint);
+      const existsDevice = await neonQueries.get.deviceThroughEndpoint(subscription.endpoint);
+      // const existsDevice = await neonQueries.getDeviceThroughEndpoint(subscription.endpoint);
       if (existsDevice) {
-        await neonQueries.updateDevice({ ...subscription });
+        console.log("update");
+        await neonQueries.update.device({ ...subscription });
       } else {
         console.log("insert");
-        await neonQueries.insertDevice({ ...subscription });
+        await neonQueries.insert.device({ ...subscription });
       }
 
       const payload = JSON.stringify({
@@ -43,6 +45,38 @@ class LearnController {
       console.log("error:", error);
       return res.status(500).json({ success: false, message: "Internal Server Error!" });
     }
+  }
+
+  async sendNotification(req, res) {
+    console.log(req.query);
+
+    if (req.query["all-devices"]) {
+      const devices = await neonQueries.get.devices();
+
+      if (devices) {
+        console.log("send notification to all devices!");
+
+        devices.forEach((device, index) => {
+          const subscription = {
+            ...device,
+            keys: {
+              p256dh: device.p256dh,
+              auth: device.auth,
+            },
+          };
+
+          const payload = JSON.stringify({
+            title: "🔥 Hello from server!",
+            body: `Đây là push notification ${index} đó bro!`,
+          });
+
+          console.log("subscription:", subscription);
+          webpush.sendNotification(subscription, payload).catch((error) => console.error(error));
+        });
+      }
+    }
+
+    return res.json({ success: true, message: "Getted all devices!" });
   }
 }
 

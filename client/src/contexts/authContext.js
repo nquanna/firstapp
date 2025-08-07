@@ -104,7 +104,7 @@ const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     (async function () {
-      // await loadUser(true);
+      await loadUser(true);
     })();
 
     // eslint-disable-next-line

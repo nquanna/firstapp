@@ -5,14 +5,13 @@ const crypto = require("crypto");
 
 const constanst = require("../../utils/constanst");
 
-const UserSchema = require("../models/user");
-const OtpSchema = require("../models/otps");
+const neonQueries = require("../../config/database/neonQueries");
 
 class AuthController {
   // [POST] /auth
   async loadUser(req, res, next) {
     try {
-      if (!req.body.sub) {
+      if (!req.body.subEmail) {
         if (req.body.isFirstly)
           return res.json({
             success: false,
@@ -23,7 +22,7 @@ class AuthController {
         return res.status(401).json({ success: false, message: "cannot find user id" });
       }
 
-      const user = await UserSchema.findById(req.body.sub).select("-password -pass").exec();
+      const user = await neonQueries.get.user(req.body.subEmail);
       if (!user) return res.status(401).json({ success: false, message: "user not found" });
 
       return res.json({
@@ -43,7 +42,7 @@ class AuthController {
       if (!req.body.isValidOtp)
         return res.status(401).json({ success: false, messgae: "Invalid OTP code." });
 
-      const user = await UserSchema.findOne({ email: req.body.email }).exec();
+      const user = await neonQueries.get.user(req.body.email);
       if (user) {
         console.log("user already exists!");
         return res.status(409).json({ success: false, message: "user already exists!" });
@@ -52,8 +51,7 @@ class AuthController {
       req.body.pass = req.body.password;
       req.body.password = await argon2.hash(req.body.password);
 
-      const newUser = new UserSchema(req.body);
-      await newUser.save();
+      await neonQueries.insert.user(req.body);
 
       res.status(201).json({
         success: true,
@@ -68,18 +66,15 @@ class AuthController {
   // [POST] /auth/login
   async login(req, res, next) {
     try {
-      const user = await UserSchema.findOne({ email: req.body.email }).exec();
-
+      const user = await neonQueries.get.user(req.body.email);
       if (!user) return res.status(401).json({ success: false, message: "Incorrect email or password" });
 
-      const isValidPassword = await argon2.verify(user?.password, req.body.password);
+      const isValidPassword = await argon2.verify(user.password, req.body.password);
       if (!isValidPassword)
         return res.status(401).json({ success: false, message: "Incorrect email or password" });
 
-      const token = jwt.sign({ sub: user.id }, constanst.jwtSecret);
+      const token = jwt.sign({ subEmail: user.email }, constanst.jwtSecret);
       console.log("login successfully!");
-
-      await UserSchema.updateOne({ email: user.email }, { amount: ++user.amount });
 
       res
         .setHeader(
@@ -108,11 +103,7 @@ class AuthController {
       please do not use this code for other purposes.</p>`;
 
     try {
-      await OtpSchema.updateOne(
-        { email },
-        { email, type, otp: await argon2.hash(otp) },
-        { upsert: true }
-      );
+      await neonQueries.insert.otp({ email, otp: await argon2.hash(otp), role: type });
 
       const transporter = nodemailer.createTransport({
         service: "Gmail",
@@ -140,9 +131,8 @@ class AuthController {
   // [POST] /auth/logout
   async logout(req, res, next) {
     try {
-      if (!req.body.sub) return res.status(401).json({ success: false, message: "cannot find user id" });
-
-      await UserSchema.updateOne({ _id: req.body.sub }, { $inc: { amount: -1 } });
+      if (!req.body.subEmail)
+        return res.status(401).json({ success: false, message: "cannot find user id" });
 
       console.log("logout successfully!");
 
@@ -168,8 +158,11 @@ class AuthController {
         return res.status(401).json({ success: false, message: "Invalid OTP code." });
 
       const hashedPassword = await argon2.hash(req.body.password);
-
-      await UserSchema.updateOne({ email: req.body.email }, { password: hashedPassword });
+      await neonQueries.update.user({
+        email: req.body.email,
+        newPass: req.body.password,
+        newPassword: hashedPassword,
+      });
 
       console.log("reseted password!");
       return res.json({ success: true, message: "Updated password" });

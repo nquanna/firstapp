@@ -5,11 +5,13 @@ require("dotenv").config();
 
 const constanst = require("./utils/constanst");
 const route = require("./routes/index");
-const connectMongo = require("./config/database/connectMongo");
+// const connectMongo = require("./config/database/connectMongo");
 const neonQueries = require("./config/database/neonQueries");
 
-// neonQueries.createDeviceTable();
-// console.log(neonQueries.createVocabTable());
+// neonQueries.create.otpsTable();
+// neonQueries.create.userTable();
+// neonQueries.create.vocabTable();
+// neonQueries.create.subTable();
 
 // const morgan = require("morgan");
 const app = express();

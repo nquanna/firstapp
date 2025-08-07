@@ -6,7 +6,7 @@ const verifyToken = (req, res, next) => {
   try {
     const token = req.cookies?.token || "";
     const decoded = jwt.verify(token, constanst.jwtSecret);
-    req.body.sub = decoded.sub;
+    req.body.subEmail = decoded.subEmail;
   } catch (error) {
     console.log(error.toString());
   } finally {
