@@ -6,6 +6,7 @@ import HomePage from "~/pages/HomePage";
 import AuthPage from "~/pages/AuthPage";
 import MePage from "~/pages/MePage";
 import AIPage from "~/pages/AIPage";
+import LearnPage from "~/pages/LearnPage";
 
 const routes = [
   /* PUBLIC ROUTES */
@@ -75,10 +76,19 @@ const routes = [
 
   {
     path: config.routes.ai,
-    // private: true,
+    private: true,
     component: AIPage,
     props: {
       routerPath: config.routes.ai,
+    },
+  },
+
+  {
+    path: config.routes.learn,
+    private: true,
+    component: LearnPage,
+    props: {
+      routerPath: config.routes.learn,
     },
   },
 ];

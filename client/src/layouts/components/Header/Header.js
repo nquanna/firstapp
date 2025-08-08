@@ -49,8 +49,11 @@ function Header() {
         </Link>
       </div>
 
-      <div className={cx("search-bar")}></div>
-      <div className={cx("cart")}></div>
+      <div className={cx("learn-link-wrapper")}>
+        <Link to={config.routes.learn} className={cx("learn-link")}>
+          <img src={images.logo} alt="logo" />
+        </Link>
+      </div>
 
       <div className={cx("auth-wrapper")}>
         <Link to={config.routes.account} className={cx("user-link")}>

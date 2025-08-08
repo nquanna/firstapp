@@ -12,11 +12,20 @@ const tableName = {
 
 const remindLater = [1, 3, 7, 15, 30];
 
-const pool = new Pool({
+let pool;
+if (!global.pgPool) {
+  global.pgPool = new Pool({
+    connectionString: constanst.neonUrl,
+    ssl: { rejectUnauthorized: false },
+  });
+}
+pool = global.pgPool;
+
+/*pool = new Pool({
   connectionString: constanst.neonUrl,
   // serverless
   ssl: { rejectUnauthorized: false },
-});
+}); */
 
 const queries = {
   create: {

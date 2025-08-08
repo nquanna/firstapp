@@ -11,6 +11,8 @@ const routes = {
   purchaseOrder: "/me/purchase-order",
 
   ai: "/ai",
+
+  learn: "/learn",
 };
 
 export default routes;

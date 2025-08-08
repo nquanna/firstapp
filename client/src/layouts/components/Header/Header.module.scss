@@ -19,9 +19,11 @@
     }
   }
 
-  .ai-link-wrapper {
+  .ai-link-wrapper,
+  .learn-link-wrapper {
     height: 100%;
-    .ai-link {
+    .ai-link,
+    .learn-link {
       img {
         height: 100%;
         border-radius: 50%;
