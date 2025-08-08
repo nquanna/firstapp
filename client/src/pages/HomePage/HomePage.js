@@ -31,7 +31,7 @@ function HomePage() {
     <>
       <div className={cx("landing")}>
         {showMessage && <Message type={type.current} state={state.current} />}
-        <div onClick={sendNotification} className={cx("text")}>
+        <div onClick={async () => await sendNotification()} className={cx("text")}>
           this is home page.
         </div>
       </div>

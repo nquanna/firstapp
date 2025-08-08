@@ -5,8 +5,7 @@ require("dotenv").config();
 
 const constanst = require("./utils/constanst");
 const route = require("./routes/index");
-// const connectMongo = require("./config/database/connectMongo");
-const neonQueries = require("./config/database/neonQueries");
+const neonQueries = require("./app/models/neonQueries");
 
 // neonQueries.create.otpsTable();
 // neonQueries.create.userTable();

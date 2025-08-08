@@ -1,6 +1,6 @@
 const argon2 = require("argon2");
 
-const neonQueries = require("../../config/database/neonQueries");
+const neonQueries = require("../../app/models/neonQueries");
 
 // [POST] /auth/register
 // [POST] /auth/forgot-password

@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const { Pool } = require("pg");
 
 const constanst = require("../../utils/constanst");
@@ -80,9 +81,9 @@ const queries = {
         (id SERIAL PRIMARY KEY,
         user_id TEXT NOT NULL,
         device_id TEXT NOT NULL,
-        endpoint TEXT NOT NULL,
-        auth TEXT NOT NULL,
-        p256dh TEXT NOT NULL,
+        endpoint TEXT,
+        auth TEXT,
+        p256dh TEXT,
         created_at TIMESTAMP DEFAULT now(),
         updated_at TIMESTAMP DEFAULT now(),
         UNIQUE (user_id, device_id))`,
@@ -106,7 +107,7 @@ const queries = {
           [email, otp, role]
         );
 
-        return res.rows.length !== 0 ? res.rows[0] : null;
+        return res.rowCount !== 0 ? res.rows[0] : null;
       } catch (error) {
         console.log("error:", error);
       }
@@ -118,7 +119,7 @@ const queries = {
           `INSERT INTO ${tableName.users} (username, email, pass, password) VALUES ($1, $2 ,$3, $4)`,
           [username, email, pass, password]
         );
-        return res.rows.length !== 0 ? res.rows : null;
+        return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
         console.log("error:", error);
       }
@@ -139,21 +140,21 @@ const queries = {
           [word.trim(), enMean, viMean, pronounce, insertedAt, remindAt, 0, true]
         );
 
-        return res.rows.length !== 0 ? res.rows : null;
+        return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
         console.log("error:", error);
       }
     },
 
-    async device({ endpoint, expirationTime, keys }) {
+    async device({ userId, deviceId, endpoint, keys = {} }) {
       try {
         const res = await pool.query(
-          `INSERT INTO ${devicesTableName}
-        (endpoint, expiration_time, p256dh, auth)
-        VALUES ($1, $2, $3, $4)`,
-          [endpoint, expirationTime, keys.p256dh, keys.auth]
+          `INSERT INTO ${tableName.subscriptions}
+          (user_id, device_id, endpoint, p256dh, auth)
+          VALUES ($1, $2, $3, $4, $5)`,
+          [userId.toString(), deviceId, endpoint, keys.p256dh, keys.auth]
         );
-        return res.rows.length !== 0 ? res.rows : null;
+        return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
         console.log("error:", error);
       }
@@ -164,7 +165,7 @@ const queries = {
     async otp(email) {
       try {
         const res = await pool.query(`SELECT * FROM ${tableName.otps} WHERE email = $1`, [email]);
-        return res.rows.length !== 0 ? res.rows[0] : null;
+        return res.rowCount !== 0 ? res.rows[0] : null;
       } catch (error) {
         console.log("error:", error);
       }
@@ -173,7 +174,7 @@ const queries = {
     async user(email) {
       try {
         const res = await pool.query(`SELECT * FROM ${tableName.users} WHERE email = $1`, [email]);
-        return res.rows.length !== 0 ? res.rows[0] : null;
+        return res.rowCount !== 0 ? res.rows[0] : null;
       } catch (error) {
         console.log("error:", error);
       }
@@ -182,7 +183,7 @@ const queries = {
     async allWords() {
       try {
         const res = await pool.query(`SELECT * FROM ${tableName.vocab}`);
-        return res.rows.length !== 0 ? res.rows : null;
+        return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
         console.log("error:", error);
       }
@@ -191,7 +192,7 @@ const queries = {
     async wordsToRemind(nowDate) {
       try {
         const res = await pool.query(`SELECT * FROM ${tableName.vocab} WHERE remind_at = $1`, [nowDate]);
-        return res.rows.length !== 0 ? res.rows : null;
+        return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
         console.log("error:", error);
       }
@@ -199,8 +200,8 @@ const queries = {
 
     async devices() {
       try {
-        const res = await pool.query(`SELECT * FROM ${devicesTableName}`);
-        return res.rows.length !== 0 ? res.rows : null;
+        const res = await pool.query(`SELECT * FROM ${tableName.subscriptions}`);
+        return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
         console.log("error:", error);
       }
@@ -208,16 +209,29 @@ const queries = {
 
     async deviceThroughEndpoint(endpoint) {
       try {
-        const res = await pool.query(`SELECT * FROM ${devicesTableName} WHERE endpoint=$1`, [endpoint]);
-        return res.rows.length !== 0
+        const res = await pool.query(`SELECT * FROM ${tableName.subscriptions} WHERE endpoint=$1`, [
+          endpoint,
+        ]);
+        return res.rowCount !== 0
           ? res.rows
           : null.length !== 0
-          ? res.rows.length !== 0
+          ? res.rowCount !== 0
             ? res.rows
             : null
           : null;
       } catch (error) {
         console.log(error);
+      }
+    },
+
+    async deviceId(deviceId) {
+      try {
+        const res = await pool.query(`SELECT * FROM ${tableName.subscriptions} WHERE device_id = $1`, [
+          deviceId,
+        ]);
+        return res.rowCount !== 0 ? res.rows[0] : null;
+      } catch (error) {
+        console.log("error:", error);
       }
     },
   },
@@ -231,28 +245,41 @@ const queries = {
           WHERE email = $1`,
           [email, newPass, newPassword]
         );
-        return res.rows.length !== 0 ? res.rows[0] : null;
+        return res.rowCount !== 0 ? res.rows[0] : null;
       } catch (error) {
         console.log("error:", error);
       }
     },
 
-    async device({ endpoint, expirationTime, keys }) {
+    async device({ deviceId, endpoint, keys }) {
       try {
         const res = await pool.query(
           `UPDATE ${tableName.subscriptions}
-          SET expiration_time = $1, p256dh = $2, auth = $3
-          WHERE endpoint = $4`,
-          [expirationTime, keys.p256dh, keys.auth, endpoint]
+          SET p256dh = $1, auth = $2, endpoint = $3
+          WHERE device_id = $4`,
+          [keys.p256dh, keys.auth, endpoint, deviceId]
         );
-        return res.rows.length !== 0 ? res.rows : null;
+        return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
         console.log("error:", error);
       }
     },
   },
 
-  delete: {},
+  delete: {
+    async device(deviceId) {
+      try {
+        const res = await pool.query(
+          `DELETE FROM ${tableName.subscriptions}
+          WHERE device_id = $1`,
+          [deviceId]
+        );
+        return res.rowCount !== 0 ? res.rows[0] : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+  },
 };
 
 module.exports = queries;

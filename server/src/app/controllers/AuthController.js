@@ -4,8 +4,9 @@ const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
 const constanst = require("../../utils/constanst");
+const genUniqueDeviceId = require("../../utils/genUniqueDeviceId");
 
-const neonQueries = require("../../config/database/neonQueries");
+const neonQueries = require("../models/neonQueries");
 
 class AuthController {
   // [POST] /auth
@@ -73,13 +74,19 @@ class AuthController {
       if (!isValidPassword)
         return res.status(401).json({ success: false, message: "Incorrect email or password" });
 
-      const token = jwt.sign({ subEmail: user.email }, constanst.jwtSecret);
+      const deviceId = await genUniqueDeviceId();
+
+      const token = jwt.sign({ subId: user.id, subEmail: user.email, deviceId }, constanst.jwtSecret);
       console.log("login successfully!");
+
+      await neonQueries.insert.device({ userId: user.id, deviceId });
 
       res
         .setHeader(
           "Set-Cookie",
-          `token=${token}; Max-Age=${9999999999}; HttpOnly; Secure; SameSite=None; Partitioned`
+          `token=${token}; Path=/; Max-Age=${
+            60 * 60 * 24 * 365 * 10000000
+          }; HttpOnly; Secure; SameSite=None; Partitioned`
         )
         .json({
           success: true,
@@ -132,14 +139,17 @@ class AuthController {
   async logout(req, res, next) {
     try {
       if (!req.body.subEmail)
-        return res.status(401).json({ success: false, message: "cannot find user id" });
+        return res.status(401).json({ success: false, message: "Cannot find user id!" });
+      if (!req.body.deviceId)
+        return res.status(401).json({ success: false, message: "Cannot find device id!" });
 
+      await neonQueries.delete.device(req.body.deviceId);
       console.log("logout successfully!");
 
       res
         .setHeader(
           "Set-Cookie",
-          `token=${null}; Max-Age=${0}; HttpOnly; Secure; SameSite=None; Partitioned`
+          `token=${null}; Path=/; Max-Age=${0}; HttpOnly; Secure; SameSite=None; Partitioned`
         )
         .json({
           success: true,

@@ -18,9 +18,9 @@ const registerServiceWorker = () => {
   }
 };
 
-const sendNotification = () => {
+const sendNotification = async () => {
   if (!subscription) return console.error("not subscription");
-  api.request({
+  await api.request({
     path: "/learn/subscribe",
     method: "post",
     data: subscription,
