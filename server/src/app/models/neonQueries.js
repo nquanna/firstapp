@@ -1,7 +1,9 @@
-const crypto = require("crypto");
 const { Pool } = require("pg");
 
 const constanst = require("../../utils/constanst");
+
+const getDate = require("../../utils/getDate");
+const setNextRemind = require("../../utils/setNextRemind");
 
 const tableName = {
   otps: "otps",
@@ -10,7 +12,7 @@ const tableName = {
   subscriptions: "subscriptions ",
 };
 
-const remindLater = [1, 3, 7, 15, 30];
+const remindLater = [1, 2, 4, 8, 15];
 
 let pool;
 if (!global.pgPool) {
@@ -20,12 +22,6 @@ if (!global.pgPool) {
   });
 }
 pool = global.pgPool;
-
-/*pool = new Pool({
-  connectionString: constanst.neonUrl,
-  // serverless
-  ssl: { rejectUnauthorized: false },
-}); */
 
 const queries = {
   create: {
@@ -68,7 +64,7 @@ const queries = {
       pool.query(
         `CREATE TABLE ${tableName.vocab}
         (id SERIAL PRIMARY KEY,
-        user_id TEXT NOT NULL,
+        user_id INT NOT NULL,
         word TEXT,
         parts_of_speech TEXT,
         en_mean TEXT,
@@ -89,7 +85,7 @@ const queries = {
       pool.query(
         `CREATE TABLE ${tableName.subscriptions}
         (id SERIAL PRIMARY KEY,
-        user_id TEXT NOT NULL,
+        user_id INT NOT NULL,
         device_id TEXT NOT NULL,
         endpoint TEXT,
         auth TEXT,
@@ -135,19 +131,19 @@ const queries = {
       }
     },
 
-    async word({ word, partsOfSpeech, enMean, viMean, pronounce }) {
-      const current = new Date();
-      const insertedAt = `${current.getDate()}-${current.getMonth() + 1}-${current.getFullYear()}`;
+    async word({ userId, word, partsOfSpeech, enMean, viMean, pronounce }) {
+      const insertedAt = getDate();
 
+      const current = new Date();
       current.setDate(current.getDate() + remindLater[0]);
-      const remindAt = `${current.getDate()}-${current.getMonth()}-${current.getFullYear()}`;
+      const remindAt = `${current.getDate()}-${current.getMonth() + 1}-${current.getFullYear()}`;
 
       try {
         const res = await pool.query(
           `INSERT INTO ${tableName.vocab}
-        (word, parts_of_speech, en_mean, vi_mean, pronounce, inserted_at, remind_at, remind_count, learning)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-          [word.trim(), partsOfSpeech, enMean, viMean, pronounce, insertedAt, remindAt, 0, true]
+          (user_id, word, parts_of_speech, en_mean, vi_mean, pronounce, inserted_at, remind_at, remind_count, learning)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+          [+userId, word.trim(), partsOfSpeech, enMean, viMean, pronounce, insertedAt, remindAt, 0, true]
         );
 
         return res.rowCount !== 0 ? res.rows : null;
@@ -162,7 +158,7 @@ const queries = {
           `INSERT INTO ${tableName.subscriptions}
           (user_id, device_id, endpoint, p256dh, auth)
           VALUES ($1, $2, $3, $4, $5)`,
-          [userId.toString(), deviceId, endpoint, keys.p256dh, keys.auth]
+          [+userId, deviceId, endpoint, keys.p256dh, keys.auth]
         );
         return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
@@ -176,6 +172,15 @@ const queries = {
       try {
         const res = await pool.query(`SELECT * FROM ${tableName.otps} WHERE email = $1`, [email]);
         return res.rowCount !== 0 ? res.rows[0] : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+
+    async allUsers() {
+      try {
+        const res = await pool.query(`SELECT id FROM ${tableName.users}`);
+        return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
         console.log("error:", error);
       }
@@ -199,9 +204,33 @@ const queries = {
       }
     },
 
-    async wordsToRemind(nowDate) {
+    async wordsToRemind(userIds) {
+      const userIdString = `(${[...userIds]})`;
+
+      const nowDate = getDate();
+
       try {
-        const res = await pool.query(`SELECT * FROM ${tableName.vocab} WHERE remind_at = $1`, [nowDate]);
+        const res = await pool.query(
+          `SELECT * FROM ${tableName.vocab}
+          WHERE user_id IN ${userIdString} AND remind_at = $1 AND learning = $2`,
+          [nowDate, true]
+        );
+        return res.rowCount !== 0 ? res.rows : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+
+    async wordsToUpdate() {
+      const nowDate = "24-8-2025";
+      // const nowDate = getDate();
+
+      try {
+        const res = await pool.query(
+          `SELECT id, remind_count FROM ${tableName.vocab}
+          WHERE remind_at = $1 AND learning = $2`,
+          [nowDate, true]
+        );
         return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
         console.log("error:", error);
@@ -217,20 +246,16 @@ const queries = {
       }
     },
 
-    async deviceThroughEndpoint(endpoint) {
+    async deviecsToRemind(userIds) {
+      const userIdString = `(${[...userIds]})`;
+
       try {
-        const res = await pool.query(`SELECT * FROM ${tableName.subscriptions} WHERE endpoint=$1`, [
-          endpoint,
-        ]);
-        return res.rowCount !== 0
-          ? res.rows
-          : null.length !== 0
-          ? res.rowCount !== 0
-            ? res.rows
-            : null
-          : null;
+        const res = await pool.query(
+          `SELECT user_id, endpoint, auth, p256dh FROM ${tableName.subscriptions} WHERE user_id IN ${userIdString}`
+        );
+        return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
-        console.log(error);
+        console.log("error:", error);
       }
     },
 
@@ -254,6 +279,32 @@ const queries = {
           SET pass = $2, password = $3
           WHERE email = $1`,
           [email, newPass, newPassword]
+        );
+        return res.rowCount !== 0 ? res.rows[0] : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+
+    async word({ id, remindCount }) {
+      const nextRemind = setNextRemind(remindLater[remindCount]);
+
+      try {
+        if (remindCount === remindLater.length) {
+          const res = await pool.query(
+            `UPDATE ${tableName.vocab}
+            SET remind_count = $2, learning = $3
+            WHERE id = $1`,
+            [id, remindCount + 1, false]
+          );
+          return res.rowCount !== 0 ? res.rows[0] : null;
+        }
+
+        const res = await pool.query(
+          `UPDATE ${tableName.vocab}
+          SET remind_at = $2, remind_count = $3
+          WHERE id = $1`,
+          [id, nextRemind, remindCount + 1]
         );
         return res.rowCount !== 0 ? res.rows[0] : null;
       } catch (error) {

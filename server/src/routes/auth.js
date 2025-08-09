@@ -6,7 +6,7 @@ const AuthController = require("../app/controllers/AuthController");
 const validate = require("../middlewares/auth/validate");
 const verifyToken = require("../middlewares/auth/verifyToken");
 const verifyOtp = require("../middlewares/auth/verifyOtp");
-const verifyDeviceId = require("../middlewares/auth/verifyDeviceId");
+const verifyDeviceId = require("../middlewares/learn/verifyDeviceId");
 
 router.post("/register", validate, verifyOtp, AuthController.register);
 router.post("/login", validate, AuthController.login);

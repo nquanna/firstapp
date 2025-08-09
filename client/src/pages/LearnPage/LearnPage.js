@@ -5,7 +5,7 @@ import classNames from "classnames/bind";
 import config from "~/config";
 
 // import "./Content";
-import { TodayVocabularies, AddVocabulary, AllVocabularies } from "./Content";
+import { TodayVocabularies, InsertVocabulary, AllVocabularies } from "./Content";
 
 import style from "./LearnPage.module.scss";
 
@@ -28,8 +28,8 @@ function LearnPage({ routerPath }) {
       body.title = "Reviews Vocabularies Today";
       body.content = <TodayVocabularies />;
       break;
-    case config.routes.addVocabulary:
-      body.content = <AddVocabulary />;
+    case config.routes.insertVocabulary:
+      body.content = <InsertVocabulary />;
       break;
     case config.routes.allVocabularies:
       body.title = "Reviews All Vocabularies";

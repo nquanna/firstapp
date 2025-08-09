@@ -14,7 +14,7 @@ const routes = {
 
   learn: "/learn",
   todayVocabularies: "/learn/today-vocabularies",
-  addVocabulary: "/learn/add-vocabulary",
+  insertVocabulary: "/learn/insert-vocabulary",
   allVocabularies: "/learn/all-vocabularies",
 };
 

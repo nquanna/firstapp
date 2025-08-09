@@ -6,6 +6,73 @@ const neonQueries = require("../models/neonQueries");
 webpush.setVapidDetails("mailto:test@test.com", constanst.vapidPublicKey, constanst.vapidPrivateKey);
 
 class LearnController {
+  // [GET] /learn/remind-every-day
+  async remindErveryDay(req, res) {
+    try {
+      const allUsers = await neonQueries.get.allUsers();
+
+      const allUsersId = allUsers.reduce((finalArray, user) => {
+        finalArray.push(user.id);
+        return finalArray;
+      }, []);
+
+      const deviecsToRemind = await neonQueries.get.deviecsToRemind(allUsersId);
+      const wordsToRemind = await neonQueries.get.wordsToRemind(allUsersId);
+
+      if (deviecsToRemind && wordsToRemind) {
+        deviecsToRemind.forEach((device) => {
+          const subscription = {
+            ...device,
+            keys: {
+              p256dh: device.p256dh,
+              auth: device.auth,
+            },
+          };
+
+          const wordsForThisUser = wordsToRemind.filter((word) => word.user_id === device.user_id);
+
+          wordsForThisUser?.forEach((wordForThisUser) => {
+            const {
+              word,
+              parts_of_speech: parts,
+              en_mean: enMean,
+              vi_mean: viMean,
+              pronounce,
+            } = wordForThisUser;
+
+            const payload = JSON.stringify({
+              title: "Review your vocab pleasee!",
+              body: `word: ${word}, type: ${parts}, English: ${enMean}, Vietnamese: ${viMean}, pronounce:${pronounce}`,
+            });
+
+            webpush
+              .sendNotification(subscription, payload)
+              .catch((error) => console.error("error:", error));
+          });
+        });
+      }
+
+      return res.json({ success: true, message: "Sent words for all devices!" });
+    } catch (error) {
+      console.log("error:", error);
+    }
+  }
+
+  // [GET] /learn/update-words
+  async updateWords(req, res) {
+    try {
+      const wordsToUpdate = await neonQueries.get.wordsToUpdate();
+      wordsToUpdate?.forEach(async (wordToUpdate) => {
+        const { id, remind_count: remindCount } = wordToUpdate;
+        await neonQueries.update.word({ id, remindCount });
+      });
+      return res.json({ success: true, message: "Updated" });
+    } catch (error) {
+      console.log("error:", error);
+      return res.status(500).json({ success: false, message: "Internal Server Error!" });
+    }
+  }
+
   // [GET] /learn/send-notification
   async sendNotification(req, res) {
     // console.log(req.query);
@@ -79,6 +146,7 @@ class LearnController {
   // [POST] /learn/insert-work
   async insertWord(req, res) {
     try {
+      neonQueries.insert.word({ ...req.body, userId: req.body.subId });
       return res.status(201).json({ success: true, message: "Inserted new word!" });
     } catch (error) {
       console.log("error:", error);

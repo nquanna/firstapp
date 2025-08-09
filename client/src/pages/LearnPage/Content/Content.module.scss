@@ -1,6 +1,8 @@
 .content-wrapper {
   --marign-top-default: 12px;
 
+  --input-max-width: 180px;
+
   height: 100%;
   background-color: var(--primary-color);
 
@@ -27,6 +29,7 @@
       input,
       textarea {
         padding: 4px 10px;
+        max-width: var(--input-max-width);
         border: 1.5px solid transparent;
         border-radius: 8px;
         outline: none;
@@ -67,5 +70,19 @@
         filter: brightness(0.8);
       }
     }
+  }
+}
+
+// Tablet
+@media all and (min-width: 768px) and (max-width: 1023px) {
+  .content-wrapper {
+    --input-max-width: 210px;
+  }
+}
+
+// PC
+@media all and (min-width: 1024px) {
+  .content-wrapper {
+    --input-max-width: 240px;
   }
 }

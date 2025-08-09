@@ -108,12 +108,12 @@ const routes = [
     },
   },
   {
-    path: config.routes.addVocabulary,
+    path: config.routes.insertVocabulary,
     private: true,
     layout: SidebarLayout,
     component: LearnPage,
     props: {
-      routerPath: config.routes.addVocabulary,
+      routerPath: config.routes.insertVocabulary,
     },
     layoutProps: {
       routerPath: config.routes.learn,

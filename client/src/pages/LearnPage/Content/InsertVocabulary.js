@@ -1,20 +1,36 @@
 import { useState } from "react";
 import classNames from "classnames/bind";
-import style from "./Content.module.scss";
 
+import { api } from "~/utils";
+
+import style from "./Content.module.scss";
 const cx = classNames.bind(style);
-function AddVocabulary() {
+function InsertVocabulary() {
   const [newWord, setNewWord] = useState({
-    word: "",
-    partsOfSpeech: "",
-    enMean: "",
-    viMean: "",
-    pronounce: "",
+    word: "hello",
+    partsOfSpeech: "v",
+    enMean: "hi",
+    viMean: "xin chao",
+    pronounce: "he lo",
   });
+
+  const handleAddNewWord = async (event) => {
+    const response = await api.request({
+      path: "/learn/insert-word",
+      method: "post",
+      data: newWord,
+    });
+
+    console.log(response);
+
+    if (response.success) {
+      // setNewWord({ word: "", partsOfSpeech: "", enMean: "", viMean: "", pronounce: "" });
+    }
+  };
 
   return (
     <div className={cx("content-wrapper")}>
-      <div className={cx("title")}>Add New Vocabulary</div>
+      <div className={cx("title")}>Insert New Vocabulary</div>
 
       <div className={cx("add-vocabulary-wrapper")}>
         <div className={cx("input-group", "word-and-parts")}>
@@ -80,10 +96,10 @@ function AddVocabulary() {
           />
         </div>
 
-        <input type="submit" value="Add" />
+        <input type="submit" value="Add" onClick={handleAddNewWord} />
       </div>
     </div>
   );
 }
 
-export default AddVocabulary;
+export default InsertVocabulary;

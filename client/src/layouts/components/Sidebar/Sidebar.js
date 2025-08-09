@@ -56,7 +56,7 @@ function Sidebar({ routerPath }) {
             <Link to={config.routes.todayVocabularies}>Today's vocabularies reviews</Link>
           </li>
           <li className={cx("learn-sidebar-content")}>
-            <Link to={config.routes.addVocabulary}>Add new vocabulary</Link>
+            <Link to={config.routes.insertVocabulary}>Add new vocabulary</Link>
           </li>
           <li className={cx("learn-sidebar-content")}>
             <Link to={config.routes.allVocabularies}>All vocabularies reviews</Link>
