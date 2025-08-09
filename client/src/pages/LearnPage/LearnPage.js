@@ -4,6 +4,7 @@ import classNames from "classnames/bind";
 
 import config from "~/config";
 
+// import "./Content";
 import { TodayVocabularies, AddVocabulary, AllVocabularies } from "./Content";
 
 import style from "./LearnPage.module.scss";

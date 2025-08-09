@@ -3,6 +3,12 @@ import style from "./Content.module.scss";
 
 const cx = classNames.bind(style);
 
-function TodayVocabularies() {}
+function TodayVocabularies() {
+  return (
+    <div className={cx("content-wrapper")}>
+      <div className={cx("title")}>Today Vocabularies</div>
+    </div>
+  );
+}
 
 export default TodayVocabularies;

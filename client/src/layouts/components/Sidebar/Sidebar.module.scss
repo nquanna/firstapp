@@ -2,24 +2,28 @@
   --sidebar-wrapper-icon-display: flex;
 
   --sidebar-wrapper-position: absolute;
+  --sidebar-wrapper-transform: translateX(-100%);
+  --sidebar-wrapper-max-height: 60px;
 }
 
 .sidebar-wrapper {
   position: var(--sidebar-wrapper-position);
   padding: 2px 8px;
   background-color: rgba(20, 20, 50, 1);
-  height: 100%;
+  max-height: 100%;
   transition: all 0.25s ease;
   z-index: 1;
 
   &.hidden {
-    max-height: 60px;
+    transform: var(--sidebar-wrapper-transform);
+    max-height: var(--sidebar-wrapper-max-height);
   }
 
   .sidebar-wrapper-icon {
     display: var(--sidebar-wrapper-icon-display);
-    position: relative;
-    padding: 14px 0;
+    position: absolute;
+    right: -6px;
+    transform: translateX(100%);
     cursor: pointer;
     z-index: 1;
 
@@ -28,10 +32,8 @@
     }
 
     svg {
-      position: relative;
-      width: 100%;
       font-size: 1.4rem;
-      color: white;
+      color: red;
     }
   }
 
@@ -87,6 +89,8 @@
     --sidebar-wrapper-icon-display: none;
 
     --sidebar-wrapper-position: relative;
+    --sidebar-wrapper-transform: 0;
+    --sidebar-wrapper-max-height: 100%;
   }
 
   .sidebar-wrapper {
@@ -104,6 +108,8 @@
     --sidebar-wrapper-icon-display: none;
 
     --sidebar-wrapper-position: relative;
+    --sidebar-wrapper-transform: 0;
+    --sidebar-wrapper-max-height: 100%;
   }
 
   .sidebar-wrapper {

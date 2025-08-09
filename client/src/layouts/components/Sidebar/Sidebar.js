@@ -68,7 +68,9 @@ function Sidebar({ routerPath }) {
       throw new Error("Invalid router path in sidebar layout!");
   }
 
-  const sidebarWrapperClassName = `col l-3 m-3 ${hiddenSidebar ? "c-1" : "c-12"}
+  // ${hiddenSidebar ? "c-1" : "c-12"}
+
+  const sidebarWrapperClassName = `col l-3 m-3 c-12
     ${cx("sidebar-wrapper", { hidden: hiddenSidebar })}`;
 
   return (

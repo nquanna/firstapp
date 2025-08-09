@@ -3,11 +3,25 @@
   --tablet-breakpoint: 768px;
   --pc-breakpoint: 1024px;
 
-  --header-height: 120px;
+  --header-height: 80px;
   --container-top: calc(var(--header-height) + 20px);
 
   --primary-color: rgb(255, 195, 200);
   --primary-color-second: rgb(245, 185, 180);
 
   --auth-background: url("../../assets/images/auth_background.jpg") no-repeat center center/cover;
+}
+
+// Tablet
+@media all and (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --header-height: 100px;
+  }
+}
+
+// PC
+@media all and (min-width: 1024px) {
+  :root {
+    --header-height: 120px;
+  }
 }
