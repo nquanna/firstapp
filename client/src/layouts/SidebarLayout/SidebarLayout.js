@@ -13,7 +13,7 @@ function SidebarLayout({ routerPath, children }) {
 
       <div className="container grid wide">
         <div className="row">
-          <Sidebar occupy="col l-3 m-3 c-8" routerPath={routerPath} />
+          <Sidebar routerPath={routerPath} />
           {children}
         </div>
       </div>

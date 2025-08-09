@@ -38,7 +38,7 @@ function LearnPage({ routerPath }) {
       throw new Error("Invalid router path in learn page!");
   }
 
-  const learnPageClassName = `col l-9 m-9 c-12 ${cx("learn-page-wrapper")}`;
+  const learnPageClassName = `col l-9 m-9 c-11 ${cx("learn-page-wrapper")}`;
 
   return <div className={learnPageClassName}>{body.content}</div>;
 }

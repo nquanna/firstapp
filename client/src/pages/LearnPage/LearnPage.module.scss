@@ -1,3 +1,20 @@
 .learn-page-wrapper {
+  // position: absolute;
+  // right: 0;
+  margin-left: calc(100% / 12);
   height: 100%;
+}
+
+// Tablet
+@media all and (min-width: 768px) and (max-width: 1023px) {
+  .learn-page-wrapper {
+    margin-left: 0;
+  }
+}
+
+// PC
+@media all and (min-width: 1024px) {
+  .learn-page-wrapper {
+    margin-left: 0;
+  }
 }

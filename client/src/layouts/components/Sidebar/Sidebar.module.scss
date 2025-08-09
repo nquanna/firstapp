@@ -7,14 +7,10 @@
 .sidebar-wrapper {
   position: var(--sidebar-wrapper-position);
   padding: 2px 8px;
-  // border: 1px solid red;
   background-color: rgba(20, 20, 50, 1);
   height: 100%;
   transition: all 0.25s ease;
-
-  &.hidden {
-    max-width: 25px;
-  }
+  z-index: 1;
 
   .sidebar-wrapper-icon {
     display: var(--sidebar-wrapper-icon-display);

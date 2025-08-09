@@ -15,7 +15,7 @@ import style from "./Sidebar.module.scss";
 
 const cx = classNames.bind(style);
 
-function Sidebar({ occupy, routerPath }) {
+function Sidebar({ routerPath }) {
   const [hiddenSidebar, setShowSidebar] = useState(false);
 
   const { user } = useContext(AuthContext);
@@ -68,7 +68,8 @@ function Sidebar({ occupy, routerPath }) {
       throw new Error("Invalid router path in sidebar layout!");
   }
 
-  const sidebarWrapperClassName = `${occupy} ${cx("sidebar-wrapper", { hidden: hiddenSidebar })}`;
+  const sidebarWrapperClassName = `col l-3 m-3 ${hiddenSidebar ? "c-1" : "c-12"}
+    ${cx("sidebar-wrapper")}`;
 
   return (
     <div className={sidebarWrapperClassName}>
