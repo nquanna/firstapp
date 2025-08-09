@@ -69,7 +69,7 @@ function Sidebar({ routerPath }) {
   }
 
   const sidebarWrapperClassName = `col l-3 m-3 ${hiddenSidebar ? "c-1" : "c-12"}
-    ${cx("sidebar-wrapper")}`;
+    ${cx("sidebar-wrapper", { hidden: hiddenSidebar })}`;
 
   return (
     <div className={sidebarWrapperClassName}>

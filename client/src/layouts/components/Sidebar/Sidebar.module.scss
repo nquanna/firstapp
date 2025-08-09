@@ -12,6 +12,10 @@
   transition: all 0.25s ease;
   z-index: 1;
 
+  &.hidden {
+    max-height: 60px;
+  }
+
   .sidebar-wrapper-icon {
     display: var(--sidebar-wrapper-icon-display);
     position: relative;
