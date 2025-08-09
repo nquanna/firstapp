@@ -16,8 +16,6 @@ function HomePage() {
   const state = useRef(location.state?.state);
   const navigate = useNavigate();
 
-  const showMessage = state.current !== undefined && location.state?.state === undefined;
-
   useEffect(() => {
     if (state.current) {
       if (location.state?.state !== undefined) return navigate(".", { replace: true, state: undefined });
@@ -30,7 +28,7 @@ function HomePage() {
   return (
     <>
       <div className={cx("landing")}>
-        {showMessage && <Message type={type.current} state={state.current} />}
+        <Message type={type.current} state={state.current} />
         <div onClick={async () => await sendNotification()} className={cx("text")}>
           this is home page.
         </div>

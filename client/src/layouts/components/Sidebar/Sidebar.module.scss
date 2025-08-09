@@ -1,16 +1,115 @@
-.sidebar-wrapper {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  padding: 4px 12px;
-  background-color: aquamarine;
+:root {
+  --sidebar-wrapper-icon-display: flex;
 
-  .infomation {
-    a {
-      img {
-        width: 40px;
-        aspect-ratio: 1/1;
-        border-radius: 50%;
+  --sidebar-wrapper-position: absolute;
+}
+
+.sidebar-wrapper {
+  position: var(--sidebar-wrapper-position);
+  padding: 2px 8px;
+  // border: 1px solid red;
+  background-color: rgba(20, 20, 50, 1);
+  height: 100%;
+  transition: all 0.25s ease;
+
+  &.hidden {
+    max-width: 25px;
+  }
+
+  .sidebar-wrapper-icon {
+    display: var(--sidebar-wrapper-icon-display);
+    position: relative;
+    padding: 14px 0;
+    cursor: pointer;
+    z-index: 1;
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    svg {
+      position: relative;
+      width: 100%;
+      font-size: 1.4rem;
+      color: white;
+    }
+  }
+
+  .me-sidebar {
+    .infomation {
+      a {
+        img {
+          width: 40px;
+          aspect-ratio: 1/1;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+
+  .learn-sidebar {
+    display: block;
+    position: relative;
+
+    &.hidden {
+      display: none;
+    }
+
+    &-content {
+      margin-top: 4px;
+      list-style-type: none;
+      border-radius: 8px;
+      background-color: var(--primary-color);
+      transition: all 0.15s ease;
+      cursor: pointer;
+
+      & + .learn-sidebar-content {
+        margin-top: 16px;
+      }
+
+      &:hover {
+        background-color: var(--primary-color-second);
+      }
+
+      a {
+        display: block;
+        width: 100%;
+        padding: 12px 18px;
+        font-size: 1.08rem;
+      }
+    }
+  }
+}
+
+// Tablet
+@media all and (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --sidebar-wrapper-icon-display: none;
+
+    --sidebar-wrapper-position: relative;
+  }
+
+  .sidebar-wrapper {
+    .learn-sidebar {
+      &.hidden {
+        display: block;
+      }
+    }
+  }
+}
+
+// PC
+@media all and (min-width: 1024px) {
+  :root {
+    --sidebar-wrapper-icon-display: none;
+
+    --sidebar-wrapper-position: relative;
+  }
+
+  .sidebar-wrapper {
+    .learn-sidebar {
+      &.hidden {
+        display: block;
       }
     }
   }

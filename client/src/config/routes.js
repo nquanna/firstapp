@@ -13,6 +13,9 @@ const routes = {
   ai: "/ai",
 
   learn: "/learn",
+  todayVocabularies: "/learn/today-vocabularies",
+  addVocabulary: "/learn/add-vocabulary",
+  allVocabularies: "/learn/all-vocabularies",
 };
 
 export default routes;

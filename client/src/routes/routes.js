@@ -86,8 +86,48 @@ const routes = [
   {
     path: config.routes.learn,
     private: true,
+    layout: SidebarLayout,
     component: LearnPage,
     props: {
+      routerPath: config.routes.learn,
+    },
+    layoutProps: {
+      routerPath: config.routes.learn,
+    },
+  },
+  {
+    path: config.routes.todayVocabularies,
+    private: true,
+    layout: SidebarLayout,
+    component: LearnPage,
+    props: {
+      routerPath: config.routes.todayVocabularies,
+    },
+    layoutProps: {
+      routerPath: config.routes.learn,
+    },
+  },
+  {
+    path: config.routes.addVocabulary,
+    private: true,
+    layout: SidebarLayout,
+    component: LearnPage,
+    props: {
+      routerPath: config.routes.addVocabulary,
+    },
+    layoutProps: {
+      routerPath: config.routes.learn,
+    },
+  },
+  {
+    path: config.routes.allVocabularies,
+    private: true,
+    layout: SidebarLayout,
+    component: LearnPage,
+    props: {
+      routerPath: config.routes.allVocabularies,
+    },
+    layoutProps: {
       routerPath: config.routes.learn,
     },
   },

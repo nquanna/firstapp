@@ -24,6 +24,7 @@ function App() {
               {routes.map((route, index) => {
                 const Private = route.private ? PrivateRoute : Fragment;
                 const Layout = route.layout ? route.layout : DefaultLayout;
+                const layoutProps = route.layoutProps ? route.layoutProps : {};
                 const Component = route.component;
 
                 return (
@@ -32,7 +33,7 @@ function App() {
                     path={route.path}
                     element={
                       <Private>
-                        <Layout>
+                        <Layout {...layoutProps}>
                           <Component {...route.props} />
                         </Layout>
                       </Private>

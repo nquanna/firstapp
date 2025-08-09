@@ -70,6 +70,7 @@ const queries = {
         (id SERIAL PRIMARY KEY,
         user_id TEXT NOT NULL,
         word TEXT,
+        parts_of_speech TEXT,
         en_mean TEXT,
         vi_mean TEXT,
         pronounce TEXT,
@@ -134,7 +135,7 @@ const queries = {
       }
     },
 
-    async word({ word, enMean, viMean, pronounce }) {
+    async word({ word, partsOfSpeech, enMean, viMean, pronounce }) {
       const current = new Date();
       const insertedAt = `${current.getDate()}-${current.getMonth() + 1}-${current.getFullYear()}`;
 
@@ -144,9 +145,9 @@ const queries = {
       try {
         const res = await pool.query(
           `INSERT INTO ${tableName.vocab}
-        (word, en_mean, vi_mean, pronounce, inserted_at, remind_at, remind_count, learning)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-          [word.trim(), enMean, viMean, pronounce, insertedAt, remindAt, 0, true]
+        (word, parts_of_speech, en_mean, vi_mean, pronounce, inserted_at, remind_at, remind_count, learning)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+          [word.trim(), partsOfSpeech, enMean, viMean, pronounce, insertedAt, remindAt, 0, true]
         );
 
         return res.rowCount !== 0 ? res.rows : null;

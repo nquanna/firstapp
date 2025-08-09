@@ -65,23 +65,25 @@ function Message(/* { type = "register", state = true } */ { type, state }) {
     },
   };
 
-  const body = messages[type][state];
+  const body = type && state !== undefined && messages[type][state];
 
   return (
     <div ref={messageRef}>
-      <div
-        className={cx("message-wrapper")}
-        style={{ "--color-state": colors[state] }}
-        onAnimationEnd={handleUnmount}>
-        <div className={cx("body")}>
-          <div className={cx("title")}>{body.title}</div>
-          <div className={cx("message")}>{body.message}</div>
-        </div>
+      {type && state !== undefined && (
+        <div
+          className={cx("message-wrapper")}
+          style={{ "--color-state": colors[state] }}
+          onAnimationEnd={handleUnmount}>
+          <div className={cx("body")}>
+            <div className={cx("title")}>{body.title}</div>
+            <div className={cx("message")}>{body.message}</div>
+          </div>
 
-        <div ref={iconRef} className={cx("icon")} onClick={handleUnmount}>
-          <FontAwesomeIcon icon={faXmark} />
+          <div ref={iconRef} className={cx("icon")} onClick={handleUnmount}>
+            <FontAwesomeIcon icon={faXmark} />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

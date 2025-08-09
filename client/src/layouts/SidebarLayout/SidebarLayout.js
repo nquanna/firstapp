@@ -6,14 +6,14 @@ import Sidebar from "~/layouts/components/Sidebar";
 // import style from "./SidebarLayout.module.scss";
 // const cx = classNames.bind(style);
 
-function SidebarLayout({ children }) {
+function SidebarLayout({ routerPath, children }) {
   return (
     <div className="wrapper">
       <Header />
 
       <div className="container grid wide">
         <div className="row">
-          <Sidebar occupy="col l-2 m-4 c-0" />
+          <Sidebar occupy="col l-3 m-3 c-8" routerPath={routerPath} />
           {children}
         </div>
       </div>
