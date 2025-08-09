@@ -16,7 +16,7 @@ import style from "./Sidebar.module.scss";
 const cx = classNames.bind(style);
 
 function Sidebar({ routerPath }) {
-  const [hiddenSidebar, setShowSidebar] = useState(false);
+  const [hiddenSidebar, setShowSidebar] = useState(true);
 
   const { user } = useContext(AuthContext);
   const avatarUrl = user.user?.avatarUrl ? user.user?.avatarUrl : images.defaultAvatar;
