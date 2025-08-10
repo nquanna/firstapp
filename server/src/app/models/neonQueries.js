@@ -222,8 +222,8 @@ const queries = {
     },
 
     async wordsToUpdate() {
-      const nowDate = "24-8-2025";
-      // const nowDate = getDate();
+      // const nowDate = "24-8-2025";
+      const nowDate = getDate();
 
       try {
         const res = await pool.query(
