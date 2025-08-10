@@ -37,7 +37,7 @@ function TodayVocabularies() {
             <th>Pronounce</th>
             <th>Remind at</th>
           </tr>
-          {todayVocabularies.map((vocabObj, index) => (
+          {todayVocabularies?.map((vocabObj, index) => (
             <tr key={index}>
               <td>{vocabObj.word}</td>
               <td>{vocabObj.parts_of_speech}</td>

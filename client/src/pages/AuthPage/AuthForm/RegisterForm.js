@@ -14,7 +14,7 @@ function RegisterForm({ enableTimer, timer, handlers }) {
   const { handleDispatch, handleSendOtp, handleSubmit } = handlers;
 
   const [authData, dispatch] = useReducer(authReducer, {
-    type: "",
+    type: "register",
     username: "",
     email: "",
     otp: "",

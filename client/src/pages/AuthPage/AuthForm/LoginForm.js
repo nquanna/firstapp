@@ -18,7 +18,7 @@ function LoginForm({ handlers: { handleDispatch, handleSubmit } }) {
   const navigate = useNavigate();
 
   const [authData, dispatch] = useReducer(authReducer, {
-    type: "",
+    type: "login",
     email: email.current || "",
     password: "",
     /* type: "login",

@@ -29,7 +29,7 @@ function InsertVocabulary() {
     console.log(response);
 
     if (response.success) {
-      // setNewWord({ word: "", partsOfSpeech: "", enMean: "", viMean: "", pronounce: "" });
+      setNewWord({ word: "", partsOfSpeech: "", enMean: "", viMean: "", pronounce: "" });
     }
   };
 

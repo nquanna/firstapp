@@ -15,7 +15,7 @@ function ForgotPasswordForm({ enableTimer, timer, handlers }) {
   const { handleDispatch, handleSendOtp, handleSubmit } = handlers;
 
   const [authData, dispatch] = useReducer(authReducer, {
-    type: "",
+    type: "forgotPassword",
     email: "",
     otp: "",
     password: "",

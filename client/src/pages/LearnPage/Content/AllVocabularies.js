@@ -37,7 +37,7 @@ function AllVocabularies() {
             <th>Pronounce</th>
             <th>Remind at</th>
           </tr>
-          {allWords.map((vocabObj, index) => (
+          {allWords?.map((vocabObj, index) => (
             <tr key={index}>
               <td>{vocabObj.user_id}</td>
               <td>{vocabObj.word}</td>
