@@ -114,6 +114,28 @@ class LearnController {
     }
   }
 
+  // [GET] /learn/user-today-words
+  async userTodayWords(req, res) {
+    try {
+      const userTodayWords = await neonQueries.get.userTodayWords(req.body.subId);
+      return res.json({ success: true, message: "Your today vocabularies!", userTodayWords });
+    } catch (error) {
+      console.log("error:", error);
+      return res.status(500).json({ success: false, message: "Internal Server Error!" });
+    }
+  }
+
+  // [GET] /learn/all-words
+  async allWords(req, res) {
+    try {
+      const allWords = await neonQueries.get.allWords();
+      return res.json({ success: true, message: "This is all vocabularies!", allWords });
+    } catch (error) {
+      console.log("error:", error);
+      return res.status(500).json({ success: false, message: "Internal Server Error!" });
+    }
+  }
+
   // [POST] /learn/subscribe
   async subscribe(req, res) {
     try {

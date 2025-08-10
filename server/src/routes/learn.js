@@ -9,6 +9,8 @@ const verifyDeviceId = require("../middlewares/learn/verifyDeviceId");
 router.get("/remind-every-day", LearnController.remindErveryDay);
 router.get("/update-words", LearnController.updateWords);
 router.get("/send-notification", LearnController.sendNotification);
+router.get("/user-today-words", verifyToken, LearnController.userTodayWords);
+router.get("/all-words", LearnController.allWords);
 
 router.post("/subscribe", verifyDeviceId, LearnController.subscribe);
 router.post("/insert-word", verifyToken, LearnController.insertWord);

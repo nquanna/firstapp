@@ -134,16 +134,27 @@ const queries = {
     async word({ userId, word, partsOfSpeech, enMean, viMean, pronounce }) {
       const insertedAt = getDate();
 
-      const current = new Date();
+      /* const current = new Date();
       current.setDate(current.getDate() + remindLater[0]);
-      const remindAt = `${current.getDate()}-${current.getMonth() + 1}-${current.getFullYear()}`;
+      const remindAt = `${current.getDate()}-${current.getMonth() + 1}-${current.getFullYear()}`; */
 
       try {
         const res = await pool.query(
           `INSERT INTO ${tableName.vocab}
           (user_id, word, parts_of_speech, en_mean, vi_mean, pronounce, inserted_at, remind_at, remind_count, learning)
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-          [+userId, word.trim(), partsOfSpeech, enMean, viMean, pronounce, insertedAt, remindAt, 0, true]
+          [
+            +userId,
+            word.trim(),
+            partsOfSpeech,
+            enMean,
+            viMean,
+            pronounce,
+            insertedAt,
+            insertedAt,
+            0,
+            true,
+          ]
         );
 
         return res.rowCount !== 0 ? res.rows : null;
@@ -197,7 +208,23 @@ const queries = {
 
     async allWords() {
       try {
-        const res = await pool.query(`SELECT * FROM ${tableName.vocab}`);
+        const res = await pool.query(
+          `SELECT user_id, word, parts_of_speech, en_mean, vi_mean, pronounce, remind_at FROM ${tableName.vocab}`
+        );
+        return res.rowCount !== 0 ? res.rows : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
+
+    async userTodayWords(userId) {
+      const nowDate = getDate();
+      try {
+        const res = await pool.query(
+          `SELECT word, parts_of_speech, en_mean, vi_mean, pronounce, remind_at FROM ${tableName.vocab}
+          WHERE user_id = $1 AND remind_at = $2 AND learning = $3`,
+          [+userId, nowDate, true]
+        );
         return res.rowCount !== 0 ? res.rows : null;
       } catch (error) {
         console.log("error:", error);
