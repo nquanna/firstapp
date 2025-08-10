@@ -68,6 +68,7 @@
 
       & + .learn-sidebar-content {
         margin-top: 16px;
+        user-select: none;
       }
 
       &:hover {
