@@ -7,8 +7,8 @@ const verifyToken = require("../middlewares/auth/verifyToken");
 const verifyDeviceId = require("../middlewares/learn/verifyDeviceId");
 
 router.get("/remind-every-day", LearnController.remindErveryDay);
+router.get("/remind-all-words", verifyToken, LearnController.remindAllWords);
 router.get("/update-words", LearnController.updateWords);
-router.get("/send-notification", LearnController.sendNotification);
 router.get("/user-today-words", verifyToken, LearnController.userTodayWords);
 router.get("/all-words", LearnController.allWords);
 

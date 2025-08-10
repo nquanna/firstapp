@@ -7,6 +7,7 @@ import { faUser, faBell } from "@fortawesome/free-regular-svg-icons";
 import classNames from "classnames/bind";
 
 import config from "~/config";
+import { api, subscribe } from "~/utils";
 import { AuthContext } from "~/contexts";
 
 import images from "~/assets/images";
@@ -20,6 +21,13 @@ function Sidebar({ routerPath }) {
 
   const { user } = useContext(AuthContext);
   const avatarUrl = user.user?.avatarUrl ? user.user?.avatarUrl : images.defaultAvatar;
+
+  const handleSendWords = async (isAllWords = false) => {
+    await api.request({
+      path: isAllWords ? "/learn/remind-all-words" : "/learn/remind-every-day",
+      method: "get",
+    });
+  };
 
   let body;
   switch (routerPath) {
@@ -60,6 +68,15 @@ function Sidebar({ routerPath }) {
           </li>
           <li className={cx("learn-sidebar-content")}>
             <Link to={config.routes.allVocabularies}>All vocabularies reviews</Link>
+          </li>
+          <li className={cx("learn-sidebar-content")} onClick={async () => await subscribe()}>
+            <span>Subscribe your device to send notification.</span>
+          </li>
+          <li className={cx("learn-sidebar-content")} onClick={async () => await handleSendWords()}>
+            <span>Review your today vocabularies now.</span>
+          </li>
+          <li className={cx("learn-sidebar-content")} onClick={async () => await handleSendWords(true)}>
+            <span>Review all vocabularies now.</span>
           </li>
         </ul>
       );

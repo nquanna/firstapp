@@ -2,8 +2,6 @@ import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import classNames from "classnames/bind";
 
-import { sendNotification } from "~/utils";
-
 import Message from "~/components/Message";
 
 import style from "./HomePage.module.scss";
@@ -29,9 +27,7 @@ function HomePage() {
     <>
       <div className={cx("landing")}>
         <Message type={type.current} state={state.current} />
-        <div onClick={async () => await sendNotification()} className={cx("text")}>
-          this is home page.
-        </div>
+        <div className={cx("text")}>this is home page.</div>
       </div>
     </>
   );

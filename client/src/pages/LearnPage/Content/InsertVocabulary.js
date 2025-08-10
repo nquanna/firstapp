@@ -7,11 +7,16 @@ import style from "./Content.module.scss";
 const cx = classNames.bind(style);
 function InsertVocabulary() {
   const [newWord, setNewWord] = useState({
-    word: "hello",
+    word: "",
+    partsOfSpeech: "",
+    enMean: "",
+    viMean: "",
+    pronounce: "",
+    /* word: "hello",
     partsOfSpeech: "v",
     enMean: "hi",
     viMean: "xin chao",
-    pronounce: "he lo",
+    pronounce: "he lo", */
   });
 
   const handleAddNewWord = async (event) => {

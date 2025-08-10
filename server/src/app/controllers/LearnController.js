@@ -58,6 +58,44 @@ class LearnController {
     }
   }
 
+  // [GET] /learn/remind-every-day
+  async remindAllWords(req, res) {
+    try {
+      const device = await neonQueries.get.deviceUserId(req.body.subId);
+      const allWords = await neonQueries.get.allWords();
+
+      allWords?.map((currentWord) => {
+        const {
+          word,
+          parts_of_speech: parts,
+          en_mean: enMean,
+          vi_mean: viMean,
+          pronounce,
+        } = currentWord;
+
+        const subscription = {
+          ...device,
+          keys: {
+            p256dh: device.p256dh,
+            auth: device.auth,
+          },
+        };
+
+        const payload = JSON.stringify({
+          title: "Review your vocab pleasee!",
+          body: `word: ${word}, type: ${parts}, English: ${enMean}, Vietnamese: ${viMean}, pronounce:${pronounce}`,
+        });
+
+        webpush.sendNotification(subscription, payload).catch((error) => console.error("error:", error));
+      });
+
+      return res.json({ success: true, message: "This is all vocabularies!", allWords });
+    } catch (error) {
+      console.log("error:", error);
+      return res.status(500).json({ success: false, message: "Internal Server Error!" });
+    }
+  }
+
   // [GET] /learn/update-words
   async updateWords(req, res) {
     try {
@@ -67,47 +105,6 @@ class LearnController {
         await neonQueries.update.word({ id, remindCount });
       });
       return res.json({ success: true, message: "Updated" });
-    } catch (error) {
-      console.log("error:", error);
-      return res.status(500).json({ success: false, message: "Internal Server Error!" });
-    }
-  }
-
-  // [GET] /learn/send-notification
-  async sendNotification(req, res) {
-    // console.log(req.query);
-
-    try {
-      if (req.query["all-devices"]) {
-        const devices = await neonQueries.get.devices();
-        // console.log("devices:", devices);
-
-        if (devices) {
-          devices.forEach((device, index) => {
-            const subscription = {
-              ...device,
-              keys: {
-                p256dh: device.p256dh,
-                auth: device.auth,
-              },
-            };
-
-            const payload = JSON.stringify({
-              title: "Hello from server!",
-              body: `Send notification for all devices, you are the ${index + 1} person`,
-            });
-
-            // console.log("subscription:", subscription);
-            webpush
-              .sendNotification(subscription, payload)
-              .catch((error) => console.error("error:", error));
-          });
-
-          console.log("Sent notification to all devices!");
-          return res.json({ success: true, message: "Sent notification for all devices!" });
-        }
-      }
-      return res.json({ success: true, message: "Not send notification for all devices!" });
     } catch (error) {
       console.log("error:", error);
       return res.status(500).json({ success: false, message: "Internal Server Error!" });

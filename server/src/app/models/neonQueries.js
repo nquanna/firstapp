@@ -296,6 +296,17 @@ const queries = {
         console.log("error:", error);
       }
     },
+
+    async deviceUserId(userId) {
+      try {
+        const res = await pool.query(`SELECT * FROM ${tableName.subscriptions} WHERE user_id = $1`, [
+          userId,
+        ]);
+        return res.rowCount !== 0 && res.rows[0].endpoint ? res.rows[0] : null;
+      } catch (error) {
+        console.log("error:", error);
+      }
+    },
   },
 
   update: {

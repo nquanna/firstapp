@@ -18,7 +18,7 @@ const registerServiceWorker = () => {
   }
 };
 
-const sendNotification = async () => {
+const subscribe = async () => {
   if (!subscription) return console.error("not subscription");
   await api.request({
     path: "/learn/subscribe",
@@ -40,5 +40,5 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
-export { sendNotification };
+export { subscribe };
 export default registerServiceWorker;

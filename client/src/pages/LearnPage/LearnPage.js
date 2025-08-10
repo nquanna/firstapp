@@ -1,10 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 
 import config from "~/config";
 
-// import "./Content";
 import { TodayVocabularies, InsertVocabulary, AllVocabularies } from "./Content";
 
 import style from "./LearnPage.module.scss";

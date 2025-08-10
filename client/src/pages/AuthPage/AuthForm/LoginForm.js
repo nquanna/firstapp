@@ -18,9 +18,12 @@ function LoginForm({ handlers: { handleDispatch, handleSubmit } }) {
   const navigate = useNavigate();
 
   const [authData, dispatch] = useReducer(authReducer, {
-    type: "login",
+    type: "",
+    email: email.current || "",
+    password: "",
+    /* type: "login",
     email: email.current || "quanhm153@gmail.com",
-    password: "Quanbicuopdt192.",
+    password: "Quanbicuopdt192.", */
   });
 
   const showMessage = state.current !== undefined && location.state?.state === undefined;

@@ -14,12 +14,18 @@ function RegisterForm({ enableTimer, timer, handlers }) {
   const { handleDispatch, handleSendOtp, handleSubmit } = handlers;
 
   const [authData, dispatch] = useReducer(authReducer, {
-    type: "register",
+    type: "",
+    username: "",
+    email: "",
+    otp: "",
+    password: "",
+    confirmPassword: "",
+    /* type: "register",
     username: "nquanna",
     email: "quanhm153@gmail.com",
     otp: "",
     password: "Quanbicuopdt192.",
-    confirmPassword: "Quanbicuopdt192.",
+    confirmPassword: "Quanbicuopdt192.", */
   });
 
   return (
