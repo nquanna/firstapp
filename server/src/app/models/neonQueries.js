@@ -338,6 +338,8 @@ const queries = {
           return res.rowCount !== 0 ? res.rows[0] : null;
         }
 
+        console.log(id);
+
         const res = await pool.query(
           `UPDATE ${tableName.vocab}
           SET remind_at = $2, remind_count = $3
