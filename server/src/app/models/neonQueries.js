@@ -324,7 +324,7 @@ const queries = {
       }
     },
 
-    async word({ id, remindCount }) {
+    async word({ id, remind_count: remindCount }) {
       const nextRemind = setNextRemind(remindLater[remindCount]);
 
       try {

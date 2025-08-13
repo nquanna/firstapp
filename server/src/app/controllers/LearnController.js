@@ -100,10 +100,8 @@ class LearnController {
   async updateWords(req, res) {
     try {
       const wordsToUpdate = await neonQueries.get.wordsToUpdate();
-      wordsToUpdate?.forEach(async (wordToUpdate) => {
-        const { id, remind_count: remindCount } = wordToUpdate;
-        await neonQueries.update.word({ id, remindCount });
-      });
+      console.log(wordsToUpdate.length);
+      wordsToUpdate?.forEach(async (wordToUpdate) => neonQueries.update.word(wordToUpdate));
       return res.json({ success: true, message: "Updated" });
     } catch (error) {
       console.log("error:", error);
