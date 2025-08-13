@@ -42,7 +42,9 @@ class LearnController {
 
             const payload = JSON.stringify({
               title: "Review your vocab pleasee!",
-              body: `word: ${word}, type: ${parts}, English: ${enMean}, Vietnamese: ${viMean}, pronounce:${pronounce}`,
+              body: `${
+                word.charAt(0).toUpperCase() + word.slice(1)
+              } (${parts.toUpperCase()}), English: ${enMean}, Vietnamese: ${viMean}, pronounce: ${pronounce}`,
             });
 
             webpush
@@ -83,7 +85,9 @@ class LearnController {
 
         const payload = JSON.stringify({
           title: "Review your vocab pleasee!",
-          body: `word: ${word}, type: ${parts}, English: ${enMean}, Vietnamese: ${viMean}, pronounce:${pronounce}`,
+          body: `${
+            word.charAt(0).toUpperCase() + word.slice(1)
+          } (${parts.toUpperCase()}), English: ${enMean}, Vietnamese: ${viMean}, pronounce: ${pronounce}`,
         });
 
         webpush.sendNotification(subscription, payload).catch((error) => console.error("error:", error));
@@ -103,9 +107,6 @@ class LearnController {
       for (let i = 0; i < wordsToUpdate?.length || 0; i++) {
         await neonQueries.update.word(wordsToUpdate[i]);
       }
-      /* wordsToUpdate?.forEach(async (wordToUpdate) => {
-        neonQueries.update.word(wordToUpdate);
-      }); */
       return res.json({ success: true, message: "Updated" });
     } catch (error) {
       console.log("error:", error);

@@ -333,7 +333,7 @@ const queries = {
             `UPDATE ${tableName.vocab}
             SET remind_count = $2, learning = $3
             WHERE id = $1`,
-            [id, remindCount + 1, false]
+            [id, remindCount, false]
           );
           return res.rowCount !== 0 ? res.rows[0] : null;
         }
