@@ -101,7 +101,10 @@ class LearnController {
     try {
       const wordsToUpdate = await neonQueries.get.wordsToUpdate();
       console.log(wordsToUpdate.length);
-      wordsToUpdate?.forEach(async (wordToUpdate) => neonQueries.update.word(wordToUpdate));
+      wordsToUpdate?.forEach(async (wordToUpdate) => {
+        console.log(wordToUpdate.id);
+        neonQueries.update.word(wordToUpdate);
+      });
       return res.json({ success: true, message: "Updated" });
     } catch (error) {
       console.log("error:", error);
